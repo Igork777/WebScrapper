@@ -6,7 +6,7 @@ namespace WebScrapper.Scraping.DTO
     public class Product
     {
         public string Name { get; set; }
-        public Dictionary<float, int> SizeToPrice = new Dictionary<float, int>();
+        public Dictionary<String, String> SizeToPrice = new Dictionary<String, String>();
         
     }
 }

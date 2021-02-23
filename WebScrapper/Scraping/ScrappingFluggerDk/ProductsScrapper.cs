@@ -32,15 +32,17 @@ namespace WebScrapper.Scraping
         {
             IList<Product> products = new List<Product>();
             Product tempProduct = new Product();
+            HashSet<String> names = new HashSet<String>();
+            
             foreach (var product in listOfProducts)
             {
                 tempProduct.Name = GetNameOfProduct(product);
                 tempProduct.SizeToPrice = GetSizeAndCorrespondingPrice(product);
                 products.Add(tempProduct);
                 Console.WriteLine(tempProduct.Name);
-                foreach (KeyValuePair<float, int> sizeAndPrice in tempProduct.SizeToPrice)
+                foreach (KeyValuePair<String, String> sizeAndPrice in tempProduct.SizeToPrice)
                 {
-                    Console.WriteLine("Size: " + sizeAndPrice.Key + "L Price: "+ sizeAndPrice.Value + " dkk/st");
+                    Console.WriteLine(sizeAndPrice.Key + " Price: "+ sizeAndPrice.Value + " dkk/st");
                 }
             }
 
@@ -51,7 +53,6 @@ namespace WebScrapper.Scraping
         private String GetNameOfProduct(HtmlNode product)
         {
             String tempName;
-            IList<String> names = new List<String>();
             tempName = (product.Descendants("h3")
                 .First(node => node.GetAttributeValue("class", "").Equals("product-block-title")).InnerText);
             var replacedName = tempName.Replace("\r\n", "").Trim();
@@ -79,40 +80,42 @@ namespace WebScrapper.Scraping
             return fixedName;
         }
 
-        private Dictionary<float, int> GetSizeAndCorrespondingPrice(HtmlNode product)
+        private Dictionary<String, String> GetSizeAndCorrespondingPrice(HtmlNode product)
         {
             HtmlDocument htmlDocument = ScrappingHelper.GetHtmlDocument("https://www.flugger.dk" + getProductLink(product));
             IList<HtmlNode> listOfSizes = GetProductsWithPriceAndSize(htmlDocument);
             String size = "", price = "", previousSize= "";
-            Dictionary<float, int> categories = new Dictionary<float, int>();
+            Dictionary<String, String> categories = new Dictionary<String, String>();
             foreach (HtmlNode category in listOfSizes)
             {
-                size = category.SelectSingleNode("div").InnerText.Replace(" ", "").Replace("L", "").Replace(",", ".");
+                size = category.SelectSingleNode("div").InnerText.Replace(",", ".");
                 price = category.SelectSingleNode("div/span").InnerText;
                 if (size.Equals("") || price.Equals(""))
                 {
-                    return new Dictionary<float, int>
+                    return new Dictionary<String, String>
                     {
-                        {0.0F, 0}
+                        {"0", "0"}
                     };
                 }
                 Match redundantPart = new Regex(@"\,.*").Match(price);
                 price = price.Replace(redundantPart.Value, "").Replace(".", "");
                 
-
+                
                 if (size.Equals(previousSize))
                 {
                     continue;
                 }
-                categories.Add(float.Parse(size), Int32.Parse(price));
+
+               
+                categories.Add(size, price);
                 previousSize = size;
             }
 
             if (categories.Count ==0)
             {
-                return new Dictionary<float, int>
+                return new Dictionary<String, String>
                 {
-                    {0.0F, 0}
+                    {"0", "0"}
                 };
             }
             return categories;

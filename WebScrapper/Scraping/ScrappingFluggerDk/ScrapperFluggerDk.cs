@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 
 namespace WebScrapper.Scraping
 {
@@ -14,15 +13,7 @@ namespace WebScrapper.Scraping
 
         public void StartScrapping()
         {
-            try
-            {
-                _indoorsProductsScrapper.Start("https://www.flugger.dk/maling-tapet/indend%C3%B8rs/");
-            }
-            catch (System.AggregateException e)
-            {
-                Console.WriteLine("Trying to recollect");
-               _indoorsProductsScrapper.Start("https://www.flugger.dk/maling-tapet/indend%C3%B8rs/");
-            }
+            _indoorsProductsScrapper.Start("https://www.flugger.dk/maling-tapet/filt-v%C3%A6v-og-savsmuldstapet/");
             
         }
     }
