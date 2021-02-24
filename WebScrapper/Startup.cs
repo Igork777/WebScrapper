@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Channels;
 using System.Threading.Tasks;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -33,14 +36,22 @@ namespace WebScrapper
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "WebScrapper", Version = "v1"});
             });
+            services.AddHangfire(config => config.SetDataCompatibilityLevel
+                    (CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseDefaultTypeSerializer()
+                .UseMemoryStorage());
 
-            ScrapperFluggerDk scrapperFluggerDk = new ScrapperFluggerDk();
-            scrapperFluggerDk.StartScrapping();
+            services.AddHangfireServer();
+            services.AddSingleton<ScrapperFluggerDk>();
+
+            // ScrapperFluggerDk scrapperFluggerDk = new ScrapperFluggerDk();
+            // scrapperFluggerDk.StartScrapping();
         }
         
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBackgroundJobClient backgroundJobClient, IRecurringJobManager recurringJobManager, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -50,12 +61,19 @@ namespace WebScrapper
             }
 
             app.UseHttpsRedirection();
-
+            app.UseHangfireDashboard();
             app.UseRouting();
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+            
+            backgroundJobClient.Enqueue(() => Console.WriteLine("Handfire job"));
+            recurringJobManager.AddOrUpdate("Run every minute",
+                () =>  
+                    serviceProvider.GetService<ScrapperFluggerDk>().StartScrapping()
+                , "*/10 * * * *");
         }
     }
 }

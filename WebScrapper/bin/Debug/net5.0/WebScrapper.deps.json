@@ -25,6 +25,9 @@
     ".NETCoreApp,Version=v5.0": {
       "WebScrapper/1.0.0": {
         "dependencies": {
+          "Hangfire.AspNetCore": "1.7.19",
+          "Hangfire.Core": "1.7.19",
+          "Hangfire.MemoryStorage": "1.7.0",
           "HtmlAgilityPack": "1.11.30",
           "Swashbuckle.AspNetCore": "5.6.3",
           "Unicode.net": "0.1.3",
@@ -319,6 +322,83 @@
           "WebScrapper.dll": {}
         }
       },
+      "Hangfire.AspNetCore/1.7.19": {
+        "dependencies": {
+          "Hangfire.Core": "1.7.19"
+        },
+        "runtime": {
+          "lib/netcoreapp3.0/Hangfire.AspNetCore.dll": {
+            "assemblyVersion": "1.7.19.0",
+            "fileVersion": "1.7.19.0"
+          }
+        },
+        "compile": {
+          "lib/netcoreapp3.0/Hangfire.AspNetCore.dll": {}
+        }
+      },
+      "Hangfire.Core/1.7.19": {
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Hangfire.Core.dll": {
+            "assemblyVersion": "1.7.19.0",
+            "fileVersion": "1.7.19.0"
+          }
+        },
+        "resources": {
+          "lib/netstandard2.0/ca/Hangfire.Core.resources.dll": {
+            "locale": "ca"
+          },
+          "lib/netstandard2.0/de/Hangfire.Core.resources.dll": {
+            "locale": "de"
+          },
+          "lib/netstandard2.0/es/Hangfire.Core.resources.dll": {
+            "locale": "es"
+          },
+          "lib/netstandard2.0/fa/Hangfire.Core.resources.dll": {
+            "locale": "fa"
+          },
+          "lib/netstandard2.0/fr/Hangfire.Core.resources.dll": {
+            "locale": "fr"
+          },
+          "lib/netstandard2.0/nl/Hangfire.Core.resources.dll": {
+            "locale": "nl"
+          },
+          "lib/netstandard2.0/pt-BR/Hangfire.Core.resources.dll": {
+            "locale": "pt-BR"
+          },
+          "lib/netstandard2.0/pt-PT/Hangfire.Core.resources.dll": {
+            "locale": "pt-PT"
+          },
+          "lib/netstandard2.0/pt/Hangfire.Core.resources.dll": {
+            "locale": "pt"
+          },
+          "lib/netstandard2.0/zh-TW/Hangfire.Core.resources.dll": {
+            "locale": "zh-TW"
+          },
+          "lib/netstandard2.0/zh/Hangfire.Core.resources.dll": {
+            "locale": "zh"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Hangfire.Core.dll": {}
+        }
+      },
+      "Hangfire.MemoryStorage/1.7.0": {
+        "dependencies": {
+          "Hangfire.Core": "1.7.19"
+        },
+        "runtime": {
+          "lib/netstandard1.3/Hangfire.MemoryStorage.dll": {
+            "assemblyVersion": "1.7.0.0",
+            "fileVersion": "1.7.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard1.3/Hangfire.MemoryStorage.dll": {}
+        }
+      },
       "HtmlAgilityPack/1.11.30": {
         "runtime": {
           "lib/netstandard2.0/HtmlAgilityPack.dll": {
@@ -340,6 +420,17 @@
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.OpenApi.dll": {}
+        }
+      },
+      "Newtonsoft.Json/11.0.1": {
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.0.1.21818"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {}
         }
       },
       "Swashbuckle.AspNetCore/5.6.3": {
@@ -2106,6 +2197,27 @@
       "serviceable": false,
       "sha512": ""
     },
+    "Hangfire.AspNetCore/1.7.19": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Klwtn5WHj+NBwNaltvrw/r/gIelF1brUxObkOUDXjXbo6KFGOuaZJ9PjRKRGtPRNN2VsePdpn3/UlwtSIX6GEA==",
+      "path": "hangfire.aspnetcore/1.7.19",
+      "hashPath": "hangfire.aspnetcore.1.7.19.nupkg.sha512"
+    },
+    "Hangfire.Core/1.7.19": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-kd7yR+uuK1zfWLocoskFayFG6zcc5nS6dO8TzaxV7qspTSPtT8kFEb3osrfPw/LOiNJ5KLFzaq0t+muQMRDv3w==",
+      "path": "hangfire.core/1.7.19",
+      "hashPath": "hangfire.core.1.7.19.nupkg.sha512"
+    },
+    "Hangfire.MemoryStorage/1.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-g4hBdD8CaePScNWDOtRlR0GCxRyCK3KaItPcmABurlUZ8hs0YrpGUAYWgSWUSw6RXuPf1ZUK0l4REpV+sKYm/w==",
+      "path": "hangfire.memorystorage/1.7.0",
+      "hashPath": "hangfire.memorystorage.1.7.0.nupkg.sha512"
+    },
     "HtmlAgilityPack/1.11.30": {
       "type": "package",
       "serviceable": true,
@@ -2126,6 +2238,13 @@
       "sha512": "sha512-Nug3rO+7Kl5/SBAadzSMAVgqDlfGjJZ0GenQrLywJ84XGKO0uRqkunz5Wyl0SDwcR71bAATXvSdbdzPrYRYKGw==",
       "path": "microsoft.openapi/1.2.3",
       "hashPath": "microsoft.openapi.1.2.3.nupkg.sha512"
+    },
+    "Newtonsoft.Json/11.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-pNN4l+J6LlpIvHOeNdXlwxv39NPJ2B5klz+Rd2UQZIx30Squ5oND1Yy3wEAUoKn0GPUj6Yxt9lxlYWQqfZcvKg==",
+      "path": "newtonsoft.json/11.0.1",
+      "hashPath": "newtonsoft.json.11.0.1.nupkg.sha512"
     },
     "Swashbuckle.AspNetCore/5.6.3": {
       "type": "package",
