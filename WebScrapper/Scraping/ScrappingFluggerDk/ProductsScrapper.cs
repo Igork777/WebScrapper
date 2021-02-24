@@ -7,14 +7,15 @@ using HtmlAgilityPack;
 using WebScrapper.Scraping.DTO;
 using WebScrapper.Scraping.Helpers;
 
-namespace WebScrapper.Scraping
+namespace WebScrapper.Scraping.ScrappingFluggerDk
 {
-    public class IndoorsProductsScrapper
+    public class ProductsScrapper
     {
         private Regex invalidCharacter = new Regex(@"&#[0-9]+[;]|&[A-Za-z]+[;]");
 
         public void Start(String urlToScrap)
         {
+            
             HtmlDocument htmlDocument =
                 ScrappingHelper.GetHtmlDocument(urlToScrap);
 
@@ -54,31 +55,18 @@ namespace WebScrapper.Scraping
         {
             String tempName;
             tempName = (product.Descendants("h3")
-                .First(node => node.GetAttributeValue("class", "").Equals("product-block-title")).InnerText);
-            var replacedName = tempName.Replace("\r\n", "").Trim();
-            if (!ScrappingHelper.CheckIfInvalidCharacter(replacedName, invalidCharacter))
+                .First(node => node.GetAttributeValue("class", "").Equals("product-block-title")).InnerText).Replace("\r\n", "").Trim();
+            if (!ScrappingHelper.CheckIfInvalidCharacter(tempName, invalidCharacter))
             {
-                return replacedName;
+                return tempName;
             }
-
-            return FixInvalidCharacter(replacedName, invalidCharacter);
+            return ScrappingHelper.FixInvalidCharacter(tempName, invalidCharacter);
         }
         
   
 
 
-        private String FixInvalidCharacter(String name, Regex invalidCharacter)
-        {
-            String fixedName = name;
-            MatchCollection incorrectCharacters = invalidCharacter.Matches(name);
-            foreach (Match incorrectCharacter in incorrectCharacters)
-            {
-                fixedName = fixedName.Replace(incorrectCharacter.Value,
-                    HttpUtility.HtmlDecode(incorrectCharacter.Value));
-            }
-
-            return fixedName;
-        }
+        
 
         private Dictionary<String, String> GetSizeAndCorrespondingPrice(HtmlNode product)
         {
@@ -90,6 +78,15 @@ namespace WebScrapper.Scraping
             {
                 size = category.SelectSingleNode("div").InnerText.Replace(",", ".");
                 price = category.SelectSingleNode("div/span").InnerText;
+                if(ScrappingHelper.CheckIfInvalidCharacter(size, invalidCharacter))
+                {
+                    size = ScrappingHelper.FixInvalidCharacter(size, invalidCharacter);
+                }
+
+                if (ScrappingHelper.CheckIfInvalidCharacter(price, invalidCharacter))
+                {
+                    price = ScrappingHelper.FixInvalidCharacter(price, invalidCharacter);
+                }
                 if (size.Equals("") || price.Equals(""))
                 {
                     return new Dictionary<String, String>
@@ -138,8 +135,10 @@ namespace WebScrapper.Scraping
                 return href;
             }
 
-            var correctHref = FixInvalidCharacter(href, invalidCharacter);
+            var correctHref = ScrappingHelper.FixInvalidCharacter(href, invalidCharacter);
             return correctHref;
         }
+
+      
     }
 }
