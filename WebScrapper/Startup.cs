@@ -1,20 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Channels;
-using System.Threading.Tasks;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using WebScrapper.Scraping;
+using WebScrapper.Scraping.ScrappingFluggerDk;
+using WebScrapper.Scraping.ScrappingFluggerDk.DB;
 
 
 namespace WebScrapper
@@ -43,12 +37,14 @@ namespace WebScrapper
                 .UseMemoryStorage());
 
             services.AddHangfireServer();
-            services.AddSingleton<ScrapperFluggerDk>();
+          // services.AddSingleton<ScrapperFluggerDk>();
+            services.AddEntityFrameworkSqlite().AddDbContext<DBContext>();
 
-            // ScrapperFluggerDk scrapperFluggerDk = new ScrapperFluggerDk();
-            // scrapperFluggerDk.StartScrapping();
+             
+              ScrapperFluggerDk scrapperFluggerDk = new ScrapperFluggerDk();
+              scrapperFluggerDk.StartScrapping();
         }
-        
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBackgroundJobClient backgroundJobClient, IRecurringJobManager recurringJobManager, IServiceProvider serviceProvider)
@@ -70,10 +66,10 @@ namespace WebScrapper
 
             
             backgroundJobClient.Enqueue(() => Console.WriteLine("Handfire job"));
-            recurringJobManager.AddOrUpdate("Run every minute",
-                () =>  
-                    serviceProvider.GetService<ScrapperFluggerDk>().StartScrapping()
-                , "*/10 * * * *");
+            // recurringJobManager.AddOrUpdate("Run every minute",
+            //     () =>  
+            //         serviceProvider.GetService<ScrapperFluggerDk>().StartScrapping()
+            //     , "* * * * *");
         }
     }
 }
