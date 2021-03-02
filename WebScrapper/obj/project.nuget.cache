@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "BZ5NjHL+8iSRJ3D5lT6hXaLGvxQD5PdJddEku6i/0uDymBDFx5GiGP8xnU5WxjmztZhYtOGfSWiMmWgctLZztg==",
+  "dgSpecHash": "Qnk0yri07kM5ZEz+vPFYH5fDxlxkti3OA1kjDcQFzL7LtDzORm7PcGHlpC9X8/XkVhPmnVWIUF+5DwOyKBpT8A==",
   "success": true,
   "projectFilePath": "D:\\PaintingProject\\WebScrapper\\WebScrapper\\WebScrapper.csproj",
   "expectedPackageFiles": [
@@ -29,7 +29,8 @@
     "C:\\Users\\Igor\\.nuget\\packages\\microsoft.extensions.options\\6.0.0-preview.1.21102.12\\microsoft.extensions.options.6.0.0-preview.1.21102.12.nupkg.sha512",
     "C:\\Users\\Igor\\.nuget\\packages\\microsoft.extensions.primitives\\6.0.0-preview.1.21102.12\\microsoft.extensions.primitives.6.0.0-preview.1.21102.12.nupkg.sha512",
     "C:\\Users\\Igor\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
-    "C:\\Users\\Igor\\.nuget\\packages\\newtonsoft.json\\11.0.1\\newtonsoft.json.11.0.1.nupkg.sha512",
+    "C:\\Users\\Igor\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\Igor\\.nuget\\packages\\selenium.webdriver\\4.0.0-beta1\\selenium.webdriver.4.0.0-beta1.nupkg.sha512",
     "C:\\Users\\Igor\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.0.5-pre20210119130047\\sqlitepclraw.bundle_e_sqlite3.2.0.5-pre20210119130047.nupkg.sha512",
     "C:\\Users\\Igor\\.nuget\\packages\\sqlitepclraw.core\\2.0.5-pre20210119130047\\sqlitepclraw.core.2.0.5-pre20210119130047.nupkg.sha512",
     "C:\\Users\\Igor\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.0.5-pre20210119130047\\sqlitepclraw.lib.e_sqlite3.2.0.5-pre20210119130047.nupkg.sha512",

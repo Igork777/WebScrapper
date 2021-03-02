@@ -7,12 +7,12 @@ using HtmlAgilityPack;
 using WebScrapper.Scraping.DTO;
 using WebScrapper.Scraping.Helpers;
 using WebScrapper.Scraping.ScrappingFluggerDk.DB;
+using WebScrapper.Scraping.ScrappingFluggerDk.Enums;
 using WebScrapper.Scraping.ScrappingFluggerDk.Repositories;
-using Type = WebScrapper.Scraping.ScrappingFluggerDk.Enums.Type;
 
 namespace WebScrapper.Scraping.ScrappingFluggerDk
 {
-    public class ProductsScrapper
+    public class FluggerDkScrapper
     {
         private List<Product> _productsIndoor;
         private List<Product> _productsOutdoor;
@@ -22,7 +22,7 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
         private Website _website;
         private UnitOfWork _unitOfWork;
 
-        public ProductsScrapper()
+        public FluggerDkScrapper()
         {
             _productsIndoor = new List<Product>();
             _productsOutdoor = new List<Product>();
@@ -49,18 +49,18 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
             try
             {
                 _productsTool.AddRange(Start("https://www.flugger.dk/malerv%C3%A6rkt%C3%B8j/pensler-ruller/",
-                    Type.Tools));
-                _productsIndoor.AddRange(Start("https://www.flugger.dk/maling-tapet/indend%C3%B8rs/", Type.Indoors));
+                    TypesOfProduct.Tools));
+                _productsIndoor.AddRange(Start("https://www.flugger.dk/maling-tapet/indend%C3%B8rs/", TypesOfProduct.Indoors));
                 _productsTool.AddRange(Start(
-                    "https://www.flugger.dk/malerv%C3%A6rkt%C3%B8j/tapetv%C3%A6rkt%C3%B8j-kl%C3%A6ber/", Type.Tools));
-                _productsOutdoor.AddRange(Start("https://www.flugger.dk/maling-tapet/udend%C3%B8rs/", Type.Outdoors));
+                    "https://www.flugger.dk/malerv%C3%A6rkt%C3%B8j/tapetv%C3%A6rkt%C3%B8j-kl%C3%A6ber/", TypesOfProduct.Tools));
+                _productsOutdoor.AddRange(Start("https://www.flugger.dk/maling-tapet/udend%C3%B8rs/", TypesOfProduct.Outdoors));
                 _productsTool.AddRange(Start("https://www.flugger.dk/maling-tapet/filt-v%C3%A6v-og-savsmuldstapet/",
-                    Type.Tools));
-                _productsOther.AddRange(Start("https://www.flugger.dk/maling-tapet/dekoration/", Type.Others));
+                    TypesOfProduct.Tools));
+                _productsOther.AddRange(Start("https://www.flugger.dk/maling-tapet/dekoration/", TypesOfProduct.Others));
                 _productsTool.AddRange(Start("https://www.flugger.dk/malerv%C3%A6rkt%C3%B8j/spartler-sandpapir/",
-                    Type.Tools));
-                _productsOther.AddRange(Start("https://www.flugger.dk/maling-tapet/tapetkl%C3%A6ber/", Type.Others));
-                _productsTool.AddRange(Start("https://www.flugger.dk/malerv%C3%A6rkt%C3%B8j/bakker-spande/", Type.Tools));
+                    TypesOfProduct.Tools));
+                _productsOther.AddRange(Start("https://www.flugger.dk/maling-tapet/tapetkl%C3%A6ber/", TypesOfProduct.Others));
+                _productsTool.AddRange(Start("https://www.flugger.dk/malerv%C3%A6rkt%C3%B8j/bakker-spande/", TypesOfProduct.Tools));
                 
                 
                 PopulateProducts(_productsIndoor, _allProductTypes[0]);
@@ -74,12 +74,7 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
             }
             catch (Exception e)
             {
-                if (e.InnerException != null) 
-                    Console.WriteLine(e.InnerException.Message);
-                else
-                {
-                    Console.WriteLine(e.StackTrace);
-                }
+                Console.WriteLine(e.StackTrace);
             }
 
             Console.WriteLine("Scrap is finished!!!");
@@ -258,13 +253,13 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
 
         [SuppressMessage("ReSharper.DPA", "DPA0002: Excessive memory allocations in SOH",
             MessageId = "type: System.String")]
-        private IList<float> GetPrice(HtmlNode product, String proxy, int port)
+        private IList<String> GetPrice(HtmlNode product, String proxy, int port)
         {
             String url = "https://www.flugger.dk" + GetProductLink(product);
             HtmlDocument htmlDocument =
                 ScrappingHelper.GetHtmlDocument(url, proxy, port);
             IList<HtmlNode> listOfSizes = GetProductsWithPriceAndSize(htmlDocument);
-            IList<float> prices = new List<float>();
+            IList<String> prices = new List<String>();
             String priceAsString = "";
             foreach (HtmlNode category in listOfSizes)
             {
@@ -278,12 +273,12 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                 Match redundantPart = new Regex(@"\,.*").Match(priceAsString);
                 if (redundantPart.Value.Length == 0)
                 {
-                    prices.Add(0);
+                    prices.Add("No price");
                 }
                 else
                 {
                     priceAsString = priceAsString.Replace(redundantPart.Value, "").Replace(".", "");
-                    prices.Add(float.Parse(priceAsString));
+                    prices.Add(priceAsString);
                 }
             }
 

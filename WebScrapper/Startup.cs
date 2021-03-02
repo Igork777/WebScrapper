@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using WebScrapper.Scraping;
 using WebScrapper.Scraping.ScrappingFluggerDk;
 using WebScrapper.Scraping.ScrappingFluggerDk.DB;
 
@@ -40,9 +41,12 @@ namespace WebScrapper
           // services.AddSingleton<ScrapperFluggerDk>();
             services.AddEntityFrameworkSqlite().AddDbContext<DBContext>();
 
-             
-              ScrapperFluggerDk scrapperFluggerDk = new ScrapperFluggerDk();
-              scrapperFluggerDk.StartScrapping();
+
+            // FluggerDkScrapper fluggerDkScrapper = new FluggerDkScrapper();
+            // fluggerDkScrapper.StartScrapping();
+
+            FluggerHelsingorDkScrapper fluggerHelsingorDkScrapper = new FluggerHelsingorDkScrapper();
+            fluggerHelsingorDkScrapper.StartScrapping();
         }
 
 
