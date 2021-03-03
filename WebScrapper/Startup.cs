@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using WebScrapper.Scraping;
 using WebScrapper.Scraping.ScrappingFluggerDk;
 using WebScrapper.Scraping.ScrappingFluggerDk.DB;
+using WebScrapper.Scraping.ScrappingFluggerDk.Repositories;
 
 
 namespace WebScrapper
@@ -41,12 +42,15 @@ namespace WebScrapper
           // services.AddSingleton<ScrapperFluggerDk>();
             services.AddEntityFrameworkSqlite().AddDbContext<DBContext>();
 
+            UnitOfWork unitOfWork = new UnitOfWork(new DBContext());
 
-            // FluggerDkScrapper fluggerDkScrapper = new FluggerDkScrapper();
+            // FluggerDkScrapper fluggerDkScrapper = new FluggerDkScrapper(unitOfWork);
             // fluggerDkScrapper.StartScrapping();
 
-            FluggerHelsingorDkScrapper fluggerHelsingorDkScrapper = new FluggerHelsingorDkScrapper();
-            fluggerHelsingorDkScrapper.StartScrapping();
+            // FluggerHelsingorDkScrapper fluggerHelsingorDkScrapper = new FluggerHelsingorDkScrapper();
+            // fluggerHelsingorDkScrapper.StartScrapping();
+            Maling_halvprisDk malingHalvprisDk = new Maling_halvprisDk(unitOfWork);
+            malingHalvprisDk.StartScrapping();
         }
 
 

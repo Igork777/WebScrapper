@@ -19,11 +19,11 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
         private List<Product> _productsTool;
         private List<Product> _productsOther;
         private List<ProductType> _allProductTypes;
-        private Website _website;
         private UnitOfWork _unitOfWork;
 
-        public FluggerDkScrapper()
+        public FluggerDkScrapper(UnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             _productsIndoor = new List<Product>();
             _productsOutdoor = new List<Product>();
             _productsTool = new List<Product>();
@@ -35,15 +35,11 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                 new ProductType() {ProductTypeId = 3, Type = "Tool"},
                 new ProductType() {ProductTypeId = 3, Type = "Other"}
             };
-            _website = new Website();
-            _website.WebsiteId = 1;
-            _website.Name = "flugger.dk";
 
         }
 
         public void StartScrapping()
-        { 
-            _unitOfWork = new UnitOfWork(new DBContext());
+        {
             Console.WriteLine("Starting new scrap");
 
             try
@@ -69,7 +65,7 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                 PopulateProducts(_productsOther, _allProductTypes[3]);
 
                 _unitOfWork.ProductsType.AddRange(_allProductTypes);
-                _unitOfWork.Website.Add(_website);
+                _unitOfWork.Website.Add(ScrappingHelper._allWebsites[0]);
                 _unitOfWork.Complete();
             }
             catch (Exception e)
@@ -88,7 +84,7 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
         {
             foreach (var product in products)
             {
-                product.Website = _website;
+                product.Website = ScrappingHelper._allWebsites[0];
                 product.ProductType = productType;
                 _unitOfWork.Products.Add(product);
             }

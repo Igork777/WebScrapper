@@ -6,14 +6,29 @@ using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Web;
 using HtmlAgilityPack;
+using WebScrapper.Scraping.DTO;
 
 namespace WebScrapper.Scraping.Helpers
 {
     public class ScrappingHelper
     {
+        public static readonly List<ProductType> _allProductTypes = new List<ProductType>()
+        {
+            new ProductType() {ProductTypeId = 1, Type = "Indoor"},
+            new ProductType() {ProductTypeId = 2, Type = "Outdoor"},
+            new ProductType() {ProductTypeId = 3, Type = "Tool"},
+            new ProductType() {ProductTypeId = 4, Type = "Other"}
+        };
+
+        public static readonly List<Website> _allWebsites = new List<Website>()
+        {
+            new Website() {WebsiteId = 1, Name = "flugger.dk"},
+            new Website() {WebsiteId = 2, Name = "flugger-helsingor.dk"},
+            new Website() {WebsiteId = 3, Name = "www.maling-halvpris.dk"},
+            new Website() {WebsiteId = 4, Name = "www.flugger-horsens.dk"}
+        };
         public static readonly Regex InvalidCharacter = new Regex(@"&#[0-9]+[;]|&[A-Za-z]+[;]");
         public static readonly Regex IpRegex = new Regex(@"\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\:[0-9]{1,5}\b");
         public static HtmlDocument GetHtmlDocument(String url)
@@ -74,6 +89,8 @@ namespace WebScrapper.Scraping.Helpers
 
             return fixedName;
         }
+        
+        
         
         public static bool CheckIfInvalidCharacter(String name, Regex regex)
         {
