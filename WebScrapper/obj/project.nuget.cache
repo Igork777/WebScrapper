@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Qnk0yri07kM5ZEz+vPFYH5fDxlxkti3OA1kjDcQFzL7LtDzORm7PcGHlpC9X8/XkVhPmnVWIUF+5DwOyKBpT8A==",
+  "dgSpecHash": "qpD3Df/nGYOlXBMB1uAqENkMv1AiXmS4+c1aI54HsgRZQS4Vvvz2Sk5iR5dqBju/unhzw6I0T6JUJ75Tsth6TQ==",
   "success": true,
   "projectFilePath": "D:\\PaintingProject\\WebScrapper\\WebScrapper\\WebScrapper.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Igor\\.nuget\\packages\\dotnetseleniumextras.waithelpers\\3.11.0\\dotnetseleniumextras.waithelpers.3.11.0.nupkg.sha512",
     "C:\\Users\\Igor\\.nuget\\packages\\hangfire.aspnetcore\\1.7.19\\hangfire.aspnetcore.1.7.19.nupkg.sha512",
     "C:\\Users\\Igor\\.nuget\\packages\\hangfire.core\\1.7.19\\hangfire.core.1.7.19.nupkg.sha512",
     "C:\\Users\\Igor\\.nuget\\packages\\hangfire.memorystorage\\1.7.0\\hangfire.memorystorage.1.7.0.nupkg.sha512",
@@ -31,6 +32,7 @@
     "C:\\Users\\Igor\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
     "C:\\Users\\Igor\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
     "C:\\Users\\Igor\\.nuget\\packages\\selenium.webdriver\\4.0.0-beta1\\selenium.webdriver.4.0.0-beta1.nupkg.sha512",
+    "C:\\Users\\Igor\\.nuget\\packages\\selenium.webdriver.chromedriver\\89.0.4389.2300\\selenium.webdriver.chromedriver.89.0.4389.2300.nupkg.sha512",
     "C:\\Users\\Igor\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.0.5-pre20210119130047\\sqlitepclraw.bundle_e_sqlite3.2.0.5-pre20210119130047.nupkg.sha512",
     "C:\\Users\\Igor\\.nuget\\packages\\sqlitepclraw.core\\2.0.5-pre20210119130047\\sqlitepclraw.core.2.0.5-pre20210119130047.nupkg.sha512",
     "C:\\Users\\Igor\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.0.5-pre20210119130047\\sqlitepclraw.lib.e_sqlite3.2.0.5-pre20210119130047.nupkg.sha512",

@@ -18,7 +18,6 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
         private List<Product> _productsOutdoor;
         private List<Product> _productsTool;
         private List<Product> _productsOther;
-        private List<ProductType> _allProductTypes;
         private UnitOfWork _unitOfWork;
 
         public FluggerDkScrapper(UnitOfWork unitOfWork)
@@ -28,13 +27,6 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
             _productsOutdoor = new List<Product>();
             _productsTool = new List<Product>();
             _productsOther = new List<Product>();
-            _allProductTypes = new List<ProductType>()
-            {
-                new ProductType() {ProductTypeId = 1, Type = "Indoor"},
-                new ProductType() {ProductTypeId = 2, Type = "Outdoor"},
-                new ProductType() {ProductTypeId = 3, Type = "Tool"},
-                new ProductType() {ProductTypeId = 3, Type = "Other"}
-            };
 
         }
 
@@ -59,12 +51,12 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                 _productsTool.AddRange(Start("https://www.flugger.dk/malerv%C3%A6rkt%C3%B8j/bakker-spande/", TypesOfProduct.Tools));
                 
                 
-                PopulateProducts(_productsIndoor, _allProductTypes[0]);
-                PopulateProducts(_productsOutdoor, _allProductTypes[1]);
-                PopulateProducts(_productsTool, _allProductTypes[2]);
-                PopulateProducts(_productsOther, _allProductTypes[3]);
+                PopulateProducts(_productsIndoor, ScrappingHelper._allProductTypes[0]);
+                PopulateProducts(_productsOutdoor, ScrappingHelper._allProductTypes[1]);
+                PopulateProducts(_productsTool, ScrappingHelper._allProductTypes[2]);
+                PopulateProducts(_productsOther, ScrappingHelper._allProductTypes[3]);
 
-                _unitOfWork.ProductsType.AddRange(_allProductTypes);
+                _unitOfWork.ProductsType.AddRange(ScrappingHelper._allProductTypes);
                 _unitOfWork.Website.Add(ScrappingHelper._allWebsites[0]);
                 _unitOfWork.Complete();
             }

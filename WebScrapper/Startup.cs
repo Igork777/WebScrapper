@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using WebScrapper.Scraping;
+using WebScrapper.Scraping.FluggerHorsensDk;
 using WebScrapper.Scraping.ScrappingFluggerDk;
 using WebScrapper.Scraping.ScrappingFluggerDk.DB;
 using WebScrapper.Scraping.ScrappingFluggerDk.Repositories;
@@ -49,8 +50,11 @@ namespace WebScrapper
 
             // FluggerHelsingorDkScrapper fluggerHelsingorDkScrapper = new FluggerHelsingorDkScrapper();
             // fluggerHelsingorDkScrapper.StartScrapping();
-            Maling_halvprisDk malingHalvprisDk = new Maling_halvprisDk(unitOfWork);
-            malingHalvprisDk.StartScrapping();
+            // Maling_halvprisDk malingHalvprisDk = new Maling_halvprisDk(unitOfWork);
+            // malingHalvprisDk.StartScrapping();
+
+            FluggerHorsensDkScrapper fluggerHorsensDkScrapper = new FluggerHorsensDkScrapper(unitOfWork);
+            fluggerHorsensDkScrapper.StartScrapping();
         }
 
 

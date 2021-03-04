@@ -2,6 +2,18 @@
   "version": 3,
   "targets": {
     "net5.0": {
+      "DotNetSeleniumExtras.WaitHelpers/3.11.0": {
+        "type": "package",
+        "dependencies": {
+          "Selenium.WebDriver": "3.10.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/SeleniumExtras.WaitHelpers.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/SeleniumExtras.WaitHelpers.dll": {}
+        }
+      },
       "Hangfire.AspNetCore/1.7.19": {
         "type": "package",
         "dependencies": {
@@ -361,6 +373,12 @@
           "lib/net5.0/WebDriver.dll": {}
         }
       },
+      "Selenium.WebDriver.ChromeDriver/89.0.4389.2300": {
+        "type": "package",
+        "build": {
+          "build/Selenium.WebDriver.ChromeDriver.targets": {}
+        }
+      },
       "SQLitePCLRaw.bundle_e_sqlite3/2.0.5-pre20210119130047": {
         "type": "package",
         "dependencies": {
@@ -599,6 +617,21 @@
     }
   },
   "libraries": {
+    "DotNetSeleniumExtras.WaitHelpers/3.11.0": {
+      "sha512": "xc6jVVl5ymgk3ZNWnC/KHxkEup1QpnwYbrwF+NQoCOGERsD8YMlLwmsX4lGhLXCLo/YQTRTIwlKCN9E/doGUNg==",
+      "type": "package",
+      "path": "dotnetseleniumextras.waithelpers/3.11.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "dotnetseleniumextras.waithelpers.3.11.0.nupkg.sha512",
+        "dotnetseleniumextras.waithelpers.nuspec",
+        "lib/net35/SeleniumExtras.WaitHelpers.dll",
+        "lib/net40/SeleniumExtras.WaitHelpers.dll",
+        "lib/net45/SeleniumExtras.WaitHelpers.dll",
+        "lib/netstandard2.0/SeleniumExtras.WaitHelpers.dll"
+      ]
+    },
     "Hangfire.AspNetCore/1.7.19": {
       "sha512": "Klwtn5WHj+NBwNaltvrw/r/gIelF1brUxObkOUDXjXbo6KFGOuaZJ9PjRKRGtPRNN2VsePdpn3/UlwtSIX6GEA==",
       "type": "package",
@@ -1176,6 +1209,23 @@
         "selenium.webdriver.nuspec"
       ]
     },
+    "Selenium.WebDriver.ChromeDriver/89.0.4389.2300": {
+      "sha512": "/lnt6U3hogvJtFBP9l9Vm3F7zVBTClCANeVzcyWwyUf/uW686KEgGU+9x6sebstjd02qrmvcP42MKHTID1tq/A==",
+      "type": "package",
+      "path": "selenium.webdriver.chromedriver/89.0.4389.2300",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/DefinePropertiesChromeDriver.targets",
+        "build/Selenium.WebDriver.ChromeDriver.targets",
+        "driver/linux64/chromedriver",
+        "driver/mac64/chromedriver",
+        "driver/win32/chromedriver.exe",
+        "nupkg-icon.png",
+        "selenium.webdriver.chromedriver.89.0.4389.2300.nupkg.sha512",
+        "selenium.webdriver.chromedriver.nuspec"
+      ]
+    },
     "SQLitePCLRaw.bundle_e_sqlite3/2.0.5-pre20210119130047": {
       "sha512": "nIoOrVIrF91rKyiNLrJL00FL1K+2C6/EhmR6vWNdx6tnO3A7mgjcrao/o4wSVlHfPUamxoEJhK+9xOC56W/2Zg==",
       "type": "package",
@@ -1568,6 +1618,7 @@
   },
   "projectFileDependencyGroups": {
     "net5.0": [
+      "DotNetSeleniumExtras.WaitHelpers >= 3.11.0",
       "Hangfire.AspNetCore >= 1.7.19",
       "Hangfire.Core >= 1.7.19",
       "Hangfire.MemoryStorage >= 1.7.0",
@@ -1576,6 +1627,7 @@
       "Microsoft.EntityFrameworkCore.Design >= 6.0.0-preview.1.21102.2",
       "Microsoft.EntityFrameworkCore.Sqlite >= 6.0.0-preview.1.21102.2",
       "Selenium.WebDriver >= 4.0.0-beta1",
+      "Selenium.WebDriver.ChromeDriver >= 89.0.4389.2300",
       "Swashbuckle.AspNetCore >= 5.6.3",
       "Unicode.net >= 0.1.3"
     ]
@@ -1619,6 +1671,10 @@
       "net5.0": {
         "targetAlias": "net5.0",
         "dependencies": {
+          "DotNetSeleniumExtras.WaitHelpers": {
+            "target": "Package",
+            "version": "[3.11.0, )"
+          },
           "Hangfire.AspNetCore": {
             "target": "Package",
             "version": "[1.7.19, )"
@@ -1652,6 +1708,10 @@
           "Selenium.WebDriver": {
             "target": "Package",
             "version": "[4.0.0-beta1, )"
+          },
+          "Selenium.WebDriver.ChromeDriver": {
+            "target": "Package",
+            "version": "[89.0.4389.2300, )"
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",
