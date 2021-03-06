@@ -13,6 +13,7 @@ namespace WebScrapper.Scraping.DTO
         public string Name { get; set; }
         public string Size { get; set; }
         public string Price { get; set; }
+        public int ProductTypeId { get; set; }
         public ProductType ProductType { get; set; }
 
         public int WebsiteId { get; set; }
