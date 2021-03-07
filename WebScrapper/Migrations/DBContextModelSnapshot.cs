@@ -21,7 +21,13 @@ namespace WebScrapper.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Hash")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PathToImage")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Price")
@@ -37,6 +43,9 @@ namespace WebScrapper.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("ProductId");
+
+                    b.HasIndex("Hash")
+                        .IsUnique();
 
                     b.HasIndex("ProductTypeId");
 

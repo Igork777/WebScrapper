@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using WebScrapper.Scraping.DTO;
@@ -36,27 +38,28 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
 
             try
             {
+                _unitOfWork.Website.Add(ScrappingHelper._allWebsites[0]);
+                _unitOfWork.ProductsType.AddRange(ScrappingHelper._allProductTypes);
                 _productsTool.AddRange(Start("https://www.flugger.dk/malerv%C3%A6rkt%C3%B8j/pensler-ruller/",
                     TypesOfProduct.Tools));
-                _productsIndoor.AddRange(Start("https://www.flugger.dk/maling-tapet/indend%C3%B8rs/", TypesOfProduct.Indoors));
-                _productsTool.AddRange(Start(
-                    "https://www.flugger.dk/malerv%C3%A6rkt%C3%B8j/tapetv%C3%A6rkt%C3%B8j-kl%C3%A6ber/", TypesOfProduct.Tools));
-                _productsOutdoor.AddRange(Start("https://www.flugger.dk/maling-tapet/udend%C3%B8rs/", TypesOfProduct.Outdoors));
-                _productsTool.AddRange(Start("https://www.flugger.dk/maling-tapet/filt-v%C3%A6v-og-savsmuldstapet/",
-                    TypesOfProduct.Tools));
-                _productsOther.AddRange(Start("https://www.flugger.dk/maling-tapet/dekoration/", TypesOfProduct.Others));
-                _productsTool.AddRange(Start("https://www.flugger.dk/malerv%C3%A6rkt%C3%B8j/spartler-sandpapir/",
-                    TypesOfProduct.Tools));
-                _productsOther.AddRange(Start("https://www.flugger.dk/maling-tapet/tapetkl%C3%A6ber/", TypesOfProduct.Others));
-                _productsTool.AddRange(Start("https://www.flugger.dk/malerv%C3%A6rkt%C3%B8j/bakker-spande/", TypesOfProduct.Tools));
-                
-                
-                PopulateProducts(_productsIndoor, ScrappingHelper._allProductTypes[0]);
-                PopulateProducts(_productsOutdoor, ScrappingHelper._allProductTypes[1]);
+                // _productsIndoor.AddRange(Start("https://www.flugger.dk/maling-tapet/indend%C3%B8rs/", TypesOfProduct.Indoors));
+                // _productsTool.AddRange(Start(
+                //     "https://www.flugger.dk/malerv%C3%A6rkt%C3%B8j/tapetv%C3%A6rkt%C3%B8j-kl%C3%A6ber/", TypesOfProduct.Tools));
+                // _productsOutdoor.AddRange(Start("https://www.flugger.dk/maling-tapet/udend%C3%B8rs/", TypesOfProduct.Outdoors));
+                // _productsTool.AddRange(Start("https://www.flugger.dk/maling-tapet/filt-v%C3%A6v-og-savsmuldstapet/",
+                //     TypesOfProduct.Tools));
+                // _productsOther.AddRange(Start("https://www.flugger.dk/maling-tapet/dekoration/", TypesOfProduct.Others));
+                // _productsTool.AddRange(Start("https://www.flugger.dk/malerv%C3%A6rkt%C3%B8j/spartler-sandpapir/",
+                //     TypesOfProduct.Tools));
+                // _productsOther.AddRange(Start("https://www.flugger.dk/maling-tapet/tapetkl%C3%A6ber/", TypesOfProduct.Others));
+                // _productsTool.AddRange(Start("https://www.flugger.dk/malerv%C3%A6rkt%C3%B8j/bakker-spande/", TypesOfProduct.Tools));
+                //
+                //
+                // PopulateProducts(_productsIndoor, ScrappingHelper._allProductTypes[0]);
+                // PopulateProducts(_productsOutdoor, ScrappingHelper._allProductTypes[1]);
                 PopulateProducts(_productsTool, ScrappingHelper._allProductTypes[2]);
-                PopulateProducts(_productsOther, ScrappingHelper._allProductTypes[3]);
-
-                _unitOfWork.ProductsType.AddRange(ScrappingHelper._allProductTypes);
+              //  PopulateProducts(_productsOther, ScrappingHelper._allProductTypes[3]);
+                
                 _unitOfWork.Website.Add(ScrappingHelper._allWebsites[0]);
                 _unitOfWork.Complete();
             }
@@ -84,9 +87,13 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
 
         private IList<Product> Start(String urlToScrap, Enum type)
         {
-            HtmlDocument htmlDocument =
-                ScrappingHelper.GetHtmlDocument(urlToScrap);
-            List<HtmlNode> listOfProducts = GetProductsList(htmlDocument);
+            HtmlDocument htmlDocument = null;
+           int iterator = 0;
+
+           htmlDocument =
+                   ScrappingHelper.GetHtmlDocument(urlToScrap);
+
+               List<HtmlNode> listOfProducts = GetProductsList(htmlDocument);
             return GetScrappedProducts(listOfProducts);
         }
 
@@ -124,15 +131,13 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
             MessageId = "type: HtmlAgilityPack.HtmlTextNode")]
         private IList<Product> GetScrappedProducts(List<HtmlNode> listOfProducts)
         {
+            ScrappingHelper.RenewIpAndPorts();
             int iteratorForProxies = 0;
             IList<Product> products = new List<Product>();
-            Dictionary<String, int> proxyAndPort = ScrappingHelper.GetProxyAndPort();
-            IList<String> proxies = proxyAndPort.Keys.ToList();
-            IList<int> ports = proxyAndPort.Values.ToList();
 
             foreach (var product in listOfProducts)
             {
-                if (iteratorForProxies > proxyAndPort.Count - 1)
+                if (iteratorForProxies > ScrappingHelper.GetProxyAndPort().Count - 1)
                 {
                     iteratorForProxies = 0;
                 }
@@ -140,26 +145,30 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                 int amountOfSizesOfAProduct = 0;
 
                 tryAnotherIP:
-                Console.WriteLine("Trying ip: " + proxies[iteratorForProxies]);
+                Console.WriteLine("Trying ip: " + ScrappingHelper.proxies[iteratorForProxies]);
                 try
                 {
                     amountOfSizesOfAProduct =
-                        GetSize(product, proxies[iteratorForProxies], ports[iteratorForProxies]).Count;
+                        GetSize(product, ScrappingHelper.proxies[iteratorForProxies], ScrappingHelper.ports[iteratorForProxies]).Count;
 
-
-                    Console.WriteLine(amountOfSizesOfAProduct);
+                    String concat = "";
                     for (int i = 0; i < amountOfSizesOfAProduct; i++)
                     {
-                        if (iteratorForProxies > proxyAndPort.Count - 1)
+                        if (iteratorForProxies > ScrappingHelper.proxies.Count - 1)
                         {
                             iteratorForProxies = 0;
                         }
 
                         Product tempProduct = new Product();
                         tempProduct.Name = GetNameOfProduct(product);
-                        tempProduct.Size = GetSize(product, proxies[iteratorForProxies], ports[iteratorForProxies])[i];
+                        tempProduct.Size = GetSize(product, ScrappingHelper.proxies[iteratorForProxies], ScrappingHelper.ports[iteratorForProxies])[i];
                         tempProduct.Price =
-                            GetPrice(product, proxies[iteratorForProxies], ports[iteratorForProxies])[i];
+                            GetPrice(product, ScrappingHelper.proxies[iteratorForProxies], ScrappingHelper.ports[iteratorForProxies])[i];
+                        tempProduct.PathToImage = "No data";
+                        concat = tempProduct.Name + tempProduct.Size + tempProduct.ProductType + tempProduct.WebsiteId +
+                                 tempProduct.PathToImage;
+                        tempProduct.Hash = ScrappingHelper.hashData(concat);
+                        Console.WriteLine("Hash: " + tempProduct.Hash);
                         products.Add(tempProduct);
                         Console.WriteLine(tempProduct.Name);
                         Console.WriteLine("Size:" + tempProduct.Size + " Price: " + tempProduct.Price + " dkk/st");
@@ -167,8 +176,8 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(proxies[iteratorForProxies] + " failed");
-                    if (iteratorForProxies > proxyAndPort.Count - 1)
+                    Console.WriteLine(ScrappingHelper.proxies[iteratorForProxies] + " failed");
+                    if (iteratorForProxies > ScrappingHelper.proxies.Count - 1)
                     {
                         iteratorForProxies = 0;
                     }
@@ -176,8 +185,6 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                     {
                         iteratorForProxies++;
                     }
-
-
                     goto tryAnotherIP;
                 }
             }
@@ -207,8 +214,10 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
         {
             String url = "https://www.flugger.dk" + GetProductLink(product);
 
+            // HtmlDocument htmlDocument =
+            //     ScrappingHelper.GetHtmlDocument(url, proxy, port);
             HtmlDocument htmlDocument =
-                ScrappingHelper.GetHtmlDocument(url, proxy, port);
+                     ScrappingHelper.GetHtmlDocument(url);
 
             IList<HtmlNode> listOfSizes = GetProductsWithPriceAndSize(htmlDocument);
             IList<String> sizes = new List<string>();
@@ -244,8 +253,9 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
         private IList<String> GetPrice(HtmlNode product, String proxy, int port)
         {
             String url = "https://www.flugger.dk" + GetProductLink(product);
-            HtmlDocument htmlDocument =
-                ScrappingHelper.GetHtmlDocument(url, proxy, port);
+            // HtmlDocument htmlDocument =
+            //     ScrappingHelper.GetHtmlDocument(url, proxy, port);
+            HtmlDocument htmlDocument = ScrappingHelper.GetHtmlDocument(url);
             IList<HtmlNode> listOfSizes = GetProductsWithPriceAndSize(htmlDocument);
             IList<String> prices = new List<String>();
             String priceAsString = "";

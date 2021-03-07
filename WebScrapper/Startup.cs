@@ -1,4 +1,7 @@
 using System;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
@@ -7,7 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using WebScrapper.Scraping;
 using WebScrapper.Scraping.FluggerHorsensDk;
+using WebScrapper.Scraping.ScrappingFluggerDk;
 using WebScrapper.Scraping.ScrappingFluggerDk.DB;
 using WebScrapper.Scraping.ScrappingFluggerDk.Repositories;
 
@@ -40,18 +45,23 @@ namespace WebScrapper
             services.AddHangfireServer();
             services.AddEntityFrameworkSqlite().AddDbContext<DBContext>();
 
+            
+            
             UnitOfWork unitOfWork = new UnitOfWork(new DBContext());
 
             // FluggerDkScrapper fluggerDkScrapper = new FluggerDkScrapper(unitOfWork);
             // fluggerDkScrapper.StartScrapping();
 
-            // FluggerHelsingorDkScrapper fluggerHelsingorDkScrapper = new FluggerHelsingorDkScrapper();
-            // fluggerHelsingorDkScrapper.StartScrapping();
+            FluggerHelsingorDkScrapper fluggerHelsingorDkScrapper = new FluggerHelsingorDkScrapper(unitOfWork);
+            fluggerHelsingorDkScrapper.StartScrapping();
             // Maling_halvprisDk malingHalvprisDk = new Maling_halvprisDk(unitOfWork);
             // malingHalvprisDk.StartScrapping();
+            
+            //String hashValue = String.Join("", MD5.Create().ComputeHash(Encoding.ASCII.GetBytes()))
+         
 
-            FluggerHorsensDkScrapper fluggerHorsensDkScrapper = new FluggerHorsensDkScrapper(unitOfWork);
-            fluggerHorsensDkScrapper.StartScrapping();
+            // FluggerHorsensDkScrapper fluggerHorsensDkScrapper = new FluggerHorsensDkScrapper(unitOfWork);
+            // fluggerHorsensDkScrapper.StartScrapping();
         }
 
 

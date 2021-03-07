@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 
@@ -10,9 +11,13 @@ namespace WebScrapper.Scraping.DTO
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ProductId { get; set; }
         
+        public string Hash { get; set; }
+        
         public string Name { get; set; }
         public string Size { get; set; }
         public string Price { get; set; }
+        
+        public string PathToImage { get; set; }
         public int ProductTypeId { get; set; }
         public ProductType ProductType { get; set; }
 

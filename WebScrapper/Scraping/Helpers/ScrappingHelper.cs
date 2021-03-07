@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -22,6 +23,9 @@ namespace WebScrapper.Scraping.Helpers
             new ProductType() {ProductTypeId = 4, Type = "Other"}
         };
 
+        public static List<String> proxies;
+        public static List<int> ports;
+
         public static readonly List<Website> _allWebsites = new List<Website>()
         {
             new Website() {WebsiteId = 1, Name = "flugger.dk"},
@@ -36,6 +40,26 @@ namespace WebScrapper.Scraping.Helpers
             HtmlWeb web = new HtmlWeb();
             var htmlDocument = web.Load(url);
             return htmlDocument;
+        }
+        
+        public static void RenewIpAndPorts()
+        {
+            Dictionary<String, int> proxiesAndPorts = GetProxyAndPort();
+            proxies = proxiesAndPorts.Keys.ToList();
+            ports = proxiesAndPorts.Values.ToList();
+        }
+
+        public static String hashData(String content)
+        {
+            StringBuilder hash = new StringBuilder();
+            MD5CryptoServiceProvider md5provider = new MD5CryptoServiceProvider();
+            byte[] bytes = md5provider.ComputeHash(new UTF8Encoding().GetBytes(content));
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                hash.Append(bytes[i].ToString("x2"));
+            }
+
+            return hash.ToString();
         }
         
       
@@ -86,7 +110,6 @@ namespace WebScrapper.Scraping.Helpers
                 fixedName = fixedName.Replace(incorrectCharacter.Value,
                     HttpUtility.HtmlDecode(incorrectCharacter.Value));
             }
-
             return fixedName;
         }
         
