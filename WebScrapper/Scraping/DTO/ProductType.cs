@@ -10,5 +10,7 @@ namespace WebScrapper.Scraping.DTO
         public int ProductTypeId { get; set; }
 
         public string Type { get; set; }
+
+        public ICollection<Product> Products { get; set; }
     }
 }

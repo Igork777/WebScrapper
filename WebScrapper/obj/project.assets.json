@@ -361,6 +361,18 @@
           "lib/netstandard2.0/Newtonsoft.Json.dll": {}
         }
       },
+      "Selenium.Support/4.0.0-beta1": {
+        "type": "package",
+        "dependencies": {
+          "Selenium.WebDriver": "4.0.0-beta1"
+        },
+        "compile": {
+          "lib/net5.0/WebDriver.Support.dll": {}
+        },
+        "runtime": {
+          "lib/net5.0/WebDriver.Support.dll": {}
+        }
+      },
       "Selenium.WebDriver/4.0.0-beta1": {
         "type": "package",
         "dependencies": {
@@ -1190,6 +1202,25 @@
         "packageIcon.png"
       ]
     },
+    "Selenium.Support/4.0.0-beta1": {
+      "sha512": "X/HHsWQHytn2kpuoXlO2NvCRpMcvtjITtVNyi6QKvAUbdP8en1C1ps15Y6TuIVOa3M3K52H4oIQZF1DtkiiBaw==",
+      "type": "package",
+      "path": "selenium.support/4.0.0-beta1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "images/icon.png",
+        "lib/net45/WebDriver.Support.dll",
+        "lib/net46/WebDriver.Support.dll",
+        "lib/net47/WebDriver.Support.dll",
+        "lib/net48/WebDriver.Support.dll",
+        "lib/net5.0/WebDriver.Support.dll",
+        "lib/netstandard2.0/WebDriver.Support.dll",
+        "lib/netstandard2.1/WebDriver.Support.dll",
+        "selenium.support.4.0.0-beta1.nupkg.sha512",
+        "selenium.support.nuspec"
+      ]
+    },
     "Selenium.WebDriver/4.0.0-beta1": {
       "sha512": "Bb6dhAFx4R3e09dv7AqY96rkYD2d7tcWvC3Knb45H0UlFu2nPkaqcPWAu8096FJYfqI67OV5KKo3MyvAGpMKpw==",
       "type": "package",
@@ -1626,6 +1657,7 @@
       "Microsoft.EntityFrameworkCore >= 6.0.0-preview.1.21102.2",
       "Microsoft.EntityFrameworkCore.Design >= 6.0.0-preview.1.21102.2",
       "Microsoft.EntityFrameworkCore.Sqlite >= 6.0.0-preview.1.21102.2",
+      "Selenium.Support >= 4.0.0-beta1",
       "Selenium.WebDriver >= 4.0.0-beta1",
       "Selenium.WebDriver.ChromeDriver >= 89.0.4389.2300",
       "Swashbuckle.AspNetCore >= 5.6.3",
@@ -1704,6 +1736,10 @@
           "Microsoft.EntityFrameworkCore.Sqlite": {
             "target": "Package",
             "version": "[6.0.0-preview.1.21102.2, )"
+          },
+          "Selenium.Support": {
+            "target": "Package",
+            "version": "[4.0.0-beta1, )"
           },
           "Selenium.WebDriver": {
             "target": "Package",

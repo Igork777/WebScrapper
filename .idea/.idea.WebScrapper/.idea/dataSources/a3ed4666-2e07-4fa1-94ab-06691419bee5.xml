@@ -1312,40 +1312,36 @@
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="486" parent="168" name="Name">
+    <column id="486" parent="168" name="Hash">
       <Position>2</Position>
       <DataType>TEXT|0s</DataType>
     </column>
-    <column id="487" parent="168" name="Size">
+    <column id="487" parent="168" name="Name">
       <Position>3</Position>
       <DataType>TEXT|0s</DataType>
     </column>
-    <column id="488" parent="168" name="Price">
+    <column id="488" parent="168" name="PathToImage">
       <Position>4</Position>
       <DataType>TEXT|0s</DataType>
     </column>
-    <column id="489" parent="168" name="ProductTypeId">
+    <column id="489" parent="168" name="Price">
       <Position>5</Position>
-      <DataType>INTEGER|0s</DataType>
-      <NotNull>1</NotNull>
+      <DataType>TEXT|0s</DataType>
     </column>
-    <column id="490" parent="168" name="WebsiteId">
+    <column id="490" parent="168" name="ProductTypeId">
       <Position>6</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="491" parent="168" name="Hash">
+    <column id="491" parent="168" name="Size">
       <Position>7</Position>
       <DataType>TEXT|0s</DataType>
     </column>
-    <index id="492" parent="168" name="IX_Product_WebsiteId_ProductTypeId_Name_Size">
-      <ColNames>WebsiteId
-ProductTypeId
-Name
-Size</ColNames>
-      <ColumnCollations></ColumnCollations>
-      <Unique>1</Unique>
-    </index>
+    <column id="492" parent="168" name="WebsiteId">
+      <Position>8</Position>
+      <DataType>INTEGER|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
     <index id="493" parent="168" name="IX_Product_Hash">
       <ColNames>Hash</ColNames>
       <ColumnCollations></ColumnCollations>
@@ -1355,105 +1351,109 @@ Size</ColNames>
       <ColNames>ProductTypeId</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <key id="495" parent="168" name="PK_Product">
+    <index id="495" parent="168" name="IX_Product_WebsiteId">
+      <ColNames>WebsiteId</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <key id="496" parent="168" name="PK_Product">
       <ColNames>ProductId</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="496" parent="168" name="FK_Product_ProductType_ProductTypeId">
+    <foreign-key id="497" parent="168" name="FK_Product_ProductType_ProductTypeId">
       <ColNames>ProductTypeId</ColNames>
       <RefTableName>ProductType</RefTableName>
       <RefKeyName>PK_ProductType</RefKeyName>
       <RefColNames>ProductTypeId</RefColNames>
       <OnDelete>cascade</OnDelete>
     </foreign-key>
-    <foreign-key id="497" parent="168" name="FK_Product_Website_WebsiteId">
+    <foreign-key id="498" parent="168" name="FK_Product_Website_WebsiteId">
       <ColNames>WebsiteId</ColNames>
       <RefTableName>Website</RefTableName>
       <RefKeyName>PK_Website</RefKeyName>
       <RefColNames>WebsiteId</RefColNames>
       <OnDelete>cascade</OnDelete>
     </foreign-key>
-    <column id="498" parent="169" name="ProductTypeId">
+    <column id="499" parent="169" name="ProductTypeId">
       <Position>1</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="499" parent="169" name="Type">
+    <column id="500" parent="169" name="Type">
       <Position>2</Position>
       <DataType>TEXT|0s</DataType>
     </column>
-    <index id="500" parent="169" name="IX_ProductType_Type">
+    <index id="501" parent="169" name="IX_ProductType_Type">
       <ColNames>Type</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <key id="501" parent="169" name="PK_ProductType">
+    <key id="502" parent="169" name="PK_ProductType">
       <ColNames>ProductTypeId</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="502" parent="170" name="WebsiteId">
+    <column id="503" parent="170" name="WebsiteId">
       <Position>1</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="503" parent="170" name="Name">
+    <column id="504" parent="170" name="Name">
       <Position>2</Position>
       <DataType>TEXT|0s</DataType>
     </column>
-    <index id="504" parent="170" name="IX_Website_Name">
+    <index id="505" parent="170" name="IX_Website_Name">
       <ColNames>Name</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <key id="505" parent="170" name="PK_Website">
+    <key id="506" parent="170" name="PK_Website">
       <ColNames>WebsiteId</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="506" parent="171" name="MigrationId">
+    <column id="507" parent="171" name="MigrationId">
       <Position>1</Position>
       <DataType>TEXT|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="507" parent="171" name="ProductVersion">
+    <column id="508" parent="171" name="ProductVersion">
       <Position>2</Position>
       <DataType>TEXT|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="508" parent="171" name="sqlite_autoindex___EFMigrationsHistory_1">
+    <index id="509" parent="171" name="sqlite_autoindex___EFMigrationsHistory_1">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>MigrationId</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="509" parent="171" name="PK___EFMigrationsHistory">
+    <key id="510" parent="171" name="PK___EFMigrationsHistory">
       <ColNames>MigrationId</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex___EFMigrationsHistory_1</UnderlyingIndexName>
     </key>
-    <column id="510" parent="172" name="type">
+    <column id="511" parent="172" name="type">
       <Position>1</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="511" parent="172" name="name">
+    <column id="512" parent="172" name="name">
       <Position>2</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="512" parent="172" name="tbl_name">
+    <column id="513" parent="172" name="tbl_name">
       <Position>3</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="513" parent="172" name="rootpage">
+    <column id="514" parent="172" name="rootpage">
       <Position>4</Position>
       <DataType>int|0s</DataType>
     </column>
-    <column id="514" parent="172" name="sql">
+    <column id="515" parent="172" name="sql">
       <Position>5</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="515" parent="173" name="name">
+    <column id="516" parent="173" name="name">
       <Position>1</Position>
     </column>
-    <column id="516" parent="173" name="seq">
+    <column id="517" parent="173" name="seq">
       <Position>2</Position>
     </column>
   </database-model>

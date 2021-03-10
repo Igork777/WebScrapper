@@ -33,6 +33,7 @@
           "Microsoft.EntityFrameworkCore": "6.0.0-preview.1.21102.2",
           "Microsoft.EntityFrameworkCore.Design": "6.0.0-preview.1.21102.2",
           "Microsoft.EntityFrameworkCore.Sqlite": "6.0.0-preview.1.21102.2",
+          "Selenium.Support": "4.0.0-beta1",
           "Selenium.WebDriver": "4.0.0-beta1",
           "Selenium.WebDriver.ChromeDriver": "89.0.4389.2300",
           "Swashbuckle.AspNetCore": "5.6.3",
@@ -681,6 +682,20 @@
         },
         "compile": {
           "lib/netstandard2.0/Newtonsoft.Json.dll": {}
+        }
+      },
+      "Selenium.Support/4.0.0-beta1": {
+        "dependencies": {
+          "Selenium.WebDriver": "4.0.0-beta1"
+        },
+        "runtime": {
+          "lib/net5.0/WebDriver.Support.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.0.0.0"
+          }
+        },
+        "compile": {
+          "lib/net5.0/WebDriver.Support.dll": {}
         }
       },
       "Selenium.WebDriver/4.0.0-beta1": {
@@ -2751,6 +2766,13 @@
       "sha512": "sha512-6mgjfnRB4jKMlzHSl+VD+oUc1IebOZabkbyWj2RiTgWwYPPuaK1H97G1sHqGwPlS5npiF5Q0OrxN1wni2n5QWg==",
       "path": "newtonsoft.json/12.0.3",
       "hashPath": "newtonsoft.json.12.0.3.nupkg.sha512"
+    },
+    "Selenium.Support/4.0.0-beta1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-X/HHsWQHytn2kpuoXlO2NvCRpMcvtjITtVNyi6QKvAUbdP8en1C1ps15Y6TuIVOa3M3K52H4oIQZF1DtkiiBaw==",
+      "path": "selenium.support/4.0.0-beta1",
+      "hashPath": "selenium.support.4.0.0-beta1.nupkg.sha512"
     },
     "Selenium.WebDriver/4.0.0-beta1": {
       "type": "package",

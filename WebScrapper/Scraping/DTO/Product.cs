@@ -18,10 +18,10 @@ namespace WebScrapper.Scraping.DTO
         public string Price { get; set; }
         
         public string PathToImage { get; set; }
-        public int ProductTypeId { get; set; }
         public ProductType ProductType { get; set; }
-
+        public int ProductTypeId { get; set; }
         public int WebsiteId { get; set; }
+        
         public Website Website { get; set; }
 
     }

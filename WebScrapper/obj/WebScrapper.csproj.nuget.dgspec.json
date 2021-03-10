@@ -74,6 +74,10 @@
               "target": "Package",
               "version": "[6.0.0-preview.1.21102.2, )"
             },
+            "Selenium.Support": {
+              "target": "Package",
+              "version": "[4.0.0-beta1, )"
+            },
             "Selenium.WebDriver": {
               "target": "Package",
               "version": "[4.0.0-beta1, )"

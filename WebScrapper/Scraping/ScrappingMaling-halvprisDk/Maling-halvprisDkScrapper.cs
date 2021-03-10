@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using OpenQA.Selenium;
@@ -9,67 +10,53 @@ using WebScrapper.Scraping.DTO;
 using WebScrapper.Scraping.Helpers;
 using WebScrapper.Scraping.ScrappingFluggerDk.DB;
 using WebScrapper.Scraping.ScrappingFluggerDk.Enums;
-using WebScrapper.Scraping.ScrappingFluggerDk.Repositories;
 
 namespace WebScrapper.Scraping
 {
     public class Maling_halvprisDk
     {
-        private List<Product> _productsIndoor;
-        private List<Product> _productsOutdoor;
-        private List<Product> _productsTool;
-        private List<Product> _productsOther;
-        private UnitOfWork _unitOfWork;
+        private DBContext _dbContext;
 
-        public Maling_halvprisDk(UnitOfWork unitOfWork)
+        public Maling_halvprisDk(DBContext dbContext)
         {
-            _unitOfWork = unitOfWork;
-            _productsIndoor = new List<Product>();
-            _productsOutdoor = new List<Product>();
-            _productsTool = new List<Product>();
-            _productsOther = new List<Product>();
+            _dbContext = dbContext;
         }
-
         public void StartScrapping()
         {
             Console.WriteLine("Starting new scrap");
-           _productsIndoor.AddRange((Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_inde/", TypesOfProduct.Indoors)));
-           _productsOutdoor.AddRange(Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_ude/", TypesOfProduct.Outdoors));
-            _productsOther.AddRange(Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-inde/", TypesOfProduct.Others));
-            _productsOther.AddRange(Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/panel-og-traemaling/",
-                TypesOfProduct.Others));
-            _productsOther.AddRange(Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/gulvmaling-fra-beckers/",
-                TypesOfProduct.Others));
-            _productsOther.AddRange(Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/glasfilt/", TypesOfProduct.Others));
-            _productsOutdoor.AddRange(Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-ude/", TypesOfProduct.Outdoors));
-            _productsOther.AddRange(Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/facademaling/", TypesOfProduct.Others));
+           Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_inde/", TypesOfProduct.Indoors);
+           Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_ude/", TypesOfProduct.Outdoors);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-inde/", TypesOfProduct.Others);
+           Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/panel-og-traemaling/",
+                TypesOfProduct.Others);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/gulvmaling-fra-beckers/",
+                TypesOfProduct.Others);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/glasfilt/", TypesOfProduct.Others);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-ude/", TypesOfProduct.Outdoors);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/facademaling/", TypesOfProduct.Others);
 
-            _productsIndoor.AddRange(Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-inde/", TypesOfProduct.Indoors));
-            _productsOutdoor.AddRange(Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-ude/", TypesOfProduct.Outdoors));
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-inde/", TypesOfProduct.Indoors);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-ude/", TypesOfProduct.Outdoors);
 
-            _productsOther.AddRange(Start("https://www.maling-halvpris.dk/butik-kob-maling/dyrup-inde/", TypesOfProduct.Others));
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/dyrup-inde/", TypesOfProduct.Others);
            
            
-            _productsOther.AddRange(Start("https://www.maling-halvpris.dk/butik-kob-maling/junckers/", TypesOfProduct.Others));
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/junckers/", TypesOfProduct.Others);
            
-            _productsOther.AddRange(Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/afvask-og-algebehandling/",
-                TypesOfProduct.Others));
-           _productsOther.AddRange(Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/gori-professionel/", TypesOfProduct.Others));
-           _productsOther.AddRange(Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/gori-daekkende/", TypesOfProduct.Others));
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/afvask-og-algebehandling/",
+                TypesOfProduct.Others);
+           Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/gori-professionel/", TypesOfProduct.Others);
+           Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/gori-daekkende/", TypesOfProduct.Others);
            
-            _productsOther.AddRange(Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/gori-daekkende/", TypesOfProduct.Others));
-            _productsOther.AddRange(Start("https://www.maling-halvpris.dk/butik-kob-maling/terrasseolie/", TypesOfProduct.Others));
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/gori-daekkende/", TypesOfProduct.Others);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/terrasseolie/", TypesOfProduct.Others);
             
-            _unitOfWork.ProductsType.AddRange(ScrappingHelper._allProductTypes);
-            _unitOfWork.Website.Add(ScrappingHelper._allWebsites[3]);
-            //_unitOfWork.Complete();
-            PopulateProducts(_productsIndoor, ScrappingHelper._allProductTypes[0]);
-            PopulateProducts(_productsOutdoor, ScrappingHelper._allProductTypes[1]);
-            PopulateProducts(_productsTool, ScrappingHelper._allProductTypes[2]);
-            PopulateProducts(_productsOther, ScrappingHelper._allProductTypes[3]);
+         
+          
+          
         }
 
-        private IList<Product> Start(String urlToScrap, Enum type)
+        private void Start(String urlToScrap, Enum type)
         {
             ScrappingHelper.RenewIpAndPorts();
             HtmlDocument htmlDocument = null;
@@ -97,30 +84,11 @@ namespace WebScrapper.Scraping
                 goto tryAnotherIP;
             }
 
-            return GetProductsList(htmlDocument);
+            GetProductsList(htmlDocument, type);
         }
         
-        
-        private void PopulateProducts(IList<Product> products, ProductType productType)
-        {
-            foreach (var product in products)
-            {
-                product.Website = ScrappingHelper._allWebsites[3];
-                product.ProductType = productType;
-                _unitOfWork.Products.Add(product);
-                Console.WriteLine("Saving Name: " + product.Name + ", Size: " + product.Size+ ", Price: " + product.Price);
-                try
-                {
-                    _unitOfWork.Complete();
-                }
-                catch (Microsoft.EntityFrameworkCore.DbUpdateException e)
-                {
-                    continue;
-                }
-            }
-        }
 
-        private List<Product> GetProductsList(HtmlDocument htmlDocument)
+        private void GetProductsList(HtmlDocument htmlDocument, Enum type)
         {
             Regex sizeRegex = new Regex("([0-9]+,[0-9]+L)|([0-9]+L)|([0-9]+,[0-9]+ L)|([0-9]+ L)");
             IList<HtmlNode> productsHtmlNode = htmlDocument.DocumentNode.Descendants("a")
@@ -207,19 +175,25 @@ namespace WebScrapper.Scraping
                             product.Size = sizes[j];
                             Console.WriteLine("Size: " + product.Size);
                             String concat = "";
-                            concat = product.Name + product.Size + product.ProductTypeId + product.WebsiteId +
-                                     product.PathToImage;
-                            Product temp = new Product()
-                                {Name = product.Name, Price = product.Price, Size = product.Size, PathToImage = product.PathToImage,Hash = ScrappingHelper.hashData(concat)};
-                            products.Add(temp);
+
+                        
+                               Product temp = new Product()
+                                {Name = product.Name, Price = product.Price, Size = product.Size, WebsiteId  = 3, ProductTypeId = Convert.ToInt32(type), PathToImage = product.PathToImage};
+                                ScrappingHelper.SaveOrUpdate(_dbContext,temp);
+                               
+                               
+                               
+                              
+                                // ScrappingHelper.AddHash(_dbContext, temp, product);
+
+                                // ScrappingHelper.SaveOrUpdate(_unitOfWork, temp);
                         }
                     }
                 }
             }
-
-            return products;
         }
 
+      
         private bool IsSecondNumberBiggerThanFirst(String firstNumber, String lastNumber)
         {
           
@@ -229,6 +203,7 @@ namespace WebScrapper.Scraping
             
             return second<first;
         }
+
 
         private IList<String> GetPrices(HtmlNode product)
         {
