@@ -20,10 +20,10 @@ namespace WebScrapper.Services
             _dbContext = dbContext;
         }
 
-        public Dictionary<String, String> GetAllSuggestions(string name)
+        public IList<Suggestion> GetAllSuggestions(string name)
         {
             HashSet<String> names = new HashSet<string>();
-            Dictionary<String, String> namesWithLabels = new Dictionary<string, string>();
+            IList<Suggestion> suggestions = new List<Suggestion>();
             IList<Product> products = _dbContext.Product.Where(product => product.Name.ToLower().Contains(name.ToLower())).ToList();
             String latinName;
             foreach (Product product in products)
@@ -36,10 +36,10 @@ namespace WebScrapper.Services
 
             foreach (String n in names)
             {
-                namesWithLabels.Add(n, n.Replace(" ", "-").ToLower());
+                suggestions.Add(new Suggestion {label = n, value = n.Replace(" ", "-").ToLower()});
             }
-            return namesWithLabels;
-        }
+            return suggestions;
+            }
     }
     
 }

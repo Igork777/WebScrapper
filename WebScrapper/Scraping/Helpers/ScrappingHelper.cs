@@ -30,7 +30,7 @@ namespace WebScrapper.Scraping.Helpers
 
         public static List<Website> _allWebsites = new List<Website>()
         {
-            new() {WebsiteId = 1, Name = "flugger.dk", Products = new List<Product>()},
+            new Website() {WebsiteId = 1, Name = "flugger.dk", Products = new List<Product>()},
             new Website() {WebsiteId = 2, Name = "flugger-helsingor.dk", Products = new List<Product>()},
             new Website() {WebsiteId = 3, Name = "www.maling-halvpris.dk", Products = new List<Product>()},
             new Website() {WebsiteId = 4, Name = "www.flugger-horsens.dk", Products = new List<Product>()}

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WebScrapper.Scraping.DTO;
 using WebScrapper.Services;
 
 namespace WebScrapper.Controllers
@@ -19,7 +20,7 @@ namespace WebScrapper.Controllers
 
         [HttpGet]
         [Route("api/suggestions/{name}")]
-        public Dictionary<string, string> GetAllSugestion(string name)
+        public IList<Suggestion> GetAllSugestion(string name)
         {
             return _scrapperService.GetAllSuggestions(name);
         }

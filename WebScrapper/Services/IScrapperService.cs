@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WebScrapper.Scraping.DTO;
 
 namespace WebScrapper.Services
 {
     public interface IScrapperService
     { 
-        public Dictionary<string, string> GetAllSuggestions(String name);
+        public IList<Suggestion> GetAllSuggestions(String name);
     }
 }
