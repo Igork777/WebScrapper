@@ -21,13 +21,14 @@ namespace WebScrapper.Scraping
         {
             _dbContext = dbContext;
         }
+
         public void StartScrapping()
         {
             Console.WriteLine("Starting new scrap");
-           Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_inde/", TypesOfProduct.Indoors);
-           Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_ude/", TypesOfProduct.Outdoors);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_inde/", TypesOfProduct.Indoors);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_ude/", TypesOfProduct.Outdoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-inde/", TypesOfProduct.Others);
-           Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/panel-og-traemaling/",
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/panel-og-traemaling/",
                 TypesOfProduct.Others);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/gulvmaling-fra-beckers/",
                 TypesOfProduct.Others);
@@ -39,21 +40,17 @@ namespace WebScrapper.Scraping
             Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-ude/", TypesOfProduct.Outdoors);
 
             Start("https://www.maling-halvpris.dk/butik-kob-maling/dyrup-inde/", TypesOfProduct.Others);
-           
-           
+
+
             Start("https://www.maling-halvpris.dk/butik-kob-maling/junckers/", TypesOfProduct.Others);
-           
+
             Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/afvask-og-algebehandling/",
                 TypesOfProduct.Others);
-           Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/gori-professionel/", TypesOfProduct.Others);
-           Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/gori-daekkende/", TypesOfProduct.Others);
-           
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/gori-professionel/", TypesOfProduct.Others);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/gori-daekkende/", TypesOfProduct.Others);
+
             Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/gori-daekkende/", TypesOfProduct.Others);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/terrasseolie/", TypesOfProduct.Others);
-            
-         
-          
-          
         }
 
         private void Start(String urlToScrap, Enum type)
@@ -61,7 +58,7 @@ namespace WebScrapper.Scraping
             ScrappingHelper.RenewIpAndPorts();
             HtmlDocument htmlDocument = null;
             int iterator = 0;
-            Console.WriteLine("Trying IP: "+ ScrappingHelper.proxies[iterator]);
+            Console.WriteLine("Trying IP: " + ScrappingHelper.proxies[iterator]);
             tryAnotherIP:
             try
             {
@@ -86,7 +83,7 @@ namespace WebScrapper.Scraping
 
             GetProductsList(htmlDocument, type);
         }
-        
+
 
         private void GetProductsList(HtmlDocument htmlDocument, Enum type)
         {
@@ -100,7 +97,7 @@ namespace WebScrapper.Scraping
             List<Product> products = new List<Product>();
             Console.WriteLine();
 
-            
+
             if (forms.Count != 0)
             {
                 for (int i = 0; i < productsHtmlNode.Count; i++)
@@ -123,10 +120,15 @@ namespace WebScrapper.Scraping
                             ScrappingHelper.FixInvalidCharacter(product.Name, ScrappingHelper.InvalidCharacter);
                     }
 
+                    product.Name = ChangeNameToNormal(product.Name);
+
                     product.PathToImage = productsHtmlNode[i].Descendants("img").First(node =>
-                        node.GetAttributeValue("class", "")
-                            .Equals("attachment-woocommerce_thumbnail size-woocommerce_thumbnail")).Attributes["src"].Value;
-                    product.PathToImage = ScrappingHelper.FixInvalidCharacter(product.PathToImage, ScrappingHelper.InvalidCharacter);
+                            node.GetAttributeValue("class", "")
+                                .Equals("attachment-woocommerce_thumbnail size-woocommerce_thumbnail"))
+                        .Attributes["src"]
+                        .Value;
+                    product.PathToImage =
+                        ScrappingHelper.FixInvalidCharacter(product.PathToImage, ScrappingHelper.InvalidCharacter);
                     Console.WriteLine("Path to image: " + product.PathToImage);
                     if (matchCollection != null && matchCollection.Count == 0)
                     {
@@ -138,7 +140,7 @@ namespace WebScrapper.Scraping
                         if (matchCollection != null)
                         {
                             String firstNumber = matchCollection[0].Value.Replace(",", ".");
-                           
+
                             if (matchCollection[0].Value.Equals(matchCollection[^1].Value))
                             {
                                 sizes.Add(firstNumber);
@@ -146,7 +148,7 @@ namespace WebScrapper.Scraping
                             else
                             {
                                 String lastNumber = matchCollection[^1].Value.Replace(",", ".");
-                                if(IsSecondNumberBiggerThanFirst(firstNumber, lastNumber))
+                                if (IsSecondNumberBiggerThanFirst(firstNumber, lastNumber))
                                 {
                                     sizes.Add(lastNumber);
                                     sizes.Add(firstNumber);
@@ -176,32 +178,93 @@ namespace WebScrapper.Scraping
                             Console.WriteLine("Size: " + product.Size);
                             String concat = "";
 
-                        
-                               Product temp = new Product()
-                                {Name = product.Name, Price = product.Price, Size = product.Size, WebsiteId  = 3, ProductTypeId = Convert.ToInt32(type), PathToImage = product.PathToImage};
-                                ScrappingHelper.SaveOrUpdate(_dbContext,temp);
-                               
-                               
-                               
-                              
-                                // ScrappingHelper.AddHash(_dbContext, temp, product);
 
-                                // ScrappingHelper.SaveOrUpdate(_unitOfWork, temp);
+                            Product temp = new Product()
+                            {
+                                Name = product.Name, Price = product.Price, Size = product.Size, WebsiteId = 3,
+                                ProductTypeId = Convert.ToInt32(type), PathToImage = product.PathToImage
+                            };
+                            temp.Name = temp.Name.Trim();
+                            if (temp.Name.Equals(""))
+                            {
+                                return;
+                            }
+                            ScrappingHelper.SaveOrUpdate(_dbContext, temp);
+
+
+                            // ScrappingHelper.AddHash(_dbContext, temp, product);
+
+                            // ScrappingHelper.SaveOrUpdate(_unitOfWork, temp);
                         }
                     }
                 }
             }
         }
 
-      
+        private String ChangeNameToNormal(string productName)
+        {
+            String rightProductName = "";
+            Regex tilRegex = new Regex("^(.*?) til ");
+            Regex characterRegex = new Regex("^(.*?)([!$%^&*()_+|~=`{}\\[\\]:\";'<>?,.\\/])");
+            Regex defisRegex = new Regex("^(.*?) – ");
+            Match matchCharacter = characterRegex.Match(productName);
+            Match matchTitle = tilRegex.Match(productName);
+            if (matchCharacter.Success)
+            {
+                rightProductName = matchCharacter.Value;
+                rightProductName = rightProductName.Remove(rightProductName.Length - 1);
+                matchTitle = tilRegex.Match(rightProductName);
+              
+                if (matchTitle.Success)
+                {
+                    rightProductName = matchTitle.Value;
+                    for (int i = 0; i < 4; i++)
+                    {
+                        rightProductName = rightProductName.Remove(rightProductName.Length - 1);
+                    }
+                }
+             
+
+               
+            }
+            else if (matchTitle.Success)
+            {
+                rightProductName = matchTitle.Value;
+                for (int i = 0; i < 4; i++)
+                {
+                    rightProductName = rightProductName.Remove(rightProductName.Length - 1);
+                }
+            }
+            else
+            {
+                rightProductName = productName;
+            }
+            Match defis = defisRegex.Match(rightProductName);
+            if (defis.Success)
+            {
+                rightProductName = defis.Value;
+                for (int i = 0; i < 4; i++)
+                {
+                    rightProductName = rightProductName.Remove(rightProductName.Length - 1);
+                }
+            }
+
+           
+            rightProductName = rightProductName.Replace("Flügger", "");
+            rightProductName = rightProductName.Trim();
+            Console.WriteLine(rightProductName);
+
+            return rightProductName;
+        }
+
+
         private bool IsSecondNumberBiggerThanFirst(String firstNumber, String lastNumber)
         {
-          
             Regex numberRegex = new Regex("([0-9]+\\.[0-9]+)|([0-9]+)");
             double first = Double.Parse(numberRegex.Match(firstNumber).Value);
             double second = Double.Parse(numberRegex.Match(lastNumber).Value);
-            
-            return second<first;
+
+            return second < first;
         }
 
 
@@ -215,7 +278,7 @@ namespace WebScrapper.Scraping
             foreach (HtmlNode price in pricesHtmlNodes)
             {
                 int iterator = 0;
-               
+
 
                 MatchCollection matchCollection = priceRegex.Matches(price.InnerText);
                 foreach (Match match in matchCollection)
@@ -225,6 +288,7 @@ namespace WebScrapper.Scraping
                         iterator++;
                         continue;
                     }
+
                     prices.Add(match.Value.Replace(",", ""));
                 }
             }

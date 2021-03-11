@@ -100,6 +100,7 @@ namespace WebScrapper.Scraping.Helpers
             String hash = hashData(product.Name + product.Size + product.ProductTypeId + product.WebsiteId +
                                    product.PathToImage);
             product.Hash = hash;
+            product.Name = product.Name.Trim();
             Product similarProduct = ExistsAlreadyInTheDatabase(dbContext, hash);
             if (similarProduct != null)
             {

@@ -25,21 +25,29 @@ namespace WebScrapper.Services
             HashSet<String> names = new HashSet<string>();
             IList<Suggestion> suggestions = new List<Suggestion>();
             IList<Product> products = _dbContext.Product.Where(product => product.Name.ToLower().Contains(name.ToLower())).ToList();
-            String latinName;
             foreach (Product product in products)
             {
-                String nameWithoutDiacretese = ScrappingHelper.RemoveDiacritics(product.Name);
-                String defisInsteadOfSpaces = nameWithoutDiacretese.Replace(" ", "-");
-                Console.WriteLine(defisInsteadOfSpaces);
-                names.Add(nameWithoutDiacretese);
+                names.Add(product.Name);
             }
 
             foreach (String n in names)
             {
-                suggestions.Add(new Suggestion {label = n, value = n.Replace(" ", "-").ToLower()});
+                suggestions.Add(new Suggestion {label = n, value = ScrappingHelper.RemoveDiacritics(n.Replace(" ", "-").ToLower())});
             }
             return suggestions;
             }
+
+        public Dictionary<string, IList<Product>> GetAllProducts(string name)
+        {
+            Dictionary<string, IList<Product>> listOfProducts = new Dictionary<string, IList<Product>>();
+            List<Product> products = _dbContext.Product.Where(node => node.Name.Equals(name)).ToList();
+
+            listOfProducts.Add("flugger.dk", products.Where(node => node.WebsiteId == 1).ToList());
+            listOfProducts.Add("flugger-helsingor.dk", products.Where(node => node.WebsiteId == 2).ToList());
+            listOfProducts.Add("www.maling-halvpris.dk", products.Where(node => node.WebsiteId == 3).ToList());
+            listOfProducts.Add("www.flugger-horsens.dk", products.Where(node => node.WebsiteId == 4).ToList());
+            return listOfProducts;
+        }
     }
     
 }

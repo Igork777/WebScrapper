@@ -24,6 +24,13 @@ namespace WebScrapper.Controllers
         {
             return _scrapperService.GetAllSuggestions(name);
         }
+
+        [HttpGet]
+        [Route("api/products/{name}")]
+        public Dictionary<String, IList<Product>> GetAllProduct(String name)
+        {
+            return _scrapperService.GetAllProducts(name);
+        }
         
     }
 }

@@ -26,6 +26,19 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
         public void StartScrapping()
         {
             Console.WriteLine("Starting new scrap");
+            Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/vaegmaling/",
+                TypesOfProduct.Indoors);
+  
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/traemaling-indendoers/",
+                TypesOfProduct.Indoors);
+     
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/sproejtemaling/",
+                TypesOfProduct.Indoors);
+      
+            Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/loftmaling/",
+                TypesOfProduct.Indoors);
           Start(
                 "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/malerruller/", TypesOfProduct.Tools);
             Start(
@@ -48,19 +61,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                 TypesOfProduct.Tools);
             
             
-            Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/vaegmaling/",
-                TypesOfProduct.Indoors);
-  
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/traemaling-indendoers/",
-                TypesOfProduct.Indoors);
-     
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/sproejtemaling/",
-                TypesOfProduct.Indoors);
-      
-            Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/loftmaling/",
-                TypesOfProduct.Indoors);
+            
             
             Start(
                 "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/indendoers-grunder/",
@@ -195,24 +196,11 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                     string price = priceRegex.Match(i.Value).Value.Replace(",", "");
                     product.Size = size;
                     product.Price = price;
-                    // product.ProductType = ScrappingHelper._allProductTypes[Convert.ToInt32(type)];
-                    // product.Website = ScrappingHelper._allWebsites[4];
                     product.PathToImage = pathToImage;
                     product.ProductTypeId = Convert.ToInt32(type);
                     product.WebsiteId = 4;
-                  
-                    // String concat = "";
-                    // concat = product.Name + product.Size + 
-                    //          //product.ProductTypeId +
-                    //          //product.WebsiteId +
-                    //          product.PathToImage;
-                    // product.Hash = ScrappingHelper.hashData(concat);
-                   // ScrappingHelper.SaveOrUpdate(_unitOfWork, product);
-                   
-                   // ScrappingHelper.AddToProductType(_dbContext, product, type);
-                   // ScrappingHelper.AddToWebsite(_dbContext, product, 4);
-                   
-                   ScrappingHelper.SaveOrUpdate(_dbContext, product);
+
+                    ScrappingHelper.SaveOrUpdate(_dbContext, product);
                 }
               
             }
@@ -270,6 +258,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                     IJavaScriptExecutor js = (IJavaScriptExecutor) driver;
                     driver.Navigate()
                         .GoToUrl(link);
+                    Thread.Sleep(4000);
                     CleanWindow(driver);
                     ReadOnlyCollection<IWebElement> colors = driver.FindElements(By.ClassName("color-box"));
                     ReadOnlyCollection<IWebElement> allSizes = driver.FindElements(By.ClassName("amount-box"));
@@ -422,7 +411,9 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
 
         private String GetName(IWebElement product)
         {
-            return product.FindElement(By.ClassName("woocommerce-loop-product__title")).Text;
+            String name = product.FindElement(By.ClassName("woocommerce-loop-product__title")).Text;
+            name = name.Replace("Flügger ", "");
+            return name;
         }
 
 

@@ -26,12 +26,14 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
 
             try
             {
-                Start("https://www.flugger.dk/malerv%C3%A6rkt%C3%B8j/pensler-ruller/",
-                    TypesOfProduct.Tools);
+                
                 Start("https://www.flugger.dk/maling-tapet/indend%C3%B8rs/", TypesOfProduct.Indoors);
                 Start(
                     "https://www.flugger.dk/malerv%C3%A6rkt%C3%B8j/tapetv%C3%A6rkt%C3%B8j-kl%C3%A6ber/",
                     TypesOfProduct.Tools);
+                Start("https://www.flugger.dk/malerv%C3%A6rkt%C3%B8j/pensler-ruller/",
+                    TypesOfProduct.Tools);
+              
                 Start("https://www.flugger.dk/maling-tapet/udend%C3%B8rs/", TypesOfProduct.Outdoors);
                 Start("https://www.flugger.dk/maling-tapet/filt-v%C3%A6v-og-savsmuldstapet/",
                     TypesOfProduct.Tools);
