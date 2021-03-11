@@ -153,7 +153,7 @@ namespace WebScrapper.Scraping
             Product product = new Product();
             product.PathToImage = GetImagePath(driver);  
             IWebElement nameElement = driver.FindElement(By.ClassName("et_pb_module_inner"));
-            product.Name = nameElement.Text; 
+            product.Name = ScrappingHelper.RemoveDiacritics(nameElement.Text.Trim());
 
             Thread.Sleep(4000);
             IWebElement price = driver.FindElement(By.ClassName("price"));

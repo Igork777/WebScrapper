@@ -94,7 +94,6 @@ namespace WebScrapper.Scraping
                         .Equals("woocommerce-LoopProduct-link woocommerce-loop-product__link")).ToList();
             IList<HtmlNode> forms = htmlDocument.DocumentNode.Descendants("form")
                 .Where(node => node.GetAttributeValue("class", "").Equals("variations_form cart")).ToList();
-            List<Product> products = new List<Product>();
             Console.WriteLine();
 
 
@@ -184,7 +183,7 @@ namespace WebScrapper.Scraping
                                 Name = product.Name, Price = product.Price, Size = product.Size, WebsiteId = 3,
                                 ProductTypeId = Convert.ToInt32(type), PathToImage = product.PathToImage
                             };
-                            temp.Name = temp.Name.Trim();
+                            temp.Name = ScrappingHelper.RemoveDiacritics(temp.Name.Trim());
                             if (temp.Name.Equals(""))
                             {
                                 return;

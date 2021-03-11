@@ -130,7 +130,7 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                         }
 
                         Product tempProduct = new Product();
-                        tempProduct.Name = GetNameOfProduct(product);
+                        tempProduct.Name = ScrappingHelper.RemoveDiacritics(GetNameOfProduct(product).Trim());
                         tempProduct.Size = GetSize(product, ScrappingHelper.proxies[iteratorForProxies],
                             ScrappingHelper.ports[iteratorForProxies])[i];
                         tempProduct.Price =

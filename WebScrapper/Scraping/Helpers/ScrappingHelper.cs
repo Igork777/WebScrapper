@@ -136,7 +136,7 @@ namespace WebScrapper.Scraping.Helpers
             return text.Replace("Ü", "U").Replace("ü", "u")
                 .Replace("Æ", "Ae").Replace("æ", "ae").
                 Replace("Ø","O").Replace("ø", "o").
-                Replace("Å","A").Replace("å", "a")
+                Replace("Å","A").Replace("å", "a").Replace("ä", "a").Replace("Ä", "A")
                 .Replace("ß", "B");
         }
         

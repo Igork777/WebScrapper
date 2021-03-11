@@ -183,7 +183,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                 try
                 {
 
-                    String name = GetName(items[j]);
+                    String name = ScrappingHelper.RemoveDiacritics(GetName(items[j]));
                     String link = GetLink(items[j]);
              
                
