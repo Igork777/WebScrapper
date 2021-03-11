@@ -90,7 +90,15 @@ namespace WebScrapper.Scraping
             List<String> pages = GetPages(urlToScrap);
             foreach (String page in pages)
             {
-                GetProducts(page, type);
+                try
+                {
+                    GetProducts(page, type);
+                }
+                catch (Exception e)
+                {
+                   continue;
+                }
+             
             }
         }
 

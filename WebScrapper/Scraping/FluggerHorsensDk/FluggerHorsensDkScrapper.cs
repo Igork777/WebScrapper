@@ -180,27 +180,35 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             Regex priceRegex = new Regex("[1-9]([0-9]{0,2}|\\.)+,");
             for (int j = 0; j < items.Count; j++)
             {
-                String name = GetName(items[j]);
-                String link = GetLink(items[j]);
+                try
+                {
+
+                    String name = GetName(items[j]);
+                    String link = GetLink(items[j]);
              
                
-                Console.WriteLine("Name: " + name);
-                Dictionary<String, String> sizeAndPrice = GetSizeAndPrice(link);
-                Product product = null;
-                String pathToImage = GetPathToTheImage(link);
-                foreach (KeyValuePair<String, String> i in sizeAndPrice)
-                {
-                    product = new Product();
-                    product.Name = name;
-                    string size = i.Key.Replace(",", ".");
-                    string price = priceRegex.Match(i.Value).Value.Replace(",", "");
-                    product.Size = size;
-                    product.Price = price;
-                    product.PathToImage = pathToImage;
-                    product.ProductTypeId = Convert.ToInt32(type);
-                    product.WebsiteId = 4;
+                    Console.WriteLine("Name: " + name);
+                    Dictionary<String, String> sizeAndPrice = GetSizeAndPrice(link);
+                    Product product = null;
+                    String pathToImage = GetPathToTheImage(link);
+                    foreach (KeyValuePair<String, String> i in sizeAndPrice)
+                    {
+                        product = new Product();
+                        product.Name = name;
+                        string size = i.Key.Replace(",", ".");
+                        string price = priceRegex.Match(i.Value).Value.Replace(",", "");
+                        product.Size = size;
+                        product.Price = price;
+                        product.PathToImage = pathToImage;
+                        product.ProductTypeId = Convert.ToInt32(type);
+                        product.WebsiteId = 4;
 
-                    ScrappingHelper.SaveOrUpdate(_dbContext, product);
+                        ScrappingHelper.SaveOrUpdate(_dbContext, product);
+                    }
+                }
+                catch (Exception e)
+                {
+                   continue;
                 }
               
             }
