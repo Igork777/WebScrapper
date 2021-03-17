@@ -8,6 +8,7 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk.DB
         public DbSet<Product> Product { get; set; }
         public DbSet<ProductType> ProductType { get; set; }
         public DbSet<Website> Website { get; set; }
+        public DbSet<User> Users { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source = Flugger.db");

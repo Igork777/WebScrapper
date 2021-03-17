@@ -25,6 +25,8 @@ namespace WebScrapper.Services
             HashSet<String> names = new HashSet<string>();
             IList<Suggestion> suggestions = new List<Suggestion>();
             IList<Product> products = _dbContext.Product.Where(product => product.Name.ToLower().Contains(name.ToLower())).ToList();
+            
+            
             foreach (Product product in products)
             {
                 names.Add(product.Name);
@@ -35,7 +37,7 @@ namespace WebScrapper.Services
                 suggestions.Add(new Suggestion {label = n, value = ScrappingHelper.RemoveDiacritics(n.Replace(" ", "-").ToLower())});
             }
             return suggestions;
-            }
+        }
 
         public Dictionary<string, IList<Product>> GetAllProducts(string name)
         {
@@ -46,6 +48,7 @@ namespace WebScrapper.Services
             listOfProducts.Add("flugger-helsingor.dk", products.Where(node => node.WebsiteId == 2).ToList());
             listOfProducts.Add("www.maling-halvpris.dk", products.Where(node => node.WebsiteId == 3).ToList());
             listOfProducts.Add("www.flugger-horsens.dk", products.Where(node => node.WebsiteId == 4).ToList());
+            
             return listOfProducts;
         }
     }

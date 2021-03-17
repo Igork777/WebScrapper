@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using WebScrapper.Scraping.DTO;
 using WebScrapper.Scraping.FluggerHorsensDk;
 using WebScrapper.Scraping.Helpers;
 using WebScrapper.Scraping.ScrappingFluggerDk;
@@ -42,10 +43,18 @@ namespace WebScrapper.Scraping
                 dbContext.SaveChanges();
             }
 
+            int amountOfUsers = dbContext.Users.Count();
+            if (amountOfUsers == 0)
+            {
+                dbContext.Users.Add(new User() {userName = "Cliff", password = ScrappingHelper.hashData("CliffChecksEverybody")});
+                dbContext.SaveChanges();
+            }
+
+         
+            // _fluggerDk.StartScrapping();
+           //  _fluggerHelsingorDkScrapper.StartScrapping();
+            // _fluggerHorsensDkScrapper.StartScrapping();
             _malingHalvprisDk.StartScrapping();
-            _fluggerDk.StartScrapping();
-            _fluggerHelsingorDkScrapper.StartScrapping();
-            _fluggerHorsensDkScrapper.StartScrapping();
         }
     }
 }

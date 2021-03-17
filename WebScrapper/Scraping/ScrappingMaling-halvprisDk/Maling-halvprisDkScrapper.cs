@@ -1,11 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
-using OpenQA.Selenium;
-using OpenQA.Selenium.DevTools.V86.DOM;
 using WebScrapper.Scraping.DTO;
 using WebScrapper.Scraping.Helpers;
 using WebScrapper.Scraping.ScrappingFluggerDk.DB;
@@ -25,6 +23,7 @@ namespace WebScrapper.Scraping
         public void StartScrapping()
         {
             Console.WriteLine("Starting new scrap");
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-inde/", TypesOfProduct.Indoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_inde/", TypesOfProduct.Indoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_ude/", TypesOfProduct.Outdoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-inde/", TypesOfProduct.Others);
@@ -36,7 +35,7 @@ namespace WebScrapper.Scraping
             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-ude/", TypesOfProduct.Outdoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/facademaling/", TypesOfProduct.Others);
 
-            Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-inde/", TypesOfProduct.Indoors);
+           
             Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-ude/", TypesOfProduct.Outdoors);
 
             Start("https://www.maling-halvpris.dk/butik-kob-maling/dyrup-inde/", TypesOfProduct.Others);
@@ -222,9 +221,6 @@ namespace WebScrapper.Scraping
                         rightProductName = rightProductName.Remove(rightProductName.Length - 1);
                     }
                 }
-             
-
-               
             }
             else if (matchTitle.Success)
             {
@@ -242,7 +238,7 @@ namespace WebScrapper.Scraping
             if (defis.Success)
             {
                 rightProductName = defis.Value;
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 3; i++)
                 {
                     rightProductName = rightProductName.Remove(rightProductName.Length - 1);
                 }
@@ -251,9 +247,34 @@ namespace WebScrapper.Scraping
            
             rightProductName = rightProductName.Replace("Flügger", "");
             rightProductName = rightProductName.Trim();
+
+            Console.WriteLine("Before new function: " + rightProductName);
+             rightProductName = ReturnNameWhichIsUsedInOtherTables(rightProductName);
+             Console.WriteLine("After new function " + rightProductName);
+
             Console.WriteLine(rightProductName);
 
             return rightProductName;
+        }
+
+        private String ReturnNameWhichIsUsedInOtherTables(String nameToCorrect)
+        {
+            String temp = nameToCorrect;
+          
+            List<String> separatedStrings =  nameToCorrect.Split(" ").ToList();
+            for (int i = separatedStrings.Count-1; i > 0 ; i--)
+            {
+                List<Product> products = _dbContext.Product.Where(product => product.WebsiteId != 3).ToList().Where(product => product.Name == nameToCorrect).ToList();
+                if (products.Count > 0)
+                {
+                    temp = nameToCorrect.Trim();
+                    return temp;
+                }
+                nameToCorrect = nameToCorrect.Replace(separatedStrings[i], "");
+                nameToCorrect = nameToCorrect.Trim();
+            }
+
+            return temp;
         }
 
 

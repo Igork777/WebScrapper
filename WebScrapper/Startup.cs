@@ -39,6 +39,16 @@ namespace WebScrapper
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseDefaultTypeSerializer()
                 .UseMemoryStorage());
+            
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                });
+            });
+            
+            
 
             services.AddHangfireServer();
             services.AddScoped<IScrapperService, ScrapperService>();
@@ -64,6 +74,7 @@ namespace WebScrapper
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseCors("CorsPolicy");
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 

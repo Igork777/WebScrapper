@@ -119,7 +119,7 @@ namespace WebScrapper.Scraping.Helpers
             }
         }
 
-        private static String hashData(String content)
+        public static String hashData(String content)
         {
             StringBuilder hash = new StringBuilder();
             MD5CryptoServiceProvider md5provider = new MD5CryptoServiceProvider();
