@@ -1,16 +1,16 @@
 using System;
-using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using Hangfire;
 using Hangfire.MemoryStorage;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using WebScrapper.Scraping;
+using WebScrapper.JWT;
 using WebScrapper.Scraping.ScrappingFluggerDk.DB;
 using WebScrapper.Services;
 
@@ -30,6 +30,26 @@ namespace WebScrapper
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            String key = "Very complex key";
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+            
+            services.AddSingleton<IJwtAuthenticationManager>(new JwtAuthenticationManager(key));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "WebScrapper", Version = "v1"});
@@ -55,8 +75,8 @@ namespace WebScrapper
             services.AddScoped<ILogInService, LogInService>();
             services.AddEntityFrameworkSqlite().AddDbContext<DBContext>();
 
-            Starter starter = new Starter();
-            starter.Start();
+            // Starter starter = new Starter();
+            // starter.Start();
         }
 
 
@@ -74,6 +94,7 @@ namespace WebScrapper
             app.UseHangfireDashboard();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseCors("CorsPolicy");
 

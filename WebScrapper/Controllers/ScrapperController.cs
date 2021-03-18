@@ -9,7 +9,7 @@ using WebScrapper.Services;
 namespace WebScrapper.Controllers
 {
     [ApiController]
-    public class ScrapperController
+    public class ScrapperController : ControllerBase
     {
         private IScrapperService _scrapperService;
 

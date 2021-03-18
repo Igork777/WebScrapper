@@ -1,24 +1,45 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Threading.Tasks;
+using WebScrapper.JWT;
 using WebScrapper.Scraping.DTO;
 using WebScrapper.Services;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebScrapper.Controllers
 {
+    [Authorize]
     [ApiController]
-    public class LogInController
+    public class LogInController : ControllerBase
     {
         private ILogInService _logInService;
-
-        public LogInController(ILogInService logInService)
+        private readonly IJwtAuthenticationManager JwtAuthenticationManager;
+        
+        public LogInController(ILogInService logInService, IJwtAuthenticationManager jwtAuthenticationManager)
         {
+            JwtAuthenticationManager = jwtAuthenticationManager;
             _logInService = logInService;
         }
 
+        // [HttpGet]
+        // [Authorize]
+        // [Route("api/name")]
+        // public String Get1()
+        // {
+        //     return "Igor";
+        // }
+        
+
+        [AllowAnonymous]
         [HttpPost]
-        [Route("api/login")]
-        public bool login([FromBody] User user)
+        [Route("api/Authenticate")]
+        public ActionResult  Authenticate([FromBody] User user)
         {
-           return _logInService.CheckIfNameAndPasswordsCorrespond(user);
+          var token=  JwtAuthenticationManager.Authenticate(user.userName, user.password);
+          if(token == null)
+              return Unauthorized();
+          return Ok(token);
         }
     }
 }

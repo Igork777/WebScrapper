@@ -87,3 +87,10 @@ D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\runtimes\win-x86\nat
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\WebDriver.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\SeleniumExtras.WaitHelpers.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\WebDriver.Support.dll
+D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
+D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
+D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
+D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
+D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
