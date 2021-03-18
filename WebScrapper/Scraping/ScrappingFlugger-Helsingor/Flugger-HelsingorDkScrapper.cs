@@ -119,6 +119,7 @@ namespace WebScrapper.Scraping
                         ScrappingHelper.SaveOrUpdate(_dbContext, product);
                     }
                 }
+                driver?.Quit();
             }
             catch (Exception ex)
             {
@@ -131,8 +132,6 @@ namespace WebScrapper.Scraping
                 tryed_times++;
                 goto tryOnceAgain;
             }
-
-            driver?.Quit();
         }
 
         private String GetImagePath(IWebDriver driver)
@@ -187,15 +186,6 @@ namespace WebScrapper.Scraping
                 priceString = priceRegex.Match(price.Text).Value.Replace(",", "");
                 Console.WriteLine("Price: " + priceString);
             }
-
-            // try
-            // {
-            //     IWebElement radio = driver.FindElement(By.Id("picker_pa_stoerrelse_ml"));
-            //     List<IWebElement> labels = radio.FindElements(By.TagName("label")).ToList();
-            //     sizesAndPrices.Add(new KeyValuePair<string, string>(label.Text, priceString));
-            // }
-            // catch (Exception e)
-            // {
 
             try
             {
@@ -299,11 +289,6 @@ namespace WebScrapper.Scraping
                 }
 
             }
-
-
-
-            //  }
-
             driver.Quit();
             return products;
         }

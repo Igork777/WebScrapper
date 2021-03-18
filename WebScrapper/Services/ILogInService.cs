@@ -4,9 +4,6 @@ namespace WebScrapper.Services
 {
     public interface ILogInService
     {
-        bool checkIfNameAndPasswordsCorrespond(User user)
-        {
-            return true;
-        }
+        bool CheckIfNameAndPasswordsCorrespond(User user);
     }
 }

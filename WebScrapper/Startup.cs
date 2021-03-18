@@ -52,6 +52,7 @@ namespace WebScrapper
 
             services.AddHangfireServer();
             services.AddScoped<IScrapperService, ScrapperService>();
+            services.AddScoped<ILogInService, LogInService>();
             services.AddEntityFrameworkSqlite().AddDbContext<DBContext>();
 
             Starter starter = new Starter();

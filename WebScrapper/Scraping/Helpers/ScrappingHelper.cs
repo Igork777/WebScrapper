@@ -25,6 +25,8 @@ namespace WebScrapper.Scraping.Helpers
             new ProductType() {ProductTypeId = 4, Type = "Other", Products = new List<Product>()}
         };
 
+        public static List<Product> allProducts;
+        public static List<Product> productsAddedDuringThisSession = new List<Product>();
         public static List<String> proxies;
         public static List<int> ports;
 
@@ -101,6 +103,7 @@ namespace WebScrapper.Scraping.Helpers
                                    product.PathToImage);
             product.Hash = hash;
             product.Name = product.Name.Trim();
+            productsAddedDuringThisSession.Add(product);
             Product similarProduct = ExistsAlreadyInTheDatabase(dbContext, hash);
             if (similarProduct != null)
             {
@@ -139,9 +142,36 @@ namespace WebScrapper.Scraping.Helpers
                 Replace("Å","A").Replace("å", "a").Replace("ä", "a").Replace("Ä", "A")
                 .Replace("ß", "B");
         }
+
+
+        public static void LoadAllProducts(DBContext dbContext)
+        {
+            allProducts = dbContext.Product.ToList();
+        }
+
+        public static void removeDeletedProductsFromDB(DBContext dbContext)
+        {
+            bool isFound = false;
+            for (int i = 0; i < allProducts.Count; i++)
+            {
+                for (int j = 0; j < productsAddedDuringThisSession.Count; j++)
+                {
+                    if (allProducts[i].Hash.Equals(productsAddedDuringThisSession[j].Hash))
+                    {
+                        isFound = true;
+                        break;
+                    }
+                }
+
+                if (!isFound)
+                {
+                    dbContext.Product.Remove(allProducts[i]);
+                }
+            }
+        }
         
-      
-        
+
+
         public static HtmlDocument GetHtmlDocument(String url, String proxy, int port)
         {
             WebProxy prox = new WebProxy(proxy, port);
@@ -190,17 +220,14 @@ namespace WebScrapper.Scraping.Helpers
             }
             return fixedName;
         }
-        
-      
-        
-        
-        
+
+
+
+
+
         public static bool CheckIfInvalidCharacter(String name, Regex regex)
         {
             return regex.IsMatch(name);
         }
-        
-        
-         
     }
 }

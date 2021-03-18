@@ -18,7 +18,7 @@ namespace WebScrapper.Controllers
         [Route("api/login")]
         public bool login([FromBody] User user)
         {
-           return _logInService.checkIfNameAndPasswordsCorrespond(user);
+           return _logInService.CheckIfNameAndPasswordsCorrespond(user);
         }
     }
 }
