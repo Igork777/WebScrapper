@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,6 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using HtmlAgilityPack;
+using RestSharp;
 using WebScrapper.Scraping.DTO;
 using WebScrapper.Scraping.ScrappingFluggerDk.DB;
 
@@ -51,6 +53,33 @@ namespace WebScrapper.Scraping.Helpers
             Dictionary<String, int> proxiesAndPorts = GetProxyAndPort();
             proxies = proxiesAndPorts.Keys.ToList();
             ports = proxiesAndPorts.Values.ToList();
+        }
+
+        public static Dictionary<string, string> getIPAndPort()
+        {
+            
+            Dictionary<String, String> proxy_port = new Dictionary<string, string>();
+            Regex ipFromJson = new Regex("\"ip\"(.*?),");
+            Regex portFromJson = new Regex("\"port\"(.*?),");
+            Regex ip_port_Values = new Regex("[1-9]([0-9]+|\\.)+");
+           
+            var client = new RestClient("https://proxypage1.p.rapidapi.com/v1/tier1?type=HTTPS&country=US");
+            var request = new RestRequest(Method.GET);
+            request.AddHeader("content-type", "application/x-www-form-urlencoded");
+            request.AddHeader("x-rapidapi-key", "1959d36928msh662f443ae286ccep1b6f5ajsnadb0d5161bee");
+            request.AddHeader("x-rapidapi-host", "proxypage1.p.rapidapi.com");
+            IRestResponse response = client.Execute(request);
+
+            Console.WriteLine(response.Content);
+            MatchCollection rawIp = ipFromJson.Matches(response.Content);
+            MatchCollection rawPort = portFromJson.Matches(response.Content);
+            Console.WriteLine();
+            for (int i = 0; i < rawIp.Count; i++)
+            {
+                proxy_port.Add(ip_port_Values.Match(rawIp[i].Value).Value, ip_port_Values.Match(rawPort[i].Value).Value);
+            }
+
+            return proxy_port;
         }
 
         private static Product ExistsAlreadyInTheDatabase(DBContext dbContext, String hash)
@@ -192,19 +221,22 @@ namespace WebScrapper.Scraping.Helpers
         }
         public static Dictionary<String, int> GetProxyAndPort()
         {
-            Dictionary<String, int> proxyAndPort = new Dictionary<String, int>();
-            HtmlDocument htmlDocument = GetHtmlDocument("https://free-proxy-list.net/uk-proxy.html");
-            HtmlNodeCollection ips = htmlDocument.DocumentNode.SelectNodes("//tbody/tr/td[1]");
-            HtmlNodeCollection ports = htmlDocument.DocumentNode.SelectNodes("//tbody/tr/td[2]");
-            Console.WriteLine();
-            for (int i = 0; i < ips.Count; i++)
+            Dictionary<String, int> proxyAndPort = new Dictionary<string, int>();
+            string[] lines = File.ReadAllLines( "Scraping\\ip.txt");
+
+            foreach (string line in lines)
             {
-               proxyAndPort.Add(ips[i].InnerText, Int32.Parse(ports[i].InnerText));
+                List<String> prox_port = line.Split(":").ToList();
+                try
+                {
+                    proxyAndPort.Add(prox_port[0], Int32.Parse(prox_port[1]));
+                }
+                catch (Exception e)
+                {
+                   
+                }
             }
-
             return proxyAndPort;
-
-
         }
 
 

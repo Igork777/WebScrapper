@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -14,6 +15,11 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
     public class FluggerDkScrapper
     {
         private DBContext _dbContext;
+        int iteratorForProxies = 0;
+        Dictionary<String, String> proxyAndPort = ScrappingHelper.getIPAndPort();
+        List<String> proxies = new List<string>();
+        List<String> ports = new List<string>();
+
 
         public FluggerDkScrapper(DBContext dbContext)
         {
@@ -26,7 +32,8 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
 
             try
             {
-                
+                proxies.AddRange(proxyAndPort.Keys);
+                ports.AddRange(proxyAndPort.Values);
                 Start("https://www.flugger.dk/maling-tapet/indend%C3%B8rs/", TypesOfProduct.Indoors);
                 Start(
                     "https://www.flugger.dk/malerv%C3%A6rkt%C3%B8j/tapetv%C3%A6rkt%C3%B8j-kl%C3%A6ber/",
@@ -59,9 +66,32 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
         {
             HtmlDocument htmlDocument = null;
             int iterator = 0;
+            Console.WriteLine("Trying: " + proxies[iteratorForProxies]);
+            tryAnotherIP:
+            try
+            {
+                
+                htmlDocument =
+                    ScrappingHelper.GetHtmlDocument(urlToScrap, proxies[iteratorForProxies], Convert.ToInt32(ports[iteratorForProxies]));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(proxies[iteratorForProxies] + " failed");
+                if (iteratorForProxies > proxies.Count - 1)
+                {
+                    proxyAndPort = ScrappingHelper.getIPAndPort();
+                    proxies.AddRange(proxyAndPort.Keys);
+                    ports.AddRange(proxyAndPort.Values);
+                    iteratorForProxies = 0;
+                }
+                else
+                {
+                    iteratorForProxies++;
+                }
 
-            htmlDocument =
-                ScrappingHelper.GetHtmlDocument(urlToScrap);
+                goto tryAnotherIP;
+            }
+        
 
             List<HtmlNode> listOfProducts = GetProductsList(htmlDocument);
             GetScrappedProducts(listOfProducts, type);
@@ -101,41 +131,30 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
             MessageId = "type: HtmlAgilityPack.HtmlTextNode")]
         private void GetScrappedProducts(List<HtmlNode> listOfProducts, Enum type)
         {
-            ScrappingHelper.RenewIpAndPorts();
-            int iteratorForProxies = 0;
-
+            
+           
             foreach (var product in listOfProducts)
             {
-                if (iteratorForProxies > ScrappingHelper.GetProxyAndPort().Count - 1)
-                {
-                    iteratorForProxies = 0;
-                }
 
                 int amountOfSizesOfAProduct = 0;
 
                 tryAnotherIP:
-                Console.WriteLine("Trying ip: " + ScrappingHelper.proxies[iteratorForProxies]);
                 try
                 {
-                    amountOfSizesOfAProduct =
-                        GetSize(product, ScrappingHelper.proxies[iteratorForProxies],
-                            ScrappingHelper.ports[iteratorForProxies]).Count;
+                    Console.WriteLine("Trying ip: " + proxies[iteratorForProxies]);
+                    List<String> proxySize = GetSize(product, proxies[iteratorForProxies],
+                        Convert.ToInt32(ports[iteratorForProxies]));
+                     
 
                     String concat = "";
                     for (int i = 0; i < amountOfSizesOfAProduct; i++)
                     {
-                        if (iteratorForProxies > ScrappingHelper.proxies.Count - 1)
-                        {
-                            iteratorForProxies = 0;
-                        }
-
                         Product tempProduct = new Product();
                         tempProduct.Name = ScrappingHelper.RemoveDiacritics(GetNameOfProduct(product).Trim());
-                        tempProduct.Size = GetSize(product, ScrappingHelper.proxies[iteratorForProxies],
-                            ScrappingHelper.ports[iteratorForProxies])[i];
+                        tempProduct.Size = proxySize[iteratorForProxies];
                         tempProduct.Price =
-                            GetPrice(product, ScrappingHelper.proxies[iteratorForProxies],
-                                ScrappingHelper.ports[iteratorForProxies])[i];
+                            GetPrice(product, proxies[iteratorForProxies],
+                                Convert.ToInt32(ports[iteratorForProxies]))[i];
                         tempProduct.PathToImage = "No data";
                         tempProduct.ProductTypeId = Convert.ToInt32(type);
                         tempProduct.WebsiteId = 1;
@@ -146,10 +165,13 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(ScrappingHelper.proxies[iteratorForProxies] + " failed");
-                    if (iteratorForProxies > ScrappingHelper.proxies.Count - 1)
+                    Console.WriteLine(proxies[iteratorForProxies] + " failed");
+                    if (iteratorForProxies == proxies.Count - 1)
                     {
-                        iteratorForProxies = 0;
+                            proxyAndPort = ScrappingHelper.getIPAndPort();
+                            proxies.AddRange(proxyAndPort.Keys);
+                            ports.AddRange(proxyAndPort.Values);
+                            iteratorForProxies = 0;
                     }
                     else
                     {
@@ -179,7 +201,7 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
 
         [SuppressMessage("ReSharper.DPA", "DPA0002: Excessive memory allocations in SOH",
             MessageId = "type: HtmlAgilityPack.HtmlTextNode")]
-        private IList<string> GetSize(HtmlNode product, String proxy, int port)
+        private List<string> GetSize(HtmlNode product, String proxy, int port)
         {
             String url = "https://www.flugger.dk" + GetProductLink(product);
 
@@ -189,7 +211,7 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                 ScrappingHelper.GetHtmlDocument(url);
 
             IList<HtmlNode> listOfSizes = GetProductsWithPriceAndSize(htmlDocument);
-            IList<String> sizes = new List<string>();
+            List<String> sizes = new List<string>();
             String size = "", previousSize = "";
             foreach (HtmlNode category in listOfSizes)
             {

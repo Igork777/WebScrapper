@@ -35,13 +35,13 @@ namespace WebScrapper.Scraping
             Start(
                 "https://flugger-helsingor.dk/vare-kategori/gulvbehandling/gulvlak-gulvbehandling/",
                 TypesOfProduct.Others);
-         
+
             Start("https://flugger-helsingor.dk/vare-kategori/indendoers-maling/loft-og-vaeg/",
                 TypesOfProduct.Indoors);
             Start(
                 "https://flugger-helsingor.dk/vare-kategori/indendoers-maling/grundere-indendors-maling/",
                 TypesOfProduct.Indoors);
-          
+
             Start("https://flugger-helsingor.dk/vare-kategori/udendors-maling/facade/",
                 TypesOfProduct.Outdoors);
             Start(
@@ -51,7 +51,7 @@ namespace WebScrapper.Scraping
                 "https://flugger-helsingor.dk/vare-kategori/udendors-maling/grundere-udendors-maling/",
                 TypesOfProduct.Outdoors);
 
-           
+
             Start("https://flugger-helsingor.dk/vare-kategori/gulvbehandling/gulvmaling/",
                 TypesOfProduct.Others);
             Start(
@@ -94,13 +94,20 @@ namespace WebScrapper.Scraping
 
         private void SaveProduct(string page, Enum type)
         {
-            int tryed_times = 0;
-            tryOnceAgain:
-            Console.WriteLine("Trying once again");
+            int iterator = 0;
+            tryAnotherIP:
+            Console.WriteLine("Trying IP: " + ScrappingHelper.proxies[iterator]);
             IWebDriver driver = null;
             try
             {
                 ChromeOptions options = new ChromeOptions();
+                Proxy proxy = new Proxy();
+                proxy.Kind = ProxyKind.Manual;
+                proxy.IsAutoDetect = false;
+                proxy.HttpProxy = proxy.SslProxy =
+                    ScrappingHelper.proxies[iterator] + ":" + ScrappingHelper.ports[iterator];
+                options.Proxy = proxy;
+                options.AddArgument("ignore-certificate-errors");
                 driver = new ChromeDriver(options);
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(40);
                 driver.Navigate().GoToUrl(page);
@@ -119,18 +126,23 @@ namespace WebScrapper.Scraping
                         ScrappingHelper.SaveOrUpdate(_dbContext, product);
                     }
                 }
+
                 driver?.Quit();
             }
             catch (Exception ex)
             {
                 driver?.Quit();
-                if (tryed_times > 10)
+                Console.WriteLine(ScrappingHelper.proxies[iterator] + " failed");
+                if (iterator >= ScrappingHelper.proxies.Count - 1)
                 {
-                    return;
+                    iterator = 0;
+                }
+                else
+                {
+                    iterator++;
                 }
 
-                tryed_times++;
-                goto tryOnceAgain;
+                goto tryAnotherIP;
             }
         }
 
@@ -154,140 +166,161 @@ namespace WebScrapper.Scraping
 
         private IList<Product> GetProduct(String link)
         {
+            int iterator = 0;
+            tryAnotherIP:
+            Console.WriteLine("Trying IP: " + ScrappingHelper.proxies[iterator]);
             Regex priceRegex = new Regex("[1-9]([0-9]{0,2}|\\.)+,");
+
             ChromeOptions options = new ChromeOptions();
             IWebDriver driver = new ChromeDriver(options);
             IList<Product> products = new List<Product>();
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(40);
-            driver.Navigate().GoToUrl(link);
-            CleanWindows(driver);
-            
-            IWebElement nameElement = driver.FindElement(By.ClassName("et_pb_module_inner"));
-            String name = ScrappingHelper.RemoveDiacritics(nameElement.Text.Trim());
-            if (name.Contains("Tonet"))
-            {
-                driver.Quit();
-                return new List<Product>();
-            }
-
-            Thread.Sleep(4000);
-            IWebElement price = driver.FindElement(By.ClassName("price"));
-            IWebElement pr = null;
-            String priceString = "";
             try
             {
-                pr = price.FindElement(By.TagName("ins"));
-                priceString = priceRegex.Match(pr.Text).Value.Replace(",", "");
-                Console.WriteLine("Price: " + priceString);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("No old price");
-                priceString = priceRegex.Match(price.Text).Value.Replace(",", "");
-                Console.WriteLine("Price: " + priceString);
-            }
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(40);
+                driver.Navigate().GoToUrl(link);
+                CleanWindows(driver);
 
-            try
-            {
-                IWebElement colorsRadio = driver.FindElement(By.Id("picker_pa_color"));
-                List<IWebElement> optionss = colorsRadio.FindElements(By.ClassName("select-option")).ToList();
-                if (optionss.Count > 1)
+                IWebElement nameElement = driver.FindElement(By.ClassName("et_pb_module_inner"));
+                String name = ScrappingHelper.RemoveDiacritics(nameElement.Text.Trim());
+                if (name.Contains("Tonet"))
                 {
-                    optionss[0].Click();
+                    driver.Quit();
+                    return new List<Product>();
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("");
-            }
 
-            try
-            {
-                IWebElement ulOfRadios = driver.FindElement(By.Id("picker_pa_stoerrelse_ml"));
-                List<IWebElement> Lis = ulOfRadios.FindElements(By.TagName("li")).ToList();
-                if (Lis.Count != 1)
+                Thread.Sleep(4000);
+                IWebElement price = driver.FindElement(By.ClassName("price"));
+                IWebElement pr = null;
+                String priceString = "";
+                try
                 {
-                    for (int i = 0; i < Lis.Count; i++)
+                    pr = price.FindElement(By.TagName("ins"));
+                    priceString = priceRegex.Match(pr.Text).Value.Replace(",", "");
+                    Console.WriteLine("Price: " + priceString);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("No old price");
+                    priceString = priceRegex.Match(price.Text).Value.Replace(",", "");
+                    Console.WriteLine("Price: " + priceString);
+                }
+
+                try
+                {
+                    IWebElement colorsRadio = driver.FindElement(By.Id("picker_pa_color"));
+                    List<IWebElement> optionss = colorsRadio.FindElements(By.ClassName("select-option")).ToList();
+                    if (optionss.Count > 1)
+                    {
+                        optionss[0].Click();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("");
+                }
+
+                try
+                {
+                    IWebElement ulOfRadios = driver.FindElement(By.Id("picker_pa_stoerrelse_ml"));
+                    List<IWebElement> Lis = ulOfRadios.FindElements(By.TagName("li")).ToList();
+                    if (Lis.Count != 1)
+                    {
+                        for (int i = 0; i < Lis.Count; i++)
+                        {
+                            Product product = new Product();
+                            product.PathToImage = GetImagePath(driver);
+                            product.Name = name;
+
+                            Thread.Sleep(4000);
+                            IWebElement radioOption = Lis[i].FindElement(By.ClassName("radio-option"));
+                            radioOption.Click();
+                            Thread.Sleep(4000);
+                            IWebElement arr = driver.FindElement(By.ClassName("single_variation_wrap"));
+                            Thread.Sleep(4000);
+                            IWebElement web = arr.FindElement(By.ClassName("price"));
+                            Thread.Sleep(8000);
+                            priceString = web.FindElement(By.TagName("ins")).Text;
+                            priceString = priceRegex.Match(priceString).Value.Replace(",", "");
+
+                            product.Size = Lis[i].Text;
+                            product.Price = priceString;
+                            products.Add(product);
+                        }
+                    }
+                    else
                     {
                         Product product = new Product();
                         product.PathToImage = GetImagePath(driver);
                         product.Name = name;
-                       
-                        Thread.Sleep(4000);
-                        IWebElement radioOption = Lis[i].FindElement(By.ClassName("radio-option"));
-                        radioOption.Click();
-                        Thread.Sleep(4000);
-                        IWebElement arr = driver.FindElement(By.ClassName("single_variation_wrap"));
-                        Thread.Sleep(4000);
-                        IWebElement web = arr.FindElement(By.ClassName("price"));
-                        Thread.Sleep(8000);
-                        priceString = web.FindElement(By.TagName("ins")).Text;
-                        priceString = priceRegex.Match(priceString).Value.Replace(",", "");
-                        
-                        product.Size = Lis[i].Text;
+                        product.Size = Lis[0].Text;
                         product.Price = priceString;
                         products.Add(product);
                     }
                 }
-                else
-                { 
-                    Product product = new Product();
-                    product.PathToImage = GetImagePath(driver);
-                    product.Name = name;
-                    product.Size = Lis[0].Text;
-                    product.Price = priceString;
-                    products.Add(product);
-                }
-            }
-            catch (Exception e)
-            {
-                try
+                catch (Exception e)
                 {
-                    IWebElement colors = driver.FindElement(By.Id("pa_color"));
-                    IWebElement sizes = driver.FindElement(By.Id("pa_stoerrelse_ml"));
-
-                    List<IWebElement> sizeOption = new List<IWebElement>(sizes.FindElements(By.TagName("option")));
-                    List<String> sizeStrings = new List<string>();
-
-                    foreach (IWebElement size in sizeOption)
+                    try
                     {
-                        Console.WriteLine(size.Text);
-                        sizeStrings.Add(size.Text);
+                        IWebElement colors = driver.FindElement(By.Id("pa_color"));
+                        IWebElement sizes = driver.FindElement(By.Id("pa_stoerrelse_ml"));
+
+                        List<IWebElement> sizeOption = new List<IWebElement>(sizes.FindElements(By.TagName("option")));
+                        List<String> sizeStrings = new List<string>();
+
+                        foreach (IWebElement size in sizeOption)
+                        {
+                            Console.WriteLine(size.Text);
+                            sizeStrings.Add(size.Text);
+                        }
+
+                        SelectElement colorsSelect = new SelectElement(colors);
+                        colorsSelect.SelectByIndex(1);
+
+                        SelectElement sizesSelect = new SelectElement(sizes);
+                        for (int i = 1; i < sizeStrings.Count; i++)
+                        {
+                            Product product = new Product();
+                            product.PathToImage = GetImagePath(driver);
+                            product.Name = name;
+
+
+                            Thread.Sleep(4000);
+                            IWebElement arr = driver.FindElement(By.ClassName("single_variation_wrap"));
+
+                            IWebElement web = arr.FindElement(By.ClassName("price"));
+                            Thread.Sleep(8000);
+                            string priceAsString = web.FindElement(By.TagName("ins")).Text;
+                            priceAsString = priceRegex.Match(priceAsString).Value.Replace(",", "");
+                            product.Size = sizeStrings[i];
+                            product.Price = priceAsString;
+                            products.Add(product);
+                        }
                     }
-
-                    SelectElement colorsSelect = new SelectElement(colors);
-                    colorsSelect.SelectByIndex(1);
-
-                    SelectElement sizesSelect = new SelectElement(sizes);
-                    for (int i = 1; i < sizeStrings.Count; i++)
+                    catch (Exception EX_NAME)
                     {
                         Product product = new Product();
                         product.PathToImage = GetImagePath(driver);
                         product.Name = name;
-                       
-                        
-                        Thread.Sleep(4000);
-                        IWebElement arr = driver.FindElement(By.ClassName("single_variation_wrap"));
-
-                        IWebElement web = arr.FindElement(By.ClassName("price"));
-                        Thread.Sleep(8000);
-                        string priceAsString = web.FindElement(By.TagName("ins")).Text;
-                        priceAsString = priceRegex.Match(priceAsString).Value.Replace(",", "");
-                        product.Size = sizeStrings[i];
-                        product.Price = priceAsString;
+                        product.Size = "No data";
+                        product.Price = priceString;
                         products.Add(product);
                     }
                 }
-                catch (Exception EX_NAME)
+            }
+            catch (Exception e)
+            {
+                driver?.Quit();
+                Console.WriteLine(ScrappingHelper.proxies[iterator] + " failed");
+                if (iterator >= ScrappingHelper.proxies.Count - 1)
                 {
-                    Product product = new Product();
-                     product.PathToImage = GetImagePath(driver);
-                     product.Name = name;
-                     product.Size = "No data";
-                     product.Price = priceString;
-                     products.Add(product);
+                    iterator = 0;
+                }
+                else
+                {
+                    iterator++;
                 }
 
+                goto tryAnotherIP;
             }
             driver.Quit();
             return products;
@@ -322,13 +355,23 @@ namespace WebScrapper.Scraping
 
         private List<String> GetPages(String urlToScrap)
         {
+            ScrappingHelper.RenewIpAndPorts();
             IWebDriver driver = null;
             int tryed_times = 0;
             HashSet<String> pages = new HashSet<string>();
-            tryOnceAgain:
+            int iterator = 0;
+            tryAnotherIP:
+            Console.WriteLine("Trying IP: " + ScrappingHelper.proxies[iterator]);
             try
             {
                 ChromeOptions options = new ChromeOptions();
+                Proxy proxy = new Proxy();
+                proxy.Kind = ProxyKind.Manual;
+                proxy.IsAutoDetect = false;
+                proxy.HttpProxy = proxy.SslProxy =
+                    ScrappingHelper.proxies[iterator] + ":" + ScrappingHelper.ports[iterator];
+                options.Proxy = proxy;
+                options.AddArgument("ignore-certificate-errors");
                 driver = new ChromeDriver(options);
                 driver.Navigate().GoToUrl(urlToScrap);
                 CleanWindows(driver);
@@ -364,14 +407,17 @@ namespace WebScrapper.Scraping
             catch (Exception e)
             {
                 driver?.Quit();
-                if (tryed_times > 10)
+                Console.WriteLine(ScrappingHelper.proxies[iterator] + " failed");
+                if (iterator >= ScrappingHelper.proxies.Count - 1)
                 {
-                    Console.WriteLine("Impossible to retrive data from page: " + urlToScrap);
-                    return new List<string>();
+                    iterator = 0;
+                }
+                else
+                {
+                    iterator++;
                 }
 
-                tryed_times++;
-                goto tryOnceAgain;
+                goto tryAnotherIP;
             }
 
 

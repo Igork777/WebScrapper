@@ -94,3 +94,4 @@ D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.IdentityMo
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\RestSharp.dll

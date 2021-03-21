@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using RestSharp;
 using WebScrapper.Scraping.DTO;
 using WebScrapper.Scraping.FluggerHorsensDk;
 using WebScrapper.Scraping.Helpers;
@@ -52,14 +54,15 @@ namespace WebScrapper.Scraping
                 dbContext.SaveChanges();
             }
 
+            //ScrappingHelper.getIPAndPort();
 
-            ScrappingHelper.LoadAllProducts(dbContext);
+            // ScrappingHelper.LoadAllProducts(dbContext);
 
-            // _fluggerDk.StartScrapping();
-            // _fluggerHelsingorDkScrapper.StartScrapping();
-            // _fluggerHorsensDkScrapper.StartScrapping();
+            //_fluggerHorsensDkScrapper.StartScrapping();
+            //_fluggerHelsingorDkScrapper.StartScrapping();
+            _fluggerDk.StartScrapping();
             _malingHalvprisDk.StartScrapping();
-            ScrappingHelper.removeDeletedProductsFromDB(dbContext);
+            //  ScrappingHelper.removeDeletedProductsFromDB(dbContext);
         }
     }
 }

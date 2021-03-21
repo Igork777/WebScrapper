@@ -14,7 +14,11 @@ namespace WebScrapper.Scraping
     public class Maling_halvprisDk
     {
         private DBContext _dbContext;
-
+        int iterator = 0;
+        Dictionary<String, String> proxyAndPort = ScrappingHelper.getIPAndPort();
+        List<String> proxies = new List<string>();
+        List<String> ports = new List<string>();
+        
         public Maling_halvprisDk(DBContext dbContext)
         {
             _dbContext = dbContext;
@@ -22,6 +26,8 @@ namespace WebScrapper.Scraping
 
         public void StartScrapping()
         {
+            proxies.AddRange(proxyAndPort.Keys);
+            ports.AddRange(proxyAndPort.Values);
             Console.WriteLine("Starting new scrap");
             Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-inde/", TypesOfProduct.Indoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_inde/", TypesOfProduct.Indoors);
@@ -54,29 +60,29 @@ namespace WebScrapper.Scraping
 
         private void Start(String urlToScrap, Enum type)
         {
-            ScrappingHelper.RenewIpAndPorts();
+          //  ScrappingHelper.RenewIpAndPorts();
             HtmlDocument htmlDocument = null;
-            int iterator = 0;
-            Console.WriteLine("Trying IP: " + ScrappingHelper.proxies[iterator]);
             tryAnotherIP:
+            Console.WriteLine("Trying IP: " + proxies[iterator]);
             try
             {
-                // htmlDocument =
-                //     ScrappingHelper.GetHtmlDocument(urlToScrap, ScrappingHelper.proxies[iterator], ScrappingHelper.ports[iterator]);
-                htmlDocument = ScrappingHelper.GetHtmlDocument(urlToScrap);
+                htmlDocument =
+                    ScrappingHelper.GetHtmlDocument(urlToScrap, proxies[iterator], Convert.ToInt32(ports[iterator]));
             }
             catch (Exception e)
             {
-                Console.WriteLine(ScrappingHelper.proxies[iterator] + " failed");
-                if (iterator >= ScrappingHelper.proxies.Count - 1)
+                if (iterator == proxyAndPort.Count - 1)
                 {
+                    proxyAndPort = ScrappingHelper.getIPAndPort();
+                    proxies.AddRange(proxyAndPort.Keys);
+                    ports.AddRange(proxyAndPort.Values);
                     iterator = 0;
                 }
                 else
                 {
                     iterator++;
                 }
-
+                Console.WriteLine(proxies[iterator] + " failed");
                 goto tryAnotherIP;
             }
 
@@ -188,11 +194,6 @@ namespace WebScrapper.Scraping
                                 return;
                             }
                             ScrappingHelper.SaveOrUpdate(_dbContext, temp);
-
-
-                            // ScrappingHelper.AddHash(_dbContext, temp, product);
-
-                            // ScrappingHelper.SaveOrUpdate(_unitOfWork, temp);
                         }
                     }
                 }

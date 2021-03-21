@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using WebScrapper.JWT;
+using WebScrapper.Scraping;
 using WebScrapper.Scraping.ScrappingFluggerDk.DB;
 using WebScrapper.Services;
 
@@ -75,8 +76,8 @@ namespace WebScrapper
             services.AddScoped<ILogInService, LogInService>();
             services.AddEntityFrameworkSqlite().AddDbContext<DBContext>();
 
-            // Starter starter = new Starter();
-            // starter.Start();
+            Starter starter = new Starter();
+            starter.Start();
         }
 
 
