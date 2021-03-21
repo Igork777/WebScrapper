@@ -47,10 +47,28 @@ namespace WebScrapper.Scraping
             }
 
             int amountOfUsers = dbContext.Users.Count();
-            if (amountOfUsers == 0)
+            if (amountOfUsers < 2)
             {
-                dbContext.Users.Add(new User()
-                    {userName = "Cliff", password = ScrappingHelper.hashData("CliffChecksEverybody")});
+                try
+                {
+                    dbContext.Users.Add(new User()
+                        {userName = "Cliff", password = ScrappingHelper.hashData("CliffChecksEverybody")});
+                }
+                catch (Exception e)
+                {
+                    // ignored
+                }
+
+                try
+                {
+                    dbContext.Users.Add(new User()
+                        {userName = "Mikkel", password = ScrappingHelper.hashData("MikkelChecksEverybody")});
+                }
+                catch (Exception e)
+                {
+                    // ignored
+                }
+
                 dbContext.SaveChanges();
             }
 
@@ -60,8 +78,8 @@ namespace WebScrapper.Scraping
 
             //_fluggerHorsensDkScrapper.StartScrapping();
             //_fluggerHelsingorDkScrapper.StartScrapping();
-            _fluggerDk.StartScrapping();
-            _malingHalvprisDk.StartScrapping();
+            // _fluggerDk.StartScrapping();
+            // _malingHalvprisDk.StartScrapping();
             //  ScrappingHelper.removeDeletedProductsFromDB(dbContext);
         }
     }

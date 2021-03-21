@@ -36,10 +36,11 @@ namespace WebScrapper.Controllers
         [Route("api/Authenticate")]
         public ActionResult  Authenticate([FromBody] User user)
         {
-          var token=  JwtAuthenticationManager.Authenticate(user.userName, user.password);
-          if(token == null)
+          var t=  JwtAuthenticationManager.Authenticate(user.userName, user.password);
+          if(t == null)
               return Unauthorized();
-          return Ok(token);
+          
+          return Ok(new Token(){token = t});
         }
     }
 }

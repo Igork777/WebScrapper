@@ -19,6 +19,7 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk.DB
             modelBuilder.Entity<Product>().HasIndex(e => new {e.Hash}).IsUnique();
             modelBuilder.Entity<ProductType>().HasIndex(e => new {e.Type});
             modelBuilder.Entity<Website>().HasIndex(e => new {e.Name});
+            modelBuilder.Entity<User>().HasIndex(e => new {e.password}).IsUnique();
         }
     }
 }
