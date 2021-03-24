@@ -15,17 +15,19 @@ namespace WebScrapper.Scraping
     {
         private DBContext _dbContext;
         int iterator = 0;
-        Dictionary<String, String> proxyAndPort = ScrappingHelper.getIPAndPort();
+        private Dictionary<String, String> proxyAndPort;
         List<String> proxies = new List<string>();
         List<String> ports = new List<string>();
         
         public Maling_halvprisDk(DBContext dbContext)
         {
             _dbContext = dbContext;
+          
         }
 
         public void StartScrapping()
         {
+            proxyAndPort = ScrappingHelper.getIPAndPort();
             proxies.AddRange(proxyAndPort.Keys);
             ports.AddRange(proxyAndPort.Values);
             Console.WriteLine("Starting new scrap");

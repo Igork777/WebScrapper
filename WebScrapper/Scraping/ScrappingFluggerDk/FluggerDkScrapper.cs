@@ -16,7 +16,7 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
     {
         private DBContext _dbContext;
         int iteratorForProxies = 0;
-        Dictionary<String, String> proxyAndPort = ScrappingHelper.getIPAndPort();
+        private Dictionary<String, String> proxyAndPort; 
         List<String> proxies = new List<string>();
         List<String> ports = new List<string>();
 
@@ -24,6 +24,7 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
         public FluggerDkScrapper(DBContext dbContext)
         {
             _dbContext = dbContext;
+         
         }
 
         public void StartScrapping()
@@ -32,6 +33,7 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
 
             try
             {
+                proxyAndPort = ScrappingHelper.getIPAndPort();
                 proxies.AddRange(proxyAndPort.Keys);
                 ports.AddRange(proxyAndPort.Values);
                 Start("https://www.flugger.dk/maling-tapet/indend%C3%B8rs/", TypesOfProduct.Indoors);
@@ -65,7 +67,6 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
         private void Start(String urlToScrap, Enum type)
         {
             HtmlDocument htmlDocument = null;
-            int iterator = 0;
             Console.WriteLine("Trying: " + proxies[iteratorForProxies]);
             tryAnotherIP:
             try
@@ -145,13 +146,12 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                     List<String> proxySize = GetSize(product, proxies[iteratorForProxies],
                         Convert.ToInt32(ports[iteratorForProxies]));
                      
-
-                    String concat = "";
-                    for (int i = 0; i < amountOfSizesOfAProduct; i++)
+                    
+                    for (int i = 0; i < proxySize.Count; i++)
                     {
                         Product tempProduct = new Product();
                         tempProduct.Name = ScrappingHelper.RemoveDiacritics(GetNameOfProduct(product).Trim());
-                        tempProduct.Size = proxySize[iteratorForProxies];
+                        tempProduct.Size = proxySize[i];
                         tempProduct.Price =
                             GetPrice(product, proxies[iteratorForProxies],
                                 Convert.ToInt32(ports[iteratorForProxies]))[i];

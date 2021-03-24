@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebScrapper.Scraping.DTO;
 using WebScrapper.Services;
@@ -9,6 +10,7 @@ using WebScrapper.Services;
 namespace WebScrapper.Controllers
 {
     [ApiController]
+    [Authorize]
     public class ScrapperController : ControllerBase
     {
         private IScrapperService _scrapperService;

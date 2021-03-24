@@ -13,7 +13,7 @@ namespace WebScrapper.JWT
     public class JwtAuthenticationManager : IJwtAuthenticationManager
     {
         private readonly IDictionary<string, string> users = new Dictionary<string, string>()
-            {{"test1", "password1"}, {"test2", "password2"} };
+            {{"Cliff", "CliffChecksEverybody"}, {"Mikkel", "MikkelChecksEverybody"} };
     
         private readonly string key;
     

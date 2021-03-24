@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 using RestSharp;
 using WebScrapper.Scraping.DTO;
 using WebScrapper.Scraping.FluggerHorsensDk;
@@ -32,6 +33,7 @@ namespace WebScrapper.Scraping
         public void Start()
         {
             DBContext dbContext = new DBContext();
+            dbContext.Database.Migrate();
             int amountOfProductType = dbContext.ProductType.Count();
             if (amountOfProductType == 0)
             {
@@ -72,15 +74,16 @@ namespace WebScrapper.Scraping
                 dbContext.SaveChanges();
             }
 
-            //ScrappingHelper.getIPAndPort();
+           // ScrappingHelper.getFreshIPAndPort();
 
-            // ScrappingHelper.LoadAllProducts(dbContext);
-
-            //_fluggerHorsensDkScrapper.StartScrapping();
-            //_fluggerHelsingorDkScrapper.StartScrapping();
-            // _fluggerDk.StartScrapping();
-            // _malingHalvprisDk.StartScrapping();
-            //  ScrappingHelper.removeDeletedProductsFromDB(dbContext);
+             //ScrappingHelper.LoadAllProducts(dbContext);
+            
+            _fluggerHelsingorDkScrapper.StartScrapping();
+           //_fluggerHorsensDkScrapper.StartScrapping();
+            //  
+            //  _fluggerDk.StartScrapping();
+            //  _malingHalvprisDk.StartScrapping();
+             //ScrappingHelper.removeDeletedProductsFromDB(dbContext);
         }
     }
 }

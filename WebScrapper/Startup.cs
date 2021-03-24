@@ -5,6 +5,7 @@ using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -70,14 +71,20 @@ namespace WebScrapper
             });
             
             
-
+            
             services.AddHangfireServer();
             services.AddScoped<IScrapperService, ScrapperService>();
             services.AddScoped<ILogInService, LogInService>();
-            services.AddEntityFrameworkSqlite().AddDbContext<DBContext>();
+             services.AddEntityFrameworkSqlite().AddDbContext<DBContext>();
+             var sp = services.BuildServiceProvider();
 
-            Starter starter = new Starter();
-            starter.Start();
+            //3.Resolve the services from the service provider
+             var myDbContext = sp.GetService<DBContext>();
+             if (myDbContext != null) myDbContext.Database.Migrate();
+
+
+             // Starter starter = new Starter();
+             //starter.Start();
         }
 
 

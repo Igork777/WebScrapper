@@ -28,111 +28,111 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/vaegmaling/",
                 TypesOfProduct.Indoors);
 
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/traemaling-indendoers/",
-                TypesOfProduct.Indoors);
-
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/sproejtemaling/",
-                TypesOfProduct.Indoors);
-
-            Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/loftmaling/",
-                TypesOfProduct.Indoors);
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/malerruller/", TypesOfProduct.Tools);
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/rulleskafter/",
-                TypesOfProduct.Tools);
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/malerspande/", TypesOfProduct.Tools);
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/malerbakker/", TypesOfProduct.Tools);
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/slibevaertoej/",
-                TypesOfProduct.Tools);
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/rengoering/arbejdshandsker/",
-                TypesOfProduct.Tools);
-            Start("https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/spartler/",
-                TypesOfProduct.Tools);
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/fugepistoler/",
-                TypesOfProduct.Tools);
-
-
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/indendoers-grunder/",
-                TypesOfProduct.Indoors);
-
-            Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/sandmaling/",
-                TypesOfProduct.Indoors);
-
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/indfarvet-spartelmasse-indendoers-maling/",
-                TypesOfProduct.Indoors);
-
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/metalmaling/", TypesOfProduct.Indoors);
-
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/vaegbeklaedning/",
-                TypesOfProduct.Indoors);
-
-            Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/gulvmaling/",
-                TypesOfProduct.Indoors);
-
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/radiatormaling/",
-                TypesOfProduct.Indoors);
-
-            Start("https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/",
-                TypesOfProduct.Outdoors);
-
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/udendoers-grunder/",
-                TypesOfProduct.Outdoors);
-
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/traemaling-udendoers/",
-                TypesOfProduct.Outdoors);
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/vinduesmaling/",
-                TypesOfProduct.Outdoors);
-
-
-            Start("https://www.flugger-horsens.dk/vare-kategori/tilbehoer/kit/",
-                TypesOfProduct.Others);
-            Start("https://www.flugger-horsens.dk/vare-kategori/tilbehoer/kit/linoliekit/",
-                TypesOfProduct.Others);
-
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/silikonefugemasse/",
-                TypesOfProduct.Others);
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/acrylfugemasse/",
-                TypesOfProduct.Others);
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/",
-                TypesOfProduct.Others);
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/vaadrumsfugemasse/",
-                TypesOfProduct.Others);
-
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningsfilt/",
-                TypesOfProduct.Others);
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningstape/",
-                TypesOfProduct.Others);
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningspap/",
-                TypesOfProduct.Others);
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningsplast/",
-                TypesOfProduct.Others);
-            Start(
-                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/udendoers-afdaekningspap/",
-                TypesOfProduct.Others);
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/traemaling-indendoers/",
+            //     TypesOfProduct.Indoors);
+            //
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/sproejtemaling/",
+            //     TypesOfProduct.Indoors);
+            //
+            // Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/loftmaling/",
+            //     TypesOfProduct.Indoors);
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/malerruller/", TypesOfProduct.Tools);
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/rulleskafter/",
+            //     TypesOfProduct.Tools);
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/malerspande/", TypesOfProduct.Tools);
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/malerbakker/", TypesOfProduct.Tools);
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/slibevaertoej/",
+            //     TypesOfProduct.Tools);
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/rengoering/arbejdshandsker/",
+            //     TypesOfProduct.Tools);
+            // Start("https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/spartler/",
+            //     TypesOfProduct.Tools);
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/fugepistoler/",
+            //     TypesOfProduct.Tools);
+            //
+            //
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/indendoers-grunder/",
+            //     TypesOfProduct.Indoors);
+            //
+            // Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/sandmaling/",
+            //     TypesOfProduct.Indoors);
+            //
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/indfarvet-spartelmasse-indendoers-maling/",
+            //     TypesOfProduct.Indoors);
+            //
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/metalmaling/", TypesOfProduct.Indoors);
+            //
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/vaegbeklaedning/",
+            //     TypesOfProduct.Indoors);
+            //
+            // Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/gulvmaling/",
+            //     TypesOfProduct.Indoors);
+            //
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/radiatormaling/",
+            //     TypesOfProduct.Indoors);
+            //
+            // Start("https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/",
+            //     TypesOfProduct.Outdoors);
+            //
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/udendoers-grunder/",
+            //     TypesOfProduct.Outdoors);
+            //
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/traemaling-udendoers/",
+            //     TypesOfProduct.Outdoors);
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/vinduesmaling/",
+            //     TypesOfProduct.Outdoors);
+            //
+            //
+            // Start("https://www.flugger-horsens.dk/vare-kategori/tilbehoer/kit/",
+            //     TypesOfProduct.Others);
+            // Start("https://www.flugger-horsens.dk/vare-kategori/tilbehoer/kit/linoliekit/",
+            //     TypesOfProduct.Others);
+            //
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/silikonefugemasse/",
+            //     TypesOfProduct.Others);
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/acrylfugemasse/",
+            //     TypesOfProduct.Others);
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/",
+            //     TypesOfProduct.Others);
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/vaadrumsfugemasse/",
+            //     TypesOfProduct.Others);
+            //
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningsfilt/",
+            //     TypesOfProduct.Others);
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningstape/",
+            //     TypesOfProduct.Others);
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningspap/",
+            //     TypesOfProduct.Others);
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningsplast/",
+            //     TypesOfProduct.Others);
+            // Start(
+            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/udendoers-afdaekningspap/",
+            //     TypesOfProduct.Others);
         }
 
         private void Start(String urlToScrap, Enum type)
@@ -140,23 +140,20 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             GetAllItems(urlToScrap, type);
         }
 
+
         private void GetAllItems(string urlToScrap, Enum type)
         {
-            ScrappingHelper.RenewIpAndPorts();
+            tryAnotherIP:
             ChromeOptions options = new ChromeOptions();
+
             IWebDriver driver = new ChromeDriver(options);
             ReadOnlyCollection<IWebElement> items;
 
-            int iterator = 0;
-            tryAnotherIP:
-            Console.WriteLine("Trying IP: " + ScrappingHelper.proxies[iterator]);
             try
             {
                 driver.Navigate()
                     .GoToUrl(urlToScrap);
                 Thread.Sleep(7000);
-                IWebElement firstWindow =
-                    driver.FindElement(By.Id("CybotCookiebotDialogBody"));
                 CleanWindow(driver);
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(40);
                 IWebElement progressOfItems = driver.FindElement(By.Id("progress_count"));
@@ -166,7 +163,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                 while (!AreAllItemsDisplayed(progressOfItems.Text))
                 {
                     Thread.Sleep(4000);
-                    
+
                     showMoreButton.Click();
                     progressOfItems = driver.FindElement(By.Id("progress_count"));
                     if (progressOfItems.Text.Equals(previousCount))
@@ -179,59 +176,42 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
 
 
                 items = driver.FindElements(By.ClassName("woocommerce-LoopProduct-link"));
-
-                Regex priceRegex = new Regex("[1-9]([0-9]{0,2}|\\.)+,");
-                for (int j = 0; j < items.Count; j++)
-                {
-                    try
-                    {
-                        String name = ScrappingHelper.RemoveDiacritics(GetName(items[j]));
-                        String link = GetLink(items[j]);
-
-
-                        Console.WriteLine("Name: " + name);
-                        Dictionary<String, String> sizeAndPrice = GetSizeAndPrice(link);
-                        Product product = null;
-                        String pathToImage = GetPathToTheImage(link);
-                        foreach (KeyValuePair<String, String> i in sizeAndPrice)
-                        {
-                            product = new Product();
-                            product.Name = name;
-                            string size = i.Key.Replace(",", ".");
-                            string price = priceRegex.Match(i.Value).Value.Replace(",", "");
-                            product.Size = size;
-                            product.Price = price;
-                            product.PathToImage = pathToImage;
-                            product.ProductTypeId = Convert.ToInt32(type);
-                            product.WebsiteId = 4;
-
-                            ScrappingHelper.SaveOrUpdate(_dbContext, product);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        continue;
-                    }
-                }
             }
             catch (Exception ex)
             {
                 driver?.Quit();
-                Console.WriteLine(ScrappingHelper.proxies[iterator] + " failed");
-                if (iterator >= ScrappingHelper.proxies.Count - 1)
-                {
-                    iterator = 0;
-                }
-                else
-                {
-                    iterator++;
-                }
-
                 goto tryAnotherIP;
             }
 
+            Regex priceRegex = new Regex("[1-9]([0-9]{0,2}|\\.)+,");
+           for (int j = 0; j < items.Count; j++)
+           {
+                String name = ScrappingHelper.RemoveDiacritics(GetName(items[j]));
+                String link = GetLink(items[j]);
+
+
+                Console.WriteLine("Name: " + name);
+                Dictionary<String, String> sizeAndPrice = GetSizeAndPrice(link);
+                Product product = null;
+                String pathToImage = GetPathToTheImage(link);
+                foreach (KeyValuePair<String, String> i in sizeAndPrice)
+                {
+                    product = new Product();
+                    product.Name = name;
+                    string size = i.Key.Replace(",", ".");
+                    string price = priceRegex.Match(i.Value).Value.Replace(",", "");
+                    product.Size = size;
+                    product.Price = price;
+                    product.PathToImage = pathToImage;
+                    product.ProductTypeId = Convert.ToInt32(type);
+                    product.WebsiteId = 4;
+
+                    ScrappingHelper.SaveOrUpdate(_dbContext, product);
+                }
+            }
             driver.Quit();
         }
+        
 
         private String GetPathToTheImage(string link)
         {
@@ -241,7 +221,6 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             String finishedString = "";
             int iterator = 0;
             tryAnotherIP:
-            Console.WriteLine("Trying IP: " + ScrappingHelper.proxies[iterator]);
             try
             {
                 driver.Navigate()
@@ -268,19 +247,10 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             catch (Exception e)
             {
                 driver?.Quit();
-                Console.WriteLine(ScrappingHelper.proxies[iterator] + " failed");
-                if (iterator >= ScrappingHelper.proxies.Count - 1)
-                {
-                    iterator = 0;
-                }
-                else
-                {
-                    iterator++;
-                }
 
                 goto tryAnotherIP;
             }
-            
+
 
             driver.Quit();
             return finishedString;
@@ -289,24 +259,13 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
 
         private Dictionary<String, String> GetSizeAndPrice(String link)
         {
-            int iterator = 0;
             Dictionary<String, String> SizeAndPrice = new Dictionary<String, string>();
             ChromeOptions options = new ChromeOptions();
-            ScrappingHelper.RenewIpAndPorts();
             IWebDriver driver = null;
             tryAnotherIP:
-            Console.WriteLine("Trying IP: " + ScrappingHelper.proxies[iterator]);
             try
             {
-                Proxy proxy = new Proxy();
-                proxy.Kind = ProxyKind.Manual;
-                proxy.IsAutoDetect = false;
-                proxy.HttpProxy =
-                    proxy.SslProxy = ScrappingHelper.proxies[iterator] + ":" + ScrappingHelper.ports[iterator];
-                options.Proxy = proxy;
-                options.AddArgument("ignore-certificate-errors");
-                 driver = new ChromeDriver(options);
-
+                driver = new ChromeDriver(options);
                 IJavaScriptExecutor js = (IJavaScriptExecutor) driver;
                 driver.Navigate()
                     .GoToUrl(link);
@@ -318,7 +277,6 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                 Thread.Sleep(4000);
                 if (colors.Count > 1)
                 {
-                   
                     try
                     {
                         colors[1].Click();
@@ -385,16 +343,6 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             catch (Exception ex)
             {
                 driver.Quit();
-                Console.WriteLine(ScrappingHelper.proxies[iterator] + " failed");
-                if (iterator >= ScrappingHelper.proxies.Count - 1)
-                {
-                    iterator = 0;
-                }
-                else
-                {
-                    iterator++;
-                }
-
                 goto tryAnotherIP;
             }
 

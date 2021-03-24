@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -11,6 +12,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using HtmlAgilityPack;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using RestSharp;
 using WebScrapper.Scraping.DTO;
 using WebScrapper.Scraping.ScrappingFluggerDk.DB;
@@ -31,6 +34,7 @@ namespace WebScrapper.Scraping.Helpers
         public static List<Product> productsAddedDuringThisSession = new List<Product>();
         public static List<String> proxies;
         public static List<int> ports;
+        public static int proxiesCounter = 0;
 
         public static List<Website> _allWebsites = new List<Website>()
         {
@@ -39,15 +43,20 @@ namespace WebScrapper.Scraping.Helpers
             new Website() {WebsiteId = 3, Name = "www.maling-halvpris.dk", Products = new List<Product>()},
             new Website() {WebsiteId = 4, Name = "www.flugger-horsens.dk", Products = new List<Product>()}
         };
+
         public static readonly Regex InvalidCharacter = new Regex(@"&#[0-9]+[;]|&[A-Za-z]+[;]");
-        public static readonly Regex IpRegex = new Regex(@"\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\:[0-9]{1,5}\b");
+
+        public static readonly Regex IpRegex =
+            new Regex(
+                @"\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\:[0-9]{1,5}\b");
+
         public static HtmlDocument GetHtmlDocument(String url)
         {
             HtmlWeb web = new HtmlWeb();
             var htmlDocument = web.Load(url);
             return htmlDocument;
         }
-        
+
         public static void RenewIpAndPorts()
         {
             Dictionary<String, int> proxiesAndPorts = GetProxyAndPort();
@@ -57,29 +66,93 @@ namespace WebScrapper.Scraping.Helpers
 
         public static Dictionary<string, string> getIPAndPort()
         {
-            
             Dictionary<String, String> proxy_port = new Dictionary<string, string>();
+            // List<String> allowedCodes = new List<string>()
+            // {
+            //     "BE", "BG", "CZ", "DK", "DE", "EE", "IE", "GR", "ES", "FR", "HR", "IT", "CY", "LV", "LT", "LU", "HU",
+            //     "MT", "NL", "AT", "PL", "PT", "RO", "SI", "SK", "FI", "SE", "IS", "LI", "NO", "CH", "GB"
+            // };
             Regex ipFromJson = new Regex("\"ip\"(.*?),");
             Regex portFromJson = new Regex("\"port\"(.*?),");
+
+            // List<String> givenCountries = new List<string>();
+
+
+            //  Regex countryJson = new Regex("\"")
             Regex ip_port_Values = new Regex("[1-9]([0-9]+|\\.)+");
-           
-            var client = new RestClient("https://proxypage1.p.rapidapi.com/v1/tier1?type=HTTPS&country=US");
+
+          
+            var client = new RestClient("https://proxy-orbit1.p.rapidapi.com/v1/");
             var request = new RestRequest(Method.GET);
-            request.AddHeader("content-type", "application/x-www-form-urlencoded");
             request.AddHeader("x-rapidapi-key", "1959d36928msh662f443ae286ccep1b6f5ajsnadb0d5161bee");
-            request.AddHeader("x-rapidapi-host", "proxypage1.p.rapidapi.com");
+            request.AddHeader("x-rapidapi-host", "proxy-orbit1.p.rapidapi.com");
             IRestResponse response = client.Execute(request);
 
             Console.WriteLine(response.Content);
-            MatchCollection rawIp = ipFromJson.Matches(response.Content);
-            MatchCollection rawPort = portFromJson.Matches(response.Content);
-            Console.WriteLine();
-            for (int i = 0; i < rawIp.Count; i++)
+            String rawProxy = ipFromJson.Match(response.Content).Value;
+            String rawPort = portFromJson.Match(response.Content).Value;
+            String proxy = ip_port_Values.Match(rawProxy).Value;
+            String port = ip_port_Values.Match(rawPort).Value;
+            Console.WriteLine(proxy+":"+port);
+            return new Dictionary<string, string>();
+        }
+
+        public static KeyValuePair<String, String> getFreshIPAndPort()
+        {
+            
+            Dictionary<String, String> proxy_port = new Dictionary<string, string>();
+            List<String> allowedCodes = new List<string>()
             {
-                proxy_port.Add(ip_port_Values.Match(rawIp[i].Value).Value, ip_port_Values.Match(rawPort[i].Value).Value);
+                "BE", "BG", "CZ", "DK", "DE", "EE", "IE", "GR", "ES", "FR", "HR", "IT", "CY", "LV", "LT", "LU", "HU",
+                "MT", "NL", "AT", "PL", "PT", "RO", "SI", "SK", "FI", "SE", "IS", "LI", "NO", "CH", "GB"
+            };
+            Regex ipFromJson = new Regex("\"ip\"(.*?),");
+            Regex portFromJson = new Regex("\"port\"(.*?),");
+
+            // List<String> givenCountries = new List<string>();
+
+
+            //  Regex countryJson = new Regex("\"")
+            Regex ip_port_Values = new Regex("[1-9]([0-9]+|\\.)+");
+
+            if (proxiesCounter == allowedCodes.Count)
+            {
+                proxiesCounter = 0;
             }
 
-            return proxy_port;
+            IRestResponse response;
+            do
+            {
+                var client = new RestClient("https://proxy-orbit1.p.rapidapi.com/v1/?location="+allowedCodes[proxiesCounter]+"&protocols=socks4");
+                proxiesCounter++;
+                var request = new RestRequest(Method.GET);
+                request.AddHeader("x-rapidapi-key", "1959d36928msh662f443ae286ccep1b6f5ajsnadb0d5161bee");
+                request.AddHeader("x-rapidapi-host", "proxy-orbit1.p.rapidapi.com");
+                 response = client.Execute(request);
+                 Console.WriteLine(response.Content);
+            } while (!response.IsSuccessful);
+            
+            
+
+           
+            String rawProxy = ipFromJson.Match(response.Content).Value;
+            String rawPort = portFromJson.Match(response.Content).Value;
+            String proxy = ip_port_Values.Match(rawProxy).Value;
+            String port = ip_port_Values.Match(rawPort).Value;
+            KeyValuePair<String, String> proxyAndPort = new KeyValuePair<string, string>(proxy,port);
+            return proxyAndPort;
+        }
+        public static ChromeOptions setProxyOption(String prox, String port)
+        {
+            ChromeOptions chromeOptions = new ChromeOptions();
+            Proxy proxy = new Proxy();
+            proxy.Kind = ProxyKind.Manual;
+            proxy.IsAutoDetect = false;
+            proxy.HttpProxy =
+                proxy.SslProxy = prox + ":" + port;
+            chromeOptions.Proxy = proxy;
+            chromeOptions.AddArgument("ignore-certificate-errors");
+            return chromeOptions;
         }
 
         private static Product ExistsAlreadyInTheDatabase(DBContext dbContext, String hash)
@@ -103,6 +176,7 @@ namespace WebScrapper.Scraping.Helpers
             {
                 productType.Products = new List<Product>();
             }
+
             productType.Products.Add(product);
             _dbContext.SaveChanges();
         }
@@ -119,36 +193,37 @@ namespace WebScrapper.Scraping.Helpers
             {
                 website.Products = new List<Product>();
             }
+
             website.Products.Add(product);
             _dbContext.SaveChanges();
-
         }
-
 
 
         public static void SaveOrUpdate(DBContext dbContext, Product product)
         {
-            String hash = hashData(product.Name + product.Size + product.ProductTypeId + product.WebsiteId +
-                                   product.PathToImage);
-            product.Hash = hash;
-            product.Name = product.Name.Trim();
-            productsAddedDuringThisSession.Add(product);
-            Product similarProduct = ExistsAlreadyInTheDatabase(dbContext, hash);
-            if (similarProduct != null)
-            {
-                if (!similarProduct.Price.Equals(product.Price))
+           
+                String hash = hashData(product.Name + product.Size + product.ProductTypeId + product.WebsiteId +
+                                       product.PathToImage);
+                product.Hash = hash;
+                product.Name = product.Name.Trim();
+                productsAddedDuringThisSession.Add(product);
+                Product similarProduct = ExistsAlreadyInTheDatabase(dbContext, hash);
+                if (similarProduct != null)
                 {
-                    similarProduct.Price = product.Price;
-                    dbContext.SaveChanges();
+                    if (!similarProduct.Price.Equals(product.Price))
+                    {
+                        similarProduct.Price = product.Price;
+                        dbContext.SaveChanges();
+                    }
                 }
-            }
-            else
-            {
-                dbContext.Product.Add(product);
-                dbContext.SaveChanges();
-                AddToProductType(dbContext, product);
-                AddToWebsite(dbContext, product);
-            }
+                else
+                {
+                    dbContext.Product.Add(product);
+                    dbContext.SaveChanges();
+                    AddToProductType(dbContext, product);
+                    AddToWebsite(dbContext, product);
+                }
+
         }
 
         public static String hashData(String content)
@@ -163,12 +238,12 @@ namespace WebScrapper.Scraping.Helpers
 
             return hash.ToString();
         }
-        public static string RemoveDiacritics(string text) 
+
+        public static string RemoveDiacritics(string text)
         {
             return text.Replace("Ü", "U").Replace("ü", "u")
-                .Replace("Æ", "Ae").Replace("æ", "ae").
-                Replace("Ø","O").Replace("ø", "o").
-                Replace("Å","A").Replace("å", "a").Replace("ä", "a").Replace("Ä", "A")
+                .Replace("Æ", "Ae").Replace("æ", "ae").Replace("Ø", "O").Replace("ø", "o").Replace("Å", "A")
+                .Replace("å", "a").Replace("ä", "a").Replace("Ä", "A")
                 .Replace("ß", "B");
         }
 
@@ -178,8 +253,11 @@ namespace WebScrapper.Scraping.Helpers
             allProducts = dbContext.Product.ToList();
         }
 
+        [SuppressMessage("ReSharper.DPA", "DPA0004: Closure object allocation")]
         public static void removeDeletedProductsFromDB(DBContext dbContext)
         {
+            var a = allProducts;
+            var b = productsAddedDuringThisSession;
             bool isFound = false;
             for (int i = 0; i < allProducts.Count; i++)
             {
@@ -187,6 +265,7 @@ namespace WebScrapper.Scraping.Helpers
                 {
                     if (allProducts[i].Hash.Equals(productsAddedDuringThisSession[j].Hash))
                     {
+                        Console.WriteLine(allProducts[i].Name + "corresponds");
                         isFound = true;
                         break;
                     }
@@ -194,11 +273,14 @@ namespace WebScrapper.Scraping.Helpers
 
                 if (!isFound)
                 {
+                    Console.WriteLine(allProducts[i].Name + "doesn't correspond");
                     dbContext.Product.Remove(allProducts[i]);
+                    dbContext.SaveChanges();
+                    Console.WriteLine(dbContext.Product.ToList().Count);
                 }
+                isFound = false;
             }
         }
-        
 
 
         public static HtmlDocument GetHtmlDocument(String url, String proxy, int port)
@@ -206,7 +288,7 @@ namespace WebScrapper.Scraping.Helpers
             WebProxy prox = new WebProxy(proxy, port);
             prox.UseDefaultCredentials = true;
             prox.Credentials = CredentialCache.DefaultCredentials;
-          
+
             WebClient client = new WebClient();
             client.Proxy = prox;
 
@@ -219,10 +301,11 @@ namespace WebScrapper.Scraping.Helpers
 
             return pageHtml;
         }
+
         public static Dictionary<String, int> GetProxyAndPort()
         {
             Dictionary<String, int> proxyAndPort = new Dictionary<string, int>();
-            string[] lines = File.ReadAllLines( "Scraping\\ip.txt");
+            string[] lines = File.ReadAllLines("Scraping\\ip.txt");
 
             foreach (string line in lines)
             {
@@ -233,12 +316,11 @@ namespace WebScrapper.Scraping.Helpers
                 }
                 catch (Exception e)
                 {
-                   
                 }
             }
+
             return proxyAndPort;
         }
-
 
 
         public static String FixInvalidCharacter(String name, Regex invalidCharacter)
@@ -250,11 +332,9 @@ namespace WebScrapper.Scraping.Helpers
                 fixedName = fixedName.Replace(incorrectCharacter.Value,
                     HttpUtility.HtmlDecode(incorrectCharacter.Value));
             }
+
             return fixedName;
         }
-
-
-
 
 
         public static bool CheckIfInvalidCharacter(String name, Regex regex)
