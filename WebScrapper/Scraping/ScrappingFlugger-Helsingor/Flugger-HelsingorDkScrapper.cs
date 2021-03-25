@@ -18,7 +18,7 @@ namespace WebScrapper.Scraping
     public class FluggerHelsingorDkScrapper
     {
         private DBContext _dbContext;
-        private KeyValuePair<String, String> proxyPort = ScrappingHelper.getFreshIPAndPort();
+        private KeyValuePair<String, String> proxyPort;
         private IWebDriver _driver;
         private ChromeOptions _chromeOptions;
 
@@ -26,15 +26,15 @@ namespace WebScrapper.Scraping
         public FluggerHelsingorDkScrapper(DBContext dbContext)
         {
             _dbContext = dbContext;
-            _chromeOptions = ScrappingHelper.setProxyOption(proxyPort.Key, proxyPort.Value);
-            _driver = new ChromeDriver(_chromeOptions);
+            proxyPort = ScrappingHelper.getFreshIPAndPort();
+            // _chromeOptions = ScrappingHelper.setProxyOption(proxyPort.Key, proxyPort.Value);
+            // _driver = new ChromeDriver(_chromeOptions);
         }
 
         [SuppressMessage("ReSharper.DPA", "DPA0002: Excessive memory allocations in SOH",
             MessageId = "type: System.String")]
         public void StartScrapping()
         {
-          
             Start(
                 "https://flugger-helsingor.dk/vare-kategori/indendoers-maling/grundere-indendors-maling/",
                 TypesOfProduct.Indoors);
@@ -105,7 +105,7 @@ namespace WebScrapper.Scraping
                     tryAnotherProxy();
                     goto tryAnotherIP;
                 }
-               
+
                 List<String> pages = GetPages(urlToScrap);
                 foreach (String page in pages)
                 {
@@ -143,7 +143,7 @@ namespace WebScrapper.Scraping
                     tryAnotherProxy();
                     goto tryAnotherIP;
                 }
-                
+
                 CleanWindows(_driver);
                 List<String> link = GetLinks(_driver);
                 for (int i = 0; i < link.Count; i++)
@@ -253,14 +253,38 @@ namespace WebScrapper.Scraping
                             product.Name = name;
 
                             Thread.Sleep(4000);
+                            tryToClick:
+                            try
+                            {
                             IWebElement radioOption = Lis[i].FindElement(By.ClassName("radio-option"));
-                            radioOption.Click();
-                            Thread.Sleep(4000);
-                            IWebElement arr = _driver.FindElement(By.ClassName("single_variation_wrap"));
-                            Thread.Sleep(4000);
-                            IWebElement web = arr.FindElement(By.ClassName("price"));
-                            Thread.Sleep(4000);
-                            priceString = web.FindElement(By.TagName("ins")).Text;
+                           
+                                radioOption.Click();
+                            }
+                            catch (ElementClickInterceptedException e)
+                            {
+                                Console.WriteLine(e);
+                                Thread.Sleep(4000);
+                                goto tryToClick;
+                            }
+                            
+                            tryAnotherIns:
+                            try
+                            {
+                                IWebElement arr = _driver.FindElement(By.ClassName("single_variation_wrap"));
+                                Thread.Sleep(4000);
+                                IWebElement web = arr.FindElement(By.ClassName("price"));
+                                Thread.Sleep(4000);
+                              
+
+                                priceString = web.FindElement(By.TagName("ins")).Text;
+                            }
+                            catch (Exception exception)
+                            {
+                                Console.WriteLine(exception);
+                                Thread.Sleep(4000);
+                                goto tryAnotherIns;
+                            }
+
                             priceString = priceRegex.Match(priceString).Value.Replace(",", "");
 
                             product.Size = Lis[i].Text;
@@ -357,7 +381,7 @@ namespace WebScrapper.Scraping
             catch (WebDriverException e)
             {
                 Console.WriteLine("Exception : " + e);
-                 tryAnotherProxy();
+                tryAnotherProxy();
                 goto tryAnotherIP;
             }
 
@@ -398,7 +422,7 @@ namespace WebScrapper.Scraping
                     tryAnotherProxy();
                     goto tryAnotherIP;
                 }
-             
+
                 CleanWindows(_driver);
                 _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(40);
                 Thread.Sleep(4000);

@@ -15,16 +15,13 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
     public class FluggerDkScrapper
     {
         private DBContext _dbContext;
-        int iteratorForProxies = 0;
-        private Dictionary<String, String> proxyAndPort; 
-        List<String> proxies = new List<string>();
-        List<String> ports = new List<string>();
+        private KeyValuePair<String, String> proxyPort;
 
 
         public FluggerDkScrapper(DBContext dbContext)
         {
             _dbContext = dbContext;
-         
+            proxyPort = ScrappingHelper.getFreshIPAndPort();
         }
 
         public void StartScrapping()
@@ -33,9 +30,6 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
 
             try
             {
-                proxyAndPort = ScrappingHelper.getIPAndPort();
-                proxies.AddRange(proxyAndPort.Keys);
-                ports.AddRange(proxyAndPort.Values);
                 Start("https://www.flugger.dk/maling-tapet/indend%C3%B8rs/", TypesOfProduct.Indoors);
                 Start(
                     "https://www.flugger.dk/malerv%C3%A6rkt%C3%B8j/tapetv%C3%A6rkt%C3%B8j-kl%C3%A6ber/",
@@ -67,29 +61,18 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
         private void Start(String urlToScrap, Enum type)
         {
             HtmlDocument htmlDocument = null;
-            Console.WriteLine("Trying: " + proxies[iteratorForProxies]);
+            Console.WriteLine("Trying: " + proxyPort.Key);
             tryAnotherIP:
             try
             {
                 
                 htmlDocument =
-                    ScrappingHelper.GetHtmlDocument(urlToScrap, proxies[iteratorForProxies], Convert.ToInt32(ports[iteratorForProxies]));
+                    ScrappingHelper.GetHtmlDocument(urlToScrap, proxyPort.Key, Convert.ToInt32(proxyPort.Value));
             }
             catch (Exception e)
             {
-                Console.WriteLine(proxies[iteratorForProxies] + " failed");
-                if (iteratorForProxies > proxies.Count - 1)
-                {
-                    proxyAndPort = ScrappingHelper.getIPAndPort();
-                    proxies.AddRange(proxyAndPort.Keys);
-                    ports.AddRange(proxyAndPort.Values);
-                    iteratorForProxies = 0;
-                }
-                else
-                {
-                    iteratorForProxies++;
-                }
-
+                Console.WriteLine(proxyPort.Key + " failed");
+                proxyPort = ScrappingHelper.getFreshIPAndPort();
                 goto tryAnotherIP;
             }
         
@@ -136,15 +119,13 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
            
             foreach (var product in listOfProducts)
             {
-
-                int amountOfSizesOfAProduct = 0;
-
+                
                 tryAnotherIP:
                 try
                 {
-                    Console.WriteLine("Trying ip: " + proxies[iteratorForProxies]);
-                    List<String> proxySize = GetSize(product, proxies[iteratorForProxies],
-                        Convert.ToInt32(ports[iteratorForProxies]));
+                    Console.WriteLine("Trying ip: " + proxyPort.Key);
+                    List<String> proxySize = GetSize(product, proxyPort.Key,
+                        Convert.ToInt32(proxyPort.Value));
                      
                     
                     for (int i = 0; i < proxySize.Count; i++)
@@ -153,8 +134,8 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                         tempProduct.Name = ScrappingHelper.RemoveDiacritics(GetNameOfProduct(product).Trim());
                         tempProduct.Size = proxySize[i];
                         tempProduct.Price =
-                            GetPrice(product, proxies[iteratorForProxies],
-                                Convert.ToInt32(ports[iteratorForProxies]))[i];
+                            GetPrice(product, proxyPort.Key,
+                                Convert.ToInt32(proxyPort.Value))[i];
                         tempProduct.PathToImage = "No data";
                         tempProduct.ProductTypeId = Convert.ToInt32(type);
                         tempProduct.WebsiteId = 1;
@@ -165,19 +146,8 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(proxies[iteratorForProxies] + " failed");
-                    if (iteratorForProxies == proxies.Count - 1)
-                    {
-                            proxyAndPort = ScrappingHelper.getIPAndPort();
-                            proxies.AddRange(proxyAndPort.Keys);
-                            ports.AddRange(proxyAndPort.Values);
-                            iteratorForProxies = 0;
-                    }
-                    else
-                    {
-                        iteratorForProxies++;
-                    }
-
+                    Console.WriteLine(proxyPort.Key + " failed");
+                    proxyPort = ScrappingHelper.getFreshIPAndPort();
                     goto tryAnotherIP;
                 }
             }
@@ -205,10 +175,24 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
         {
             String url = "https://www.flugger.dk" + GetProductLink(product);
 
-            // HtmlDocument htmlDocument =
-            //     ScrappingHelper.GetHtmlDocument(url, proxy, port);
-            HtmlDocument htmlDocument =
-                ScrappingHelper.GetHtmlDocument(url);
+           
+         
+                tryAnotherIP:
+                Console.WriteLine("Trying IP: " + proxyPort.Key);
+                HtmlDocument htmlDocument = null;
+                try
+                { 
+                    htmlDocument =
+                        ScrappingHelper.GetHtmlDocument(url, proxyPort.Key, Convert.ToInt32(proxyPort.Value));
+                }
+                catch (Exception e)
+                {
+                
+                    Console.WriteLine(proxyPort.Key + " failed");
+                    proxyPort = ScrappingHelper.getFreshIPAndPort();
+                    goto tryAnotherIP;
+                }
+               
 
             IList<HtmlNode> listOfSizes = GetProductsWithPriceAndSize(htmlDocument);
             List<String> sizes = new List<string>();
@@ -243,9 +227,22 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
         private IList<String> GetPrice(HtmlNode product, String proxy, int port)
         {
             String url = "https://www.flugger.dk" + GetProductLink(product);
-            // HtmlDocument htmlDocument =
-            //     ScrappingHelper.GetHtmlDocument(url, proxy, port);
-            HtmlDocument htmlDocument = ScrappingHelper.GetHtmlDocument(url);
+            tryAnotherIP:
+            HtmlDocument htmlDocument = null;
+            try
+            { 
+                htmlDocument =
+                    ScrappingHelper.GetHtmlDocument(url, proxyPort.Key, Convert.ToInt32(proxyPort.Value));
+            }
+            catch (Exception e)
+            {
+                
+                Console.WriteLine(proxyPort.Key + " failed");
+                proxyPort = ScrappingHelper.getFreshIPAndPort();
+                goto tryAnotherIP;
+            }
+            
+            
             IList<HtmlNode> listOfSizes = GetProductsWithPriceAndSize(htmlDocument);
             IList<String> prices = new List<String>();
             String priceAsString = "";

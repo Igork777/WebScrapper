@@ -14,22 +14,18 @@ namespace WebScrapper.Scraping
     public class Maling_halvprisDk
     {
         private DBContext _dbContext;
-        int iterator = 0;
-        private Dictionary<String, String> proxyAndPort;
-        List<String> proxies = new List<string>();
-        List<String> ports = new List<string>();
+        private KeyValuePair<String, String> proxyPort;
         
         public Maling_halvprisDk(DBContext dbContext)
         {
             _dbContext = dbContext;
+            proxyPort = ScrappingHelper.getFreshIPAndPort();
           
         }
 
         public void StartScrapping()
         {
-            proxyAndPort = ScrappingHelper.getIPAndPort();
-            proxies.AddRange(proxyAndPort.Keys);
-            ports.AddRange(proxyAndPort.Values);
+           
             Console.WriteLine("Starting new scrap");
             Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-inde/", TypesOfProduct.Indoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_inde/", TypesOfProduct.Indoors);
@@ -62,32 +58,20 @@ namespace WebScrapper.Scraping
 
         private void Start(String urlToScrap, Enum type)
         {
-          //  ScrappingHelper.RenewIpAndPorts();
-            HtmlDocument htmlDocument = null;
             tryAnotherIP:
-            Console.WriteLine("Trying IP: " + proxies[iterator]);
+            HtmlDocument htmlDocument = null;
+            Console.WriteLine("Trying ip:" + proxyPort.Key);
             try
             {
                 htmlDocument =
-                    ScrappingHelper.GetHtmlDocument(urlToScrap, proxies[iterator], Convert.ToInt32(ports[iterator]));
+                    ScrappingHelper.GetHtmlDocument(urlToScrap, proxyPort.Key, Convert.ToInt32(proxyPort.Value));
             }
             catch (Exception e)
             {
-                if (iterator == proxyAndPort.Count - 1)
-                {
-                    proxyAndPort = ScrappingHelper.getIPAndPort();
-                    proxies.AddRange(proxyAndPort.Keys);
-                    ports.AddRange(proxyAndPort.Values);
-                    iterator = 0;
-                }
-                else
-                {
-                    iterator++;
-                }
-                Console.WriteLine(proxies[iterator] + " failed");
+                Console.WriteLine(proxyPort.Key + " failed");
+                proxyPort = ScrappingHelper.getFreshIPAndPort();
                 goto tryAnotherIP;
             }
-
             GetProductsList(htmlDocument, type);
         }
 

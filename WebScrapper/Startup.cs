@@ -83,8 +83,8 @@ namespace WebScrapper
              if (myDbContext != null) myDbContext.Database.Migrate();
 
 
-             // Starter starter = new Starter();
-             //starter.Start();
+              Starter starter = new Starter();
+             starter.Start();
         }
 
 

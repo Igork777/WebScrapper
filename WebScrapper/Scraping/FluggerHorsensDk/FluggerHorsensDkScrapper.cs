@@ -16,6 +16,9 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
     public class FluggerHorsensDkScrapper
     {
         private DBContext _dbContext;
+        int counterOfTries = 0;
+
+        private IWebDriver _driver, _driverItem;
 
         public FluggerHorsensDkScrapper(DBContext dbContext)
         {
@@ -25,114 +28,119 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
         public void StartScrapping()
         {
             Console.WriteLine("Starting new scrap");
+            ChromeOptions chromeOptions = new ChromeOptions();
+            _driver = new ChromeDriver(chromeOptions);
+            _driverItem = new ChromeDriver(chromeOptions);
             Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/vaegmaling/",
                 TypesOfProduct.Indoors);
+            
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/traemaling-indendoers/",
+                TypesOfProduct.Indoors);
+            
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/sproejtemaling/",
+                TypesOfProduct.Indoors);
+            
+            Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/loftmaling/",
+                TypesOfProduct.Indoors);
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/malerruller/", TypesOfProduct.Tools);
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/rulleskafter/",
+                TypesOfProduct.Tools);
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/malerspande/", TypesOfProduct.Tools);
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/malerbakker/", TypesOfProduct.Tools);
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/slibevaertoej/",
+                TypesOfProduct.Tools);
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/rengoering/arbejdshandsker/",
+                TypesOfProduct.Tools);
+            Start("https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/spartler/",
+                TypesOfProduct.Tools);
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/fugepistoler/",
+                TypesOfProduct.Tools);
+            
+            
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/indendoers-grunder/",
+                TypesOfProduct.Indoors);
+            
+            Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/sandmaling/",
+                TypesOfProduct.Indoors);
+            
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/indfarvet-spartelmasse-indendoers-maling/",
+                TypesOfProduct.Indoors);
+            
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/metalmaling/", TypesOfProduct.Indoors);
+            
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/vaegbeklaedning/",
+                TypesOfProduct.Indoors);
+            
+            Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/gulvmaling/",
+                TypesOfProduct.Indoors);
+            
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/radiatormaling/",
+                TypesOfProduct.Indoors);
 
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/traemaling-indendoers/",
-            //     TypesOfProduct.Indoors);
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/sproejtemaling/",
-            //     TypesOfProduct.Indoors);
-            //
-            // Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/loftmaling/",
-            //     TypesOfProduct.Indoors);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/malerruller/", TypesOfProduct.Tools);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/rulleskafter/",
-            //     TypesOfProduct.Tools);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/malerspande/", TypesOfProduct.Tools);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/malerbakker/", TypesOfProduct.Tools);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/slibevaertoej/",
-            //     TypesOfProduct.Tools);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/rengoering/arbejdshandsker/",
-            //     TypesOfProduct.Tools);
-            // Start("https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/spartler/",
-            //     TypesOfProduct.Tools);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/fugepistoler/",
-            //     TypesOfProduct.Tools);
-            //
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/indendoers-grunder/",
-            //     TypesOfProduct.Indoors);
-            //
-            // Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/sandmaling/",
-            //     TypesOfProduct.Indoors);
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/indfarvet-spartelmasse-indendoers-maling/",
-            //     TypesOfProduct.Indoors);
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/metalmaling/", TypesOfProduct.Indoors);
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/vaegbeklaedning/",
-            //     TypesOfProduct.Indoors);
-            //
-            // Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/gulvmaling/",
-            //     TypesOfProduct.Indoors);
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/radiatormaling/",
-            //     TypesOfProduct.Indoors);
-            //
-            // Start("https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/",
-            //     TypesOfProduct.Outdoors);
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/udendoers-grunder/",
-            //     TypesOfProduct.Outdoors);
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/traemaling-udendoers/",
-            //     TypesOfProduct.Outdoors);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/vinduesmaling/",
-            //     TypesOfProduct.Outdoors);
-            //
-            //
-            // Start("https://www.flugger-horsens.dk/vare-kategori/tilbehoer/kit/",
-            //     TypesOfProduct.Others);
-            // Start("https://www.flugger-horsens.dk/vare-kategori/tilbehoer/kit/linoliekit/",
-            //     TypesOfProduct.Others);
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/silikonefugemasse/",
-            //     TypesOfProduct.Others);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/acrylfugemasse/",
-            //     TypesOfProduct.Others);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/",
-            //     TypesOfProduct.Others);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/vaadrumsfugemasse/",
-            //     TypesOfProduct.Others);
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningsfilt/",
-            //     TypesOfProduct.Others);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningstape/",
-            //     TypesOfProduct.Others);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningspap/",
-            //     TypesOfProduct.Others);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningsplast/",
-            //     TypesOfProduct.Others);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/udendoers-afdaekningspap/",
-            //     TypesOfProduct.Others);
+            Start("https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/",
+                TypesOfProduct.Outdoors);
+
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/udendoers-grunder/",
+                TypesOfProduct.Outdoors);
+
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/traemaling-udendoers/",
+                TypesOfProduct.Outdoors);
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/vinduesmaling/",
+                TypesOfProduct.Outdoors);
+
+
+            Start("https://www.flugger-horsens.dk/vare-kategori/tilbehoer/kit/",
+                TypesOfProduct.Others);
+            Start("https://www.flugger-horsens.dk/vare-kategori/tilbehoer/kit/linoliekit/",
+                TypesOfProduct.Others);
+
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/silikonefugemasse/",
+                TypesOfProduct.Others);
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/acrylfugemasse/",
+                TypesOfProduct.Others);
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/",
+                TypesOfProduct.Others);
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/vaadrumsfugemasse/",
+                TypesOfProduct.Others);
+
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningsfilt/",
+                TypesOfProduct.Others);
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningstape/",
+                TypesOfProduct.Others);
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningspap/",
+                TypesOfProduct.Others);
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningsplast/",
+                TypesOfProduct.Others);
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/udendoers-afdaekningspap/",
+                TypesOfProduct.Others);
+            _driverItem.Quit();
+            _driver.Quit();
         }
 
         private void Start(String urlToScrap, Enum type)
@@ -143,29 +151,30 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
 
         private void GetAllItems(string urlToScrap, Enum type)
         {
-            tryAnotherIP:
-            ChromeOptions options = new ChromeOptions();
-
-            IWebDriver driver = new ChromeDriver(options);
             ReadOnlyCollection<IWebElement> items;
 
+
+            tryOneMoreTime:
             try
             {
-                driver.Navigate()
+                _driver.Navigate()
                     .GoToUrl(urlToScrap);
-                Thread.Sleep(7000);
-                CleanWindow(driver);
-                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(40);
-                IWebElement progressOfItems = driver.FindElement(By.Id("progress_count"));
-                IWebElement showMoreButton = driver.FindElement(By.Id("loadmore"));
+                CleanWindow(_driver);
+                IWebElement progressOfItems = null;
+                Thread.Sleep(4000);
+                progressOfItems = _driver.FindElement(By.Id("progress_count"));
+                IWebElement showMoreButton = null;
+                Thread.Sleep(4000);
+                showMoreButton = _driver.FindElement(By.Id("loadmore"));
 
                 String previousCount = "";
                 while (!AreAllItemsDisplayed(progressOfItems.Text))
                 {
-                    Thread.Sleep(4000);
-
                     showMoreButton.Click();
-                    progressOfItems = driver.FindElement(By.Id("progress_count"));
+                    Thread.Sleep(4000);
+                    progressOfItems = _driver.FindElement(By.Id("progress_count"));
+
+
                     if (progressOfItems.Text.Equals(previousCount))
                     {
                         break;
@@ -174,18 +183,17 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                     previousCount = progressOfItems.Text;
                 }
 
-
-                items = driver.FindElements(By.ClassName("woocommerce-LoopProduct-link"));
+                Thread.Sleep(4000);
+                items = _driver.FindElements(By.ClassName("woocommerce-LoopProduct-link"));
             }
             catch (Exception ex)
             {
-                driver?.Quit();
-                goto tryAnotherIP;
+                goto tryOneMoreTime;
             }
 
             Regex priceRegex = new Regex("[1-9]([0-9]{0,2}|\\.)+,");
-           for (int j = 0; j < items.Count; j++)
-           {
+            for (int j = 0; j < items.Count; j++)
+            {
                 String name = ScrappingHelper.RemoveDiacritics(GetName(items[j]));
                 String link = GetLink(items[j]);
 
@@ -209,72 +217,81 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                     ScrappingHelper.SaveOrUpdate(_dbContext, product);
                 }
             }
-            driver.Quit();
         }
-        
+
 
         private String GetPathToTheImage(string link)
         {
             Regex pngImage = new Regex("http.*?\\.png");
-            ChromeOptions options = new ChromeOptions();
-            IWebDriver driver = new ChromeDriver(options);
             String finishedString = "";
-            int iterator = 0;
-            tryAnotherIP:
+            tryPneMoreTime:
             try
             {
-                driver.Navigate()
-                    .GoToUrl(link);
                 Thread.Sleep(4000);
-                driver.FindElement(By.Id("main_header"));
-                CleanWindow(driver);
-                Thread.Sleep(10000);
-                IWebElement path = driver.FindElement(By.ClassName("attachment-product-image"));
-                String compoundSrcSet = path.GetAttribute("srcset");
-
-                String[] sets = compoundSrcSet.Split(",");
-                finishedString = "No data";
-                foreach (String set in sets)
+                try
                 {
-                    if (set.Contains(".png"))
+                    _driverItem.FindElement(By.Id("main_header"));
+
+
+                    String compoundSrcSet = "";
+                    Thread.Sleep(4000);
+                    IWebElement path = _driverItem.FindElement(By.ClassName("attachment-product-image"));
+                    compoundSrcSet = path.GetAttribute("srcset");
+
+
+                    String[] sets = compoundSrcSet.Split(",");
+                    finishedString = "No data";
+                    foreach (String set in sets)
                     {
-                        finishedString = pngImage.Match(set).Value;
-                        Console.WriteLine(finishedString);
-                        break;
+                        if (set.Contains(".png"))
+                        {
+                            finishedString = pngImage.Match(set).Value;
+                            Console.WriteLine(finishedString);
+                            break;
+                        }
                     }
+                }
+                catch (NoSuchElementException e)
+                {
+                    return finishedString;
                 }
             }
             catch (Exception e)
             {
-                driver?.Quit();
-
-                goto tryAnotherIP;
+                Console.WriteLine(e);
+                _driverItem.Quit();
+                _driverItem = new ChromeDriver(new ChromeOptions());
+                goto tryPneMoreTime;
             }
 
 
-            driver.Quit();
+            _driverItem.Quit();
             return finishedString;
         }
 
 
         private Dictionary<String, String> GetSizeAndPrice(String link)
         {
-            Dictionary<String, String> SizeAndPrice = new Dictionary<String, string>();
-            ChromeOptions options = new ChromeOptions();
-            IWebDriver driver = null;
-            tryAnotherIP:
+            Dictionary<String, String> SizeAndPrice;
+            tryPneMoreTime:
             try
             {
-                driver = new ChromeDriver(options);
-                IJavaScriptExecutor js = (IJavaScriptExecutor) driver;
-                driver.Navigate()
+                SizeAndPrice = new Dictionary<String, string>();
+                
+                _driverItem.Navigate()
                     .GoToUrl(link);
                 Thread.Sleep(4000);
-                driver.FindElement(By.Id("main_header"));
-                CleanWindow(driver);
-                ReadOnlyCollection<IWebElement> colors = driver.FindElements(By.ClassName("color-box"));
-                ReadOnlyCollection<IWebElement> allSizes = driver.FindElements(By.ClassName("amount-box"));
+                _driverItem.FindElement(By.Id("main_header"));
+                CleanWindow(_driverItem);
+                ReadOnlyCollection<IWebElement> colors;
                 Thread.Sleep(4000);
+                colors = _driverItem.FindElements(By.ClassName("color-box"));
+
+                ReadOnlyCollection<IWebElement> allSizes;
+                Thread.Sleep(4000);
+                allSizes = _driverItem.FindElements(By.ClassName("amount-box"));
+
+
                 if (colors.Count > 1)
                 {
                     try
@@ -284,9 +301,12 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                     }
                     catch (Exception ex)
                     {
-                        var popup = driver.FindElement(By.ClassName("flugger-close-popup"));
-                        popup.Click();
+                        Console.WriteLine(ex);
                         Thread.Sleep(4000);
+                        
+                        
+                        var popup = _driverItem.FindElement(By.ClassName("flugger-close-popup"));
+                        popup.Click();
                         colors[0].Click();
                     }
                 }
@@ -299,7 +319,6 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                 Regex activeElement = new Regex("active");
                 Regex sizeRegex = new Regex("([0-9]{0,2}|,)[0-9]+");
                 List<IWebElement> selectedSize = GetAllSizes(allSizes);
-                Thread.Sleep(4000);
                 List<String> prices = new List<String>();
                 foreach (IWebElement size in selectedSize)
                 {
@@ -308,17 +327,19 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                         size.Click();
                     }
 
-                    Thread.Sleep(2000);
+
                     IWebElement price;
                     try
                     {
+                        Thread.Sleep(4000);
                         price =
-                            driver.FindElements(By.ClassName("woocommerce-Price-amount"))[1];
+                            _driverItem.FindElements(By.ClassName("woocommerce-Price-amount"))[1];
                     }
                     catch
                     {
+                        Thread.Sleep(4000);
                         price =
-                            driver.FindElements(By.ClassName("woocommerce-Price-amount"))[0];
+                            _driverItem.FindElements(By.ClassName("woocommerce-Price-amount"))[0];
                     }
 
                     if (prices.Contains(price.Text))
@@ -342,11 +363,12 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             }
             catch (Exception ex)
             {
-                driver.Quit();
-                goto tryAnotherIP;
+                Console.WriteLine(ex);
+                _driverItem.Quit();
+                _driverItem = new ChromeDriver(new ChromeOptions());
+                goto tryPneMoreTime;
             }
 
-            driver.Quit();
             return SizeAndPrice;
         }
 
@@ -354,17 +376,37 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
         private List<IWebElement> GetAllSizes(ReadOnlyCollection<IWebElement> allSizes)
         {
             Regex inactiveItemRegex = new Regex("inactive");
-            List<IWebElement> selectedSizes = new List<IWebElement>();
+            List<IWebElement> selectedSizes = null;
+            tryOneMoreTime:
+
+            selectedSizes = new List<IWebElement>();
             foreach (IWebElement size in allSizes)
             {
-                if (inactiveItemRegex.IsMatch(size.GetAttribute("class")) ||
-                    size.GetAttribute("id").Equals("amount-picker"))
+                tryAmountPicker:
+                try
                 {
-                    continue;
+                    if (inactiveItemRegex.IsMatch(size.GetAttribute("class")) ||
+                        size.GetAttribute("id").Equals("amount-picker"))
+                    {
+                        continue;
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (counterOfTries < 3)
+                    {
+                        Thread.Sleep(4000);
+                        counterOfTries++;
+                        goto tryAmountPicker;
+                    }
+
+                    counterOfTries = 0;
+                    throw;
                 }
 
                 selectedSizes.Add(size);
             }
+
 
             return selectedSizes;
         }
@@ -412,7 +454,10 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
 
         private String GetName(IWebElement product)
         {
-            String name = product.FindElement(By.ClassName("woocommerce-loop-product__title")).Text;
+            String name = "";
+            Thread.Sleep(4000);
+            name = product.FindElement(By.ClassName("woocommerce-loop-product__title")).Text;
+
             name = name.Replace("Flügger ", "");
             return name;
         }
