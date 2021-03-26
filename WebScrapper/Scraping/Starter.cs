@@ -25,8 +25,8 @@ namespace WebScrapper.Scraping
             _dbContext = new DBContext();
 
             // _fluggerDk = new FluggerDkScrapper(_dbContext);
-             _fluggerHorsensDkScrapper = new FluggerHorsensDkScrapper(_dbContext);
-            // _fluggerHelsingorDkScrapper = new FluggerHelsingorDkScrapper(_dbContext);
+            // _fluggerHorsensDkScrapper = new FluggerHorsensDkScrapper(_dbContext);
+            _fluggerHelsingorDkScrapper = new FluggerHelsingorDkScrapper(_dbContext);
             // _malingHalvprisDk = new Maling_halvprisDk(_dbContext);
         }
 
@@ -78,8 +78,8 @@ namespace WebScrapper.Scraping
 
              //ScrappingHelper.LoadAllProducts(dbContext);
             
-            //_fluggerHelsingorDkScrapper.StartScrapping();
-           _fluggerHorsensDkScrapper.StartScrapping();
+            _fluggerHelsingorDkScrapper.StartScrapping();
+          // _fluggerHorsensDkScrapper.StartScrapping();
             //  
              // _fluggerDk.StartScrapping();
              // _malingHalvprisDk.StartScrapping();
