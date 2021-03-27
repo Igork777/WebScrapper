@@ -21,19 +21,12 @@ namespace WebScrapper.Controllers
             JwtAuthenticationManager = jwtAuthenticationManager;
             _logInService = logInService;
         }
-
-        // [HttpGet]
-        // [Authorize]
-        // [Route("api/name")]
-        // public String Get1()
-        // {
-        //     return "Igor";
-        // }
+        
         
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("api/Authenticate")]
+        [Route("api/Authentication")]
         public ActionResult  Authenticate([FromBody] User user)
         {
           var t=  JwtAuthenticationManager.Authenticate(user.userName, user.password);

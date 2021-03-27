@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using HtmlAgilityPack;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using RestSharp;
 using WebScrapper.Scraping.DTO;
 using WebScrapper.Scraping.ScrappingFluggerDk.DB;
@@ -32,8 +28,6 @@ namespace WebScrapper.Scraping.Helpers
 
         public static List<Product> allProducts;
         public static List<Product> productsAddedDuringThisSession = new List<Product>();
-        public static List<String> proxies;
-        public static List<int> ports;
         public static int proxiesCounter = 0;
 
         public static List<Website> _allWebsites = new List<Website>()
@@ -57,49 +51,9 @@ namespace WebScrapper.Scraping.Helpers
             return htmlDocument;
         }
 
-        public static void RenewIpAndPorts()
-        {
-            Dictionary<String, int> proxiesAndPorts = GetProxyAndPort();
-            proxies = proxiesAndPorts.Keys.ToList();
-            ports = proxiesAndPorts.Values.ToList();
-        }
-
-        public static Dictionary<string, string> getIPAndPort()
-        {
-            Dictionary<String, String> proxy_port = new Dictionary<string, string>();
-            // List<String> allowedCodes = new List<string>()
-            // {
-            //     "BE", "BG", "CZ", "DK", "DE", "EE", "IE", "GR", "ES", "FR", "HR", "IT", "CY", "LV", "LT", "LU", "HU",
-            //     "MT", "NL", "AT", "PL", "PT", "RO", "SI", "SK", "FI", "SE", "IS", "LI", "NO", "CH", "GB"
-            // };
-            Regex ipFromJson = new Regex("\"ip\"(.*?),");
-            Regex portFromJson = new Regex("\"port\"(.*?),");
-
-            // List<String> givenCountries = new List<string>();
-
-
-            //  Regex countryJson = new Regex("\"")
-            Regex ip_port_Values = new Regex("[1-9]([0-9]+|\\.)+");
-
-          
-            var client = new RestClient("https://proxy-orbit1.p.rapidapi.com/v1/");
-            var request = new RestRequest(Method.GET);
-            request.AddHeader("x-rapidapi-key", "1959d36928msh662f443ae286ccep1b6f5ajsnadb0d5161bee");
-            request.AddHeader("x-rapidapi-host", "proxy-orbit1.p.rapidapi.com");
-            IRestResponse response = client.Execute(request);
-
-            Console.WriteLine(response.Content);
-            String rawProxy = ipFromJson.Match(response.Content).Value;
-            String rawPort = portFromJson.Match(response.Content).Value;
-            String proxy = ip_port_Values.Match(rawProxy).Value;
-            String port = ip_port_Values.Match(rawPort).Value;
-            Console.WriteLine(proxy+":"+port);
-            return new Dictionary<string, string>();
-        }
 
         public static KeyValuePair<String, String> getFreshIPAndPort()
         {
-            
             Dictionary<String, String> proxy_port = new Dictionary<string, string>();
             List<String> allowedCodes = new List<string>()
             {
@@ -109,10 +63,6 @@ namespace WebScrapper.Scraping.Helpers
             Regex ipFromJson = new Regex("\"ip\"(.*?),");
             Regex portFromJson = new Regex("\"port\"(.*?),");
 
-            // List<String> givenCountries = new List<string>();
-
-
-            //  Regex countryJson = new Regex("\"")
             Regex ip_port_Values = new Regex("[1-9]([0-9]+|\\.)+");
 
             if (proxiesCounter == allowedCodes.Count)
@@ -123,36 +73,23 @@ namespace WebScrapper.Scraping.Helpers
             IRestResponse response;
             do
             {
-                var client = new RestClient("https://proxy-orbit1.p.rapidapi.com/v1/?location="+allowedCodes[proxiesCounter]+"&protocols=socks4");
+                var client = new RestClient("https://proxy-orbit1.p.rapidapi.com/v1/?location=" +
+                                            allowedCodes[proxiesCounter] + "&protocols=socks4");
                 proxiesCounter++;
                 var request = new RestRequest(Method.GET);
                 request.AddHeader("x-rapidapi-key", "1959d36928msh662f443ae286ccep1b6f5ajsnadb0d5161bee");
                 request.AddHeader("x-rapidapi-host", "proxy-orbit1.p.rapidapi.com");
-                 response = client.Execute(request);
-                 Console.WriteLine(response.Content);
+                response = client.Execute(request);
+                Console.WriteLine(response.Content);
             } while (!response.IsSuccessful);
-            
-            
 
-           
+
             String rawProxy = ipFromJson.Match(response.Content).Value;
             String rawPort = portFromJson.Match(response.Content).Value;
             String proxy = ip_port_Values.Match(rawProxy).Value;
             String port = ip_port_Values.Match(rawPort).Value;
-            KeyValuePair<String, String> proxyAndPort = new KeyValuePair<string, string>(proxy,port);
+            KeyValuePair<String, String> proxyAndPort = new KeyValuePair<string, string>(proxy, port);
             return proxyAndPort;
-        }
-        public static ChromeOptions setProxyOption(String prox, String port)
-        {
-            ChromeOptions chromeOptions = new ChromeOptions();
-            Proxy proxy = new Proxy();
-            proxy.Kind = ProxyKind.Manual;
-            proxy.IsAutoDetect = false;
-            proxy.HttpProxy =
-                proxy.SslProxy = prox + ":" + port;
-            chromeOptions.Proxy = proxy;
-            chromeOptions.AddArgument("ignore-certificate-errors");
-            return chromeOptions;
         }
 
         private static Product ExistsAlreadyInTheDatabase(DBContext dbContext, String hash)
@@ -201,29 +138,39 @@ namespace WebScrapper.Scraping.Helpers
 
         public static void SaveOrUpdate(DBContext dbContext, Product product)
         {
-           
-                String hash = hashData(product.Name + product.Size + product.ProductTypeId + product.WebsiteId +
-                                       product.PathToImage);
-                product.Hash = hash;
-                product.Name = product.Name.Trim();
-                productsAddedDuringThisSession.Add(product);
-                Product similarProduct = ExistsAlreadyInTheDatabase(dbContext, hash);
-                if (similarProduct != null)
+            String hash = hashData(product.Name + product.Size + product.ProductTypeId + product.WebsiteId +
+                                   product.PathToImage);
+            product.Hash = hash;
+            product.Name = product.Name.Trim();
+            productsAddedDuringThisSession.Add(product);
+            Product similarProduct = ExistsAlreadyInTheDatabase(dbContext, hash);
+            if (similarProduct != null)
+            {
+                if (!similarProduct.Price.Equals(product.Price))
                 {
-                    if (!similarProduct.Price.Equals(product.Price))
-                    {
-                        similarProduct.Price = product.Price;
-                        dbContext.SaveChanges();
-                    }
-                }
-                else
-                {
-                    dbContext.Product.Add(product);
+                    similarProduct.Price = product.Price;
                     dbContext.SaveChanges();
-                    AddToProductType(dbContext, product);
-                    AddToWebsite(dbContext, product);
+                }
+            }
+            else
+            {
+                IEnumerable<Product> products = from s in dbContext.Product.ToList()
+                    where s.Name.Equals(product.Name) &&
+                          s.Price.Equals(product.Price) && s.ProductTypeId.Equals(product.ProductTypeId) &&
+                          s.WebsiteId.Equals(product.WebsiteId)
+                    select s;
+
+                var enumerable = products.ToList();
+                if (enumerable.Any())
+                {
+                    dbContext.Product.Remove(enumerable.ToList()[0]);
                 }
 
+                dbContext.Product.Add(product);
+                dbContext.SaveChanges();
+                AddToProductType(dbContext, product);
+                AddToWebsite(dbContext, product);
+            }
         }
 
         public static String hashData(String content)
@@ -278,6 +225,7 @@ namespace WebScrapper.Scraping.Helpers
                     dbContext.SaveChanges();
                     Console.WriteLine(dbContext.Product.ToList().Count);
                 }
+
                 isFound = false;
             }
         }

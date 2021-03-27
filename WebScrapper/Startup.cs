@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Web.Http;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -24,7 +25,10 @@ namespace WebScrapper
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            
         }
+
+       
 
         public IConfiguration Configuration { get; }
 
@@ -69,12 +73,12 @@ namespace WebScrapper
                     policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
                 });
             });
-            
-            
-            
+
+
             services.AddHangfireServer();
             services.AddScoped<IScrapperService, ScrapperService>();
             services.AddScoped<ILogInService, LogInService>();
+            services.AddSingleton<Starter>();
              services.AddEntityFrameworkSqlite().AddDbContext<DBContext>();
              var sp = services.BuildServiceProvider();
 
@@ -82,9 +86,8 @@ namespace WebScrapper
              var myDbContext = sp.GetService<DBContext>();
              if (myDbContext != null) myDbContext.Database.Migrate();
 
-
-              Starter starter = new Starter();
-             starter.Start();
+             // Starter starter = new Starter();
+             // starter.Start();
         }
 
 
@@ -110,10 +113,10 @@ namespace WebScrapper
 
             
             backgroundJobClient.Enqueue(() => Console.WriteLine("Handfire job"));
-            // recurringJobManager.AddOrUpdate("Run every minute",
-            //     () =>  
-            //         serviceProvider.GetService<ScrapperFluggerDk>().StartScrapping()
-            //     , "* * * * *");
+            recurringJobManager.AddOrUpdate("Run every week",
+                () =>  
+                    serviceProvider.GetService<Starter>().Start()
+                , Cron.Weekly);
         }
     }
 }

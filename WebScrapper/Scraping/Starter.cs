@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
-using RestSharp;
 using WebScrapper.Scraping.DTO;
 using WebScrapper.Scraping.FluggerHorsensDk;
 using WebScrapper.Scraping.Helpers;
@@ -24,10 +21,10 @@ namespace WebScrapper.Scraping
         {
             _dbContext = new DBContext();
 
-            // _fluggerDk = new FluggerDkScrapper(_dbContext);
-            // _fluggerHorsensDkScrapper = new FluggerHorsensDkScrapper(_dbContext);
+             _fluggerDk = new FluggerDkScrapper(_dbContext);
+             _fluggerHorsensDkScrapper = new FluggerHorsensDkScrapper(_dbContext);
             _fluggerHelsingorDkScrapper = new FluggerHelsingorDkScrapper(_dbContext);
-            // _malingHalvprisDk = new Maling_halvprisDk(_dbContext);
+             _malingHalvprisDk = new Maling_halvprisDk(_dbContext);
         }
 
         public void Start()
@@ -73,17 +70,16 @@ namespace WebScrapper.Scraping
 
                 dbContext.SaveChanges();
             }
+            
 
-           // ScrappingHelper.getFreshIPAndPort();
-
-             //ScrappingHelper.LoadAllProducts(dbContext);
+             ScrappingHelper.LoadAllProducts(dbContext);
             
             _fluggerHelsingorDkScrapper.StartScrapping();
-          // _fluggerHorsensDkScrapper.StartScrapping();
-            //  
-             // _fluggerDk.StartScrapping();
-             // _malingHalvprisDk.StartScrapping();
-             //ScrappingHelper.removeDeletedProductsFromDB(dbContext);
+            _fluggerHorsensDkScrapper.StartScrapping();
+
+            _fluggerDk.StartScrapping();
+            _malingHalvprisDk.StartScrapping();
+            ScrappingHelper.removeDeletedProductsFromDB(dbContext);
         }
     }
 }
