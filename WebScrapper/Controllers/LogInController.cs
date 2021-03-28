@@ -26,7 +26,7 @@ namespace WebScrapper.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        [Route("api/Authentication")]
+        [Route("api/Authenticate")]
         public ActionResult  Authenticate([FromBody] User user)
         {
           var t=  JwtAuthenticationManager.Authenticate(user.userName, user.password);
