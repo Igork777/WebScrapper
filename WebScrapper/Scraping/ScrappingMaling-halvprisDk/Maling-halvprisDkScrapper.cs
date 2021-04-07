@@ -14,12 +14,12 @@ namespace WebScrapper.Scraping
     public class Maling_halvprisDk
     {
         private DBContext _dbContext;
-        private KeyValuePair<String, String> proxyPort;
+       // private KeyValuePair<String, String> proxyPort;
         
         public Maling_halvprisDk(DBContext dbContext)
         {
             _dbContext = dbContext;
-            proxyPort = ScrappingHelper.getFreshIPAndPort();
+      //      proxyPort = ScrappingHelper.getFreshIPAndPort();
           
         }
 
@@ -60,16 +60,16 @@ namespace WebScrapper.Scraping
         {
             tryAnotherIP:
             HtmlDocument htmlDocument = null;
-            Console.WriteLine("Trying ip:" + proxyPort.Key);
+           // Console.WriteLine("Trying ip:" + proxyPort.Key);
             try
             {
                 htmlDocument =
-                    ScrappingHelper.GetHtmlDocument(urlToScrap, proxyPort.Key, Convert.ToInt32(proxyPort.Value));
+                    ScrappingHelper.GetHtmlDocument(urlToScrap);
             }
             catch (Exception e)
             {
-                Console.WriteLine(proxyPort.Key + " failed");
-                proxyPort = ScrappingHelper.getFreshIPAndPort();
+                // Console.WriteLine(proxyPort.Key + " failed");
+                // proxyPort = ScrappingHelper.getFreshIPAndPort();
                 goto tryAnotherIP;
             }
             GetProductsList(htmlDocument, type);

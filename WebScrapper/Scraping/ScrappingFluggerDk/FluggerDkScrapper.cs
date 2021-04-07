@@ -15,13 +15,13 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
     public class FluggerDkScrapper
     {
         private DBContext _dbContext;
-        private KeyValuePair<String, String> proxyPort;
+   //    private KeyValuePair<String, String> proxyPort;
 
 
         public FluggerDkScrapper(DBContext dbContext)
         {
             _dbContext = dbContext;
-            proxyPort = ScrappingHelper.getFreshIPAndPort();
+           // proxyPort = ScrappingHelper.getFreshIPAndPort();
         }
 
         public void StartScrapping()
@@ -61,18 +61,14 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
         private void Start(String urlToScrap, Enum type)
         {
             HtmlDocument htmlDocument = null;
-            Console.WriteLine("Trying: " + proxyPort.Key);
             tryAnotherIP:
             try
             {
-                
                 htmlDocument =
-                    ScrappingHelper.GetHtmlDocument(urlToScrap, proxyPort.Key, Convert.ToInt32(proxyPort.Value));
+                    ScrappingHelper.GetHtmlDocument(urlToScrap);
             }
             catch (Exception e)
             {
-                Console.WriteLine(proxyPort.Key + " failed");
-                proxyPort = ScrappingHelper.getFreshIPAndPort();
                 goto tryAnotherIP;
             }
         
@@ -123,19 +119,17 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                 tryAnotherIP:
                 try
                 {
-                    Console.WriteLine("Trying ip: " + proxyPort.Key);
-                    List<String> proxySize = GetSize(product, proxyPort.Key,
-                        Convert.ToInt32(proxyPort.Value));
+                   // Console.WriteLine("Trying ip: " + proxyPort.Key);
+                    List<String> sizes = GetSize(product);
                      
                     
-                    for (int i = 0; i < proxySize.Count; i++)
+                    for (int i = 0; i < sizes.Count; i++)
                     {
                         Product tempProduct = new Product();
                         tempProduct.Name = ScrappingHelper.RemoveDiacritics(GetNameOfProduct(product).Trim());
-                        tempProduct.Size = proxySize[i];
+                        tempProduct.Size = sizes[i];
                         tempProduct.Price =
-                            GetPrice(product, proxyPort.Key,
-                                Convert.ToInt32(proxyPort.Value))[i];
+                            GetPrice(product)[i];
                         tempProduct.PathToImage = "No data";
                         tempProduct.ProductTypeId = Convert.ToInt32(type);
                         tempProduct.WebsiteId = 1;
@@ -146,8 +140,6 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(proxyPort.Key + " failed");
-                    proxyPort = ScrappingHelper.getFreshIPAndPort();
                     goto tryAnotherIP;
                 }
             }
@@ -171,25 +163,23 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
 
         [SuppressMessage("ReSharper.DPA", "DPA0002: Excessive memory allocations in SOH",
             MessageId = "type: HtmlAgilityPack.HtmlTextNode")]
-        private List<string> GetSize(HtmlNode product, String proxy, int port)
+        private List<string> GetSize(HtmlNode product)
         {
             String url = "https://www.flugger.dk" + GetProductLink(product);
 
            
          
                 tryAnotherIP:
-                Console.WriteLine("Trying IP: " + proxyPort.Key);
+              
                 HtmlDocument htmlDocument = null;
                 try
                 { 
                     htmlDocument =
-                        ScrappingHelper.GetHtmlDocument(url, proxyPort.Key, Convert.ToInt32(proxyPort.Value));
+                        ScrappingHelper.GetHtmlDocument(url);
                 }
                 catch (Exception e)
                 {
-                
-                    Console.WriteLine(proxyPort.Key + " failed");
-                    proxyPort = ScrappingHelper.getFreshIPAndPort();
+                    
                     goto tryAnotherIP;
                 }
                
@@ -224,7 +214,7 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
 
         [SuppressMessage("ReSharper.DPA", "DPA0002: Excessive memory allocations in SOH",
             MessageId = "type: System.String")]
-        private IList<String> GetPrice(HtmlNode product, String proxy, int port)
+        private IList<String> GetPrice(HtmlNode product)
         {
             String url = "https://www.flugger.dk" + GetProductLink(product);
             tryAnotherIP:
@@ -232,13 +222,10 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
             try
             { 
                 htmlDocument =
-                    ScrappingHelper.GetHtmlDocument(url, proxyPort.Key, Convert.ToInt32(proxyPort.Value));
+                    ScrappingHelper.GetHtmlDocument(url);
             }
             catch (Exception e)
             {
-                
-                Console.WriteLine(proxyPort.Key + " failed");
-                proxyPort = ScrappingHelper.getFreshIPAndPort();
                 goto tryAnotherIP;
             }
             

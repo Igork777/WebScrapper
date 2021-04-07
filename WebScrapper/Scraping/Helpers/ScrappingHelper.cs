@@ -52,45 +52,45 @@ namespace WebScrapper.Scraping.Helpers
         }
 
 
-        public static KeyValuePair<String, String> getFreshIPAndPort()
-        {
-            Dictionary<String, String> proxy_port = new Dictionary<string, string>();
-            List<String> allowedCodes = new List<string>()
-            {
-                "BE", "BG", "CZ", "DK", "DE", "EE", "IE", "GR", "ES", "FR", "HR", "IT", "CY", "LV", "LT", "LU", "HU",
-                "MT", "NL", "AT", "PL", "PT", "RO", "SI", "SK", "FI", "SE", "IS", "LI", "NO", "CH", "GB"
-            };
-            Regex ipFromJson = new Regex("\"ip\"(.*?),");
-            Regex portFromJson = new Regex("\"port\"(.*?),");
-
-            Regex ip_port_Values = new Regex("[1-9]([0-9]+|\\.)+");
-
-            if (proxiesCounter == allowedCodes.Count)
-            {
-                proxiesCounter = 0;
-            }
-
-            IRestResponse response;
-            do
-            {
-                var client = new RestClient("https://proxy-orbit1.p.rapidapi.com/v1/?location=" +
-                                            allowedCodes[proxiesCounter] + "&protocols=socks4");
-                proxiesCounter++;
-                var request = new RestRequest(Method.GET);
-                request.AddHeader("x-rapidapi-key", "1959d36928msh662f443ae286ccep1b6f5ajsnadb0d5161bee");
-                request.AddHeader("x-rapidapi-host", "proxy-orbit1.p.rapidapi.com");
-                response = client.Execute(request);
-                Console.WriteLine(response.Content);
-            } while (!response.IsSuccessful);
-
-
-            String rawProxy = ipFromJson.Match(response.Content).Value;
-            String rawPort = portFromJson.Match(response.Content).Value;
-            String proxy = ip_port_Values.Match(rawProxy).Value;
-            String port = ip_port_Values.Match(rawPort).Value;
-            KeyValuePair<String, String> proxyAndPort = new KeyValuePair<string, string>(proxy, port);
-            return proxyAndPort;
-        }
+        // public static KeyValuePair<String, String> getFreshIPAndPort()
+        // {
+        //     Dictionary<String, String> proxy_port = new Dictionary<string, string>();
+        //     List<String> allowedCodes = new List<string>()
+        //     {
+        //         "BE", "BG", "CZ", "DK", "DE", "EE", "IE", "GR", "ES", "FR", "HR", "IT", "CY", "LV", "LT", "LU", "HU",
+        //         "MT", "NL", "AT", "PL", "PT", "RO", "SI", "SK", "FI", "SE", "IS", "LI", "NO", "CH", "GB"
+        //     };
+        //     Regex ipFromJson = new Regex("\"ip\"(.*?),");
+        //     Regex portFromJson = new Regex("\"port\"(.*?),");
+        //
+        //     Regex ip_port_Values = new Regex("[1-9]([0-9]+|\\.)+");
+        //
+        //     if (proxiesCounter == allowedCodes.Count)
+        //     {
+        //         proxiesCounter = 0;
+        //     }
+        //
+        //     IRestResponse response;
+        //     do
+        //     {
+        //         var client = new RestClient("https://proxy-orbit1.p.rapidapi.com/v1/?location=" +
+        //                                     allowedCodes[proxiesCounter] + "&protocols=socks4");
+        //         proxiesCounter++;
+        //         var request = new RestRequest(Method.GET);
+        //         request.AddHeader("x-rapidapi-key", "1959d36928msh662f443ae286ccep1b6f5ajsnadb0d5161bee");
+        //         request.AddHeader("x-rapidapi-host", "proxy-orbit1.p.rapidapi.com");
+        //         response = client.Execute(request);
+        //         Console.WriteLine(response.Content);
+        //     } while (!response.IsSuccessful);
+        //
+        //
+        //     String rawProxy = ipFromJson.Match(response.Content).Value;
+        //     String rawPort = portFromJson.Match(response.Content).Value;
+        //     String proxy = ip_port_Values.Match(rawProxy).Value;
+        //     String port = ip_port_Values.Match(rawPort).Value;
+        //     KeyValuePair<String, String> proxyAndPort = new KeyValuePair<string, string>(proxy, port);
+        //     return proxyAndPort;
+        // }
 
         private static Product ExistsAlreadyInTheDatabase(DBContext dbContext, String hash)
         {
@@ -201,6 +201,7 @@ namespace WebScrapper.Scraping.Helpers
         }
 
         [SuppressMessage("ReSharper.DPA", "DPA0004: Closure object allocation")]
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public static void removeDeletedProductsFromDB(DBContext dbContext)
         {
             var a = allProducts;

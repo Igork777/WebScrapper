@@ -216,6 +216,8 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
 
                     ScrappingHelper.SaveOrUpdate(_dbContext, product);
                 }
+
+                Console.WriteLine("Product: " + name + " finished");
             }
         }
 
@@ -282,11 +284,10 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                     .GoToUrl(link);
                 Thread.Sleep(4000);
                 _driverItem.FindElement(By.Id("main_header"));
-                CleanWindow(_driverItem);
                 ReadOnlyCollection<IWebElement> colors;
                 Thread.Sleep(4000);
                 colors = _driverItem.FindElements(By.ClassName("color-box"));
-
+                CleanWindow(_driverItem);
                 ReadOnlyCollection<IWebElement> allSizes;
                 Thread.Sleep(4000);
                 allSizes = _driverItem.FindElements(By.ClassName("amount-box"));
@@ -429,7 +430,6 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception: " + e);
                 Console.WriteLine("Clear windows not needed");
             }
         }
