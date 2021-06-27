@@ -162,6 +162,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             showMoreButton = _driver.FindElement(By.Id("loadmore"));
 
             String previousCount = "";
+            Thread.Sleep(4000);
             while (!AreAllItemsDisplayed(progressOfItems.Text))
             {
                 showMoreButton.Click();
@@ -180,7 +181,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             Thread.Sleep(4000);
             items = _driver.FindElements(By.ClassName("woocommerce-LoopProduct-link"));
 
-            
+
             for (int j = 0; j < items.Count; j++)
             {
                 items = _driver.FindElements(By.ClassName("woocommerce-LoopProduct-link"));
@@ -206,8 +207,6 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                     Console.WriteLine(product.ToString());
                     ScrappingHelper.SaveOrUpdate(_dbContext, product);
                 }
-
-               
             }
         }
 
@@ -239,6 +238,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
 
         private Dictionary<String, String> GetSizeAndPrice(String link)
         {
+            int counter_color = 0;
             Dictionary<String, String> SizeAndPrice;
 
             SizeAndPrice = new Dictionary<String, string>();
@@ -249,30 +249,41 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             CleanWindow();
             _driver.FindElement(By.Id("main_header"));
             IWebElement color = _driver.FindElement(By.ClassName("color-box"));
-            Thread.Sleep(2000);
+           
+            Thread.Sleep(4000);
             if (!color.GetAttribute("class").Contains("active"))
             {
-                IWebElement color2 = _driver.FindElement(By.ClassName("color-box"));
-                color2.Click();
+                List<IWebElement> colors = _driver.FindElements(By.ClassName("color-box")).ToList();
+                colors[counter_color].Click();
             }
             else
             {
-                IWebElement color2 = _driver.FindElement(By.ClassName("color-box"));
-                color2.Click();
-                Thread.Sleep(1000);
-                color2.Click();
+                List<IWebElement> colors = _driver.FindElements(By.ClassName("color-box")).ToList();
+                colors[counter_color].Click();
+                Thread.Sleep(4000);
+                colors[counter_color].Click();
             }
 
             Thread.Sleep(2000);
             List<IWebElement> selectedSize = GetAllSizes();
             Thread.Sleep(2000);
-            
+            goBack:
+            String previous_price = "";
             foreach (IWebElement size in selectedSize)
             {
                 size.Click();
                 Thread.Sleep(4000);
                 IWebElement price = _driver.FindElement(By.Id("price"));
                 String cleanedPrice = CleanPrice(price.FindElement(By.TagName("ins")).Text);
+                if (cleanedPrice.Equals(previous_price))
+                {
+                    SizeAndPrice.Clear();
+                    List<IWebElement> colors = _driver.FindElements(By.ClassName("color-box")).ToList();
+                    colors[++counter_color].Click();
+                    goto goBack;
+                }
+                previous_price = cleanedPrice; 
+
                 String cleanedSize = CleanSize(size.Text);
                 SizeAndPrice.Add(cleanedSize, cleanedPrice);
             }
@@ -290,7 +301,6 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
         {
             String cleanPrice = price.Split(",")[0].Replace(".", "");
             return cleanPrice;
-
         }
 
         private List<IWebElement> GetAllSizes()
