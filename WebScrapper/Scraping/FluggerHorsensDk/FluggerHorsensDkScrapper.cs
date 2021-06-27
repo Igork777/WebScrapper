@@ -249,10 +249,20 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             CleanWindow();
             _driver.FindElement(By.Id("main_header"));
             IWebElement color = _driver.FindElement(By.ClassName("color-box"));
+            Thread.Sleep(2000);
             if (!color.GetAttribute("class").Contains("active"))
             {
-                color.Click();
+                IWebElement color2 = _driver.FindElement(By.ClassName("color-box"));
+                color2.Click();
             }
+            else
+            {
+                IWebElement color2 = _driver.FindElement(By.ClassName("color-box"));
+                color2.Click();
+                Thread.Sleep(1000);
+                color2.Click();
+            }
+
             Thread.Sleep(2000);
             List<IWebElement> selectedSize = GetAllSizes();
             Thread.Sleep(2000);
@@ -260,7 +270,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             foreach (IWebElement size in selectedSize)
             {
                 size.Click();
-                Thread.Sleep(2000);
+                Thread.Sleep(4000);
                 IWebElement price = _driver.FindElement(By.Id("price"));
                 String cleanedPrice = CleanPrice(price.FindElement(By.TagName("ins")).Text);
                 String cleanedSize = CleanSize(size.Text);
