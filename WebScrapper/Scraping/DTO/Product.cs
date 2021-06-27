@@ -24,5 +24,10 @@ namespace WebScrapper.Scraping.DTO
         
         public Website Website { get; set; }
 
+        public override string ToString()
+        {
+            return "Name: " + Name + "\n" + "Size: " + Size + "\n" + "Price: " + Price + "\n" + "Path to image: " +
+                   PathToImage;
+        }
     }
 }

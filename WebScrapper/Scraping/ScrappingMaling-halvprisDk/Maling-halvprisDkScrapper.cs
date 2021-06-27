@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 using HtmlAgilityPack;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -19,7 +21,7 @@ namespace WebScrapper.Scraping
     {
         private DBContext _dbContext;
         private IWebDriver _driver;
-        
+
         public Maling_halvprisDk(DBContext dbContext)
         {
             _dbContext = dbContext;
@@ -29,203 +31,216 @@ namespace WebScrapper.Scraping
         {
             Console.WriteLine("Starting new scrap");
             Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_inde/", TypesOfProduct.Indoors);
-            // Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_ude/", TypesOfProduct.Outdoors);
-            // Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-ude/", TypesOfProduct.Outdoors);
-            // Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/facademaling/", TypesOfProduct.Others);
-            // Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-inde/", TypesOfProduct.Others);
-            // Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/panel-og-traemaling/",
-            //     TypesOfProduct.Others);
-            // Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/gulvmaling-fra-beckers/",
-            //     TypesOfProduct.Others);
-            // Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/glasfilt/", TypesOfProduct.Others);
-            // Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/afvask-og-algebehandling/",
-            //     TypesOfProduct.Others);
-            // Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/gori-professionel/", TypesOfProduct.Others);
-            // Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/gori-daekkende/", TypesOfProduct.Others);
-            // Start("https://www.maling-halvpris.dk/butik-kob-maling/dyrup-inde/", TypesOfProduct.Others);
-            // Start("https://www.maling-halvpris.dk/butik-kob-maling/iso-paint/", TypesOfProduct.Others);
-            // Start("https://www.maling-halvpris.dk/butik-kob-maling/junckers/", TypesOfProduct.Others);
-            
-            //Start("https://www.maling-halvpris.dk/butik-kob-maling/terrasseolie/", TypesOfProduct.Outdoors);
-            
-            // Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-ude/", TypesOfProduct.Outdoors);
-            // Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-inde/", TypesOfProduct.Indoors);
-            // Start("https://www.maling-halvpris.dk/butik-kob-maling/malervaerktoej-afdaekning/", TypesOfProduct.Tools);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_ude/", TypesOfProduct.Outdoors);
+             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-ude/", TypesOfProduct.Outdoors);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/facademaling/", TypesOfProduct.Others);
+             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-inde/", TypesOfProduct.Others);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/panel-og-traemaling/", TypesOfProduct.Others);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/gulvmaling-fra-beckers/", TypesOfProduct.Others);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/glasfilt/", TypesOfProduct.Others);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/afvask-og-algebehandling/",
+                TypesOfProduct.Others);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/gori-professionel/", TypesOfProduct.Others);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/gori-daekkende/", TypesOfProduct.Others);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/dyrup-inde/", TypesOfProduct.Others);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/iso-paint/", TypesOfProduct.Others);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/junckers/", TypesOfProduct.Others);
+
+           Start("https://www.maling-halvpris.dk/butik-kob-maling/terrasseolie/", TypesOfProduct.Outdoors);
+
+             Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-ude/", TypesOfProduct.Outdoors);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-inde/", TypesOfProduct.Indoors);
         }
 
         private void Start(String urlToScrap, Enum type)
         {
-            HtmlDocument htmlDocument = null;
+            _driver?.Quit();
 
             _driver = new ChromeDriver();
             _driver.Navigate().GoToUrl(urlToScrap);
-            htmlDocument =
-                ScrappingHelper.GetHtmlDocument(urlToScrap);
-            GetProductsList(htmlDocument, type);
+
+            GetProductsList(type);
         }
 
 
-        private void GetProductsList(HtmlDocument htmlDocument, Enum type)
+        private void GetProductsList(Enum type)
         {
-            Regex sizeRegex =
-                new Regex(
-                    "([0-9]+,[0-9]+L)|([0-9]+L)|([0-9]+,[0-9]+ L)|([0-9]+ L)|([0-9]+,[0-9]+ liter)|([0-9]+ liter)");
-            IList<HtmlNode> productsHtmlNode = htmlDocument.DocumentNode.Descendants("a")
-                .Where(node =>
-                    node.GetAttributeValue("class", "")
-                        .Equals("woocommerce-LoopProduct-link woocommerce-loop-product__link")).ToList();
-            IList<HtmlNode> forms = htmlDocument.DocumentNode.Descendants("form")
-                .Where(node => node.GetAttributeValue("class", "").Equals("variations_form cart")).ToList();
-            if (forms.Count != 0)
+            IWebElement allProducts = _driver.FindElement(By.ClassName("products"));
+            List<IWebElement> productList = allProducts.FindElements(By.ClassName("product")).ToList();
+            for (int i = 0; i < productList.Count; i++)
             {
-                for (int i = 0; i < productsHtmlNode.Count; i++)
+                if (i == 12)
                 {
+                    Console.WriteLine("Stop");
+                }
 
-                    MatchCollection matchCollection = null;
-                    IList<String> prices = GetPrices(productsHtmlNode[i]);
-                    IList<String> sizes = new List<String>();
-                    Product product = new Product();
-                    double minNumber = 0, maxNumber = 0;
-                    if (forms.Count != 0)
+                String pathToTheImage = productList[i].FindElement(By.TagName("img")).GetAttribute("src");
+                String nameOfTheProduct = productList[i].FindElement(By.ClassName("woocommerce-loop-product__title")).Text;
+                Dictionary<double, int> sizesAndPrices = GetAllSizesAndPrices(productList[i]);
+                SaveProducts(pathToTheImage, nameOfTheProduct, sizesAndPrices, type);
+            }
+        }
+
+        private void SaveProducts(String pathToImage, String nameOfTheProduct, Dictionary<double, int> sizesAndPrices, Enum type)
+        {
+            foreach (KeyValuePair<double, int> iterator in sizesAndPrices)
+            {
+                Product finalProduct = new Product()
+                {
+                    Name = nameOfTheProduct, Price = iterator.Value.ToString(), Size = iterator.Key.ToString(), WebsiteId = 3,
+                    ProductTypeId = Convert.ToInt32(type), PathToImage = pathToImage
+                };
+                if (ScrappingHelper.CheckIfInvalidCharacter(finalProduct.Name, ScrappingHelper.InvalidCharacter))
+                {
+                    finalProduct.Name =
+                        ScrappingHelper.FixInvalidCharacter(finalProduct.Name, ScrappingHelper.InvalidCharacter);
+                }
+        
+                finalProduct.Name = ChangeNameToNormal(finalProduct.Name);
+                finalProduct.Name = ScrappingHelper.RemoveDiacritics(finalProduct.Name.Trim());
+                if (finalProduct.Name.Equals(""))
+                {
+                    return;
+                }
+
+                Console.WriteLine(finalProduct.ToString());
+
+                ScrappingHelper.SaveOrUpdate(_dbContext, finalProduct);
+            }
+        }
+
+        private Dictionary<double, int> GetAllSizesAndPrices(IWebElement product)
+        {
+
+            try
+            {
+                IWebElement form = product.FindElement(By.ClassName("variations_form"));
+                IWebElement variations = form.FindElement(By.ClassName("variations"));
+                List<IWebElement> tableRow = variations.FindElements(By.TagName("tr")).ToList();
+                if (tableRow.Count == 1)
+                {
+                    if (tableRow[0].FindElement(By.ClassName("label")).Text.Contains("Stør"))
                     {
-                        var tempData = forms[i].GetAttributeValue("data-product_variations", "");
-                        matchCollection = sizeRegex.Matches(tempData);
-                        KeyValuePair<double, double> temp = GetFirstAndLastNumber(matchCollection);
-                        minNumber = temp.Key;
-                        maxNumber = temp.Value;
-                    }
-
-                    product.Name = productsHtmlNode[i].Descendants("h2").First(node =>
-                        node.GetAttributeValue("class", "").Equals("woocommerce-loop-product__title")).InnerText;
-                    if (ScrappingHelper.CheckIfInvalidCharacter(product.Name, ScrappingHelper.InvalidCharacter))
-                    {
-                        product.Name =
-                            ScrappingHelper.FixInvalidCharacter(product.Name, ScrappingHelper.InvalidCharacter);
-                    }
-
-                    product.Name = ChangeNameToNormal(product.Name);
-
-                    try
-                    {
-                        product.PathToImage = productsHtmlNode[i].Descendants("img").First(node =>
-                                node.GetAttributeValue("class", "")
-                                    .Equals("attachment-woocommerce_thumbnail size-woocommerce_thumbnail"))
-                            .Attributes["src"]
-                            .Value;
-                        product.PathToImage =
-                            ScrappingHelper.FixInvalidCharacter(product.PathToImage, ScrappingHelper.InvalidCharacter);
-                    }
-                    catch (Exception ex)
-                    {
-                        product.PathToImage = "No path";
-                    }
-
-
-                    Console.WriteLine("Path to image: " + product.PathToImage);
-                    if (matchCollection != null && matchCollection.Count == 0 && prices.Count < 1)
-                    {
-                        product.Price = "No data";
-                        product.Size = "No data";
-                        Console.WriteLine("Name: " + product.Name);
-                        Console.WriteLine("Price: " + product.Price);
-                        Console.WriteLine("Size: " + product.Size);
-                        SaveProduct(product, type);
-                    }
-                    else if (matchCollection != null && matchCollection.Count == 0 && prices.Count == 1)
-                    {
-                        product.Price = prices[0];
-                        product.Size = "No data";
-                        Console.WriteLine("Name: " + product.Name);
-                        Console.WriteLine("Price: " + product.Price);
-                        Console.WriteLine("Size: " + product.Size);
-                        SaveProduct(product, type);
-                    }
-                    else
-                    {
-                        if (matchCollection != null)
-                        {
-                            if (minNumber.Equals(99999) && maxNumber.Equals(0))
-                            {
-                                sizes.Add("No data");
-                                sizes.Add("No data");
-                            }
-
-                            else if (minNumber.Equals(maxNumber) || prices.Count == 1)
-                            {
-                                sizes.Add(minNumber.ToString());
-                            }
-                            else
-                            {
-                                sizes.Add(minNumber.ToString());
-                                sizes.Add(maxNumber.ToString());
-                            }
-                        }
-
-                        for (int j = 0; j < sizes.Count; j++)
-                        {
-                            Console.WriteLine("Name: " + product.Name);
-                            try
-                            {
-                                product.Price = prices[j];
-                            }
-                            catch (Exception e)
-                            {
-                                product.Price = "No data";
-                            }
-
-                            Console.WriteLine("Price: " + product.Price);
-                            product.Size = sizes[j];
-                            Console.WriteLine("Size: " + product.Size);
-                            
-
-
-                            SaveProduct(product, type);
-                        }
+                        return RetirvieCorespondedSizesAndPrices(tableRow[0], form, product);
                     }
                 }
+                else if (tableRow.Count > 1)
+                {
+                    IWebElement sizeTableRow = null;
+                    for (int i = 0; i < tableRow.Count; i++)
+                    {
+                        List<IWebElement> tableData = tableRow[i].FindElements(By.ClassName("label")).ToList();
+                        if (tableData.Count > 0 && tableData[0].Text.Contains("Farve")|| tableData[0].Text.Contains("Glans") || tableData[0].Text.Contains("Korn"))
+                        {
+                            IWebElement farversDataValue = tableRow[i].FindElement(By.ClassName("value"));
+                            List<IWebElement> options = farversDataValue.FindElements(By.ClassName("attached")).ToList();
+                            if (options.Count > 0)
+                            {
+                                options[0].Click();
+                            }
+                        }
+                        else if (tableData.Count > 0 && tableData[0].Text.Contains("Stør")||tableData[0].Text.Contains("Stær"))
+                        {
+                            sizeTableRow = tableRow[i];
+                        }
+                    }
+
+                    return RetirvieCorespondedSizesAndPrices(sizeTableRow, form, product);
+                }
+
+                return new Dictionary<double, int>();
+            }
+            catch (Exception e)
+            {
+                return new Dictionary<double, int>();
             }
         }
 
-        private void SaveProduct(Product product, Enum type)
+        private Dictionary<double, int> RetirvieCorespondedSizesAndPrices(IWebElement tableRow, IWebElement form, IWebElement supplementaryForm)
         {
+            Dictionary<double, int> sizeAndPrice = new Dictionary<double, int>();
+            string strSize = "";
+            if (tableRow == null)
+            {
+                return new Dictionary<double, int>();
+            }
+            IWebElement tableDataValue = tableRow.FindElement(By.ClassName("value"));
+            List<IWebElement> options = tableDataValue.FindElements(By.ClassName("attached")).ToList();
+            for (int i = 0; i < options.Count; i++)
+            {
+                List<IWebElement> defineOptionsOnceAgainToAvoidStaleException = DefineOptionsAgain(tableRow);
+                strSize = defineOptionsOnceAgainToAvoidStaleException[i].Text;
+                defineOptionsOnceAgainToAvoidStaleException[i].Click();
+                double cleanedSize = CleanSize(strSize);
+                if (cleanedSize == -1)
+                {
+                    return new Dictionary<double, int>();
+                }
+
+                Thread.Sleep(2000);
+                int cleanedPrice = GetPrice(form, supplementaryForm);
+                sizeAndPrice.Add(cleanedSize, cleanedPrice);
+            }
+
+            return sizeAndPrice;
+        }
+
+        private List<IWebElement> DefineOptionsAgain(IWebElement tableDataValue)
+        {
+            return tableDataValue.FindElements(By.ClassName("attached")).ToList();
+        }
+
+        private int GetPrice(IWebElement form, IWebElement supplementaryForm)
+        {
+            IWebElement priceWrapper = form.FindElement(By.ClassName("single_variation_wrap"));
+            try
+            {
+                IWebElement currentPrice = priceWrapper.FindElement(By.TagName("ins"));
+                IWebElement exactPrice = currentPrice.FindElement(By.ClassName("woocommerce-Price-amount"));
+                return CleanPrice(exactPrice.Text);
+            }
+            catch (Exception exception)
+            {
+                try
+                {
+                    IWebElement currentPrice = supplementaryForm.FindElement(By.TagName("ins"));
+                    IWebElement exactPrice = currentPrice.FindElement(By.ClassName("woocommerce-Price-amount"));
+                    return CleanPrice(exactPrice.Text);
+                }
+                catch (Exception ex)
+                {
+                    IWebElement exactPrice = supplementaryForm.FindElement(By.ClassName("woocommerce-Price-amount"));
+                    Console.WriteLine(exactPrice.Text);
+                    return CleanPrice(exactPrice.Text);
+                }
+
+                
+                
+            }
             
-            Product finalProduct = new Product()
-            {
-                Name = product.Name, Price = product.Price, Size = product.Size, WebsiteId = 3,
-                ProductTypeId = Convert.ToInt32(type), PathToImage = product.PathToImage
-            };
-            finalProduct.Name = ScrappingHelper.RemoveDiacritics(finalProduct.Name.Trim());
-            if (finalProduct.Name.Equals(""))
-            {
-                return;
-            }
-
-            ScrappingHelper.SaveOrUpdate(_dbContext, finalProduct);
         }
 
-        private KeyValuePair<double, double> GetFirstAndLastNumber(MatchCollection matchCollection)
+
+        private int CleanPrice(String uncleanedPrices)
         {
-            HashSet<double> hashNumbers = new HashSet<double>();
-            foreach (Match match in matchCollection)
-            {
-                String cleanedMatch = match.ToString().Replace(",", ".").Replace(" ", "").Replace("L", "")
-                    .Replace("liter", "");
-                hashNumbers.Add(Double.Parse(cleanedMatch));
-            }
-
-            double minNumber = 99999, maxNumber = 0;
-            foreach (double hashNumber in hashNumbers)
-            {
-                if (minNumber > hashNumber)
-                    minNumber = hashNumber;
-                if (maxNumber < hashNumber)
-                    maxNumber = hashNumber;
-            }
-
-
-            return new KeyValuePair<double, double>(minNumber, maxNumber);
+            String cleanedPrice = uncleanedPrices.Replace("DKK ", "").Replace(",00", "").Replace(".","");
+            return Int32.Parse(cleanedPrice);
         }
 
+        private double CleanSize(String uncleanedSize)
+        {
+            String temp = "";
+            double size = -1;
+            temp = uncleanedSize.Replace("L", "").Replace(",", ".").Replace(" ", "").Replace("liter", "");
+            try
+            {
+                 size = Double.Parse(temp);
+            }
+            catch (Exception e)
+            {
+            }
+            return size;
+        }
         private String ChangeNameToNormal(string productName)
         {
             String rightProductName = "";
@@ -271,22 +286,13 @@ namespace WebScrapper.Scraping
                     rightProductName = rightProductName.Remove(rightProductName.Length - 1);
                 }
             }
-
-
             rightProductName = rightProductName.Replace("Flügger", "");
             rightProductName = rightProductName.Trim();
-
-            Console.WriteLine("Before new function: " + rightProductName);
             rightProductName = ReturnNameWhichIsUsedInOtherTables(rightProductName);
-            Console.WriteLine("After new function " + rightProductName);
-
-            Console.WriteLine(rightProductName);
-
             if (rightProductName.Equals(""))
             {
                 return productName;
             }
-
             return rightProductName;
         }
 
@@ -310,45 +316,6 @@ namespace WebScrapper.Scraping
             }
 
             return temp;
-        }
-
-
-        private bool IsSecondNumberBiggerThanFirst(String firstNumber, String lastNumber)
-        {
-            Regex numberRegex = new Regex("([0-9]+\\.[0-9]+)|([0-9]+)");
-            double first = Double.Parse(numberRegex.Match(firstNumber).Value);
-            double second = Double.Parse(numberRegex.Match(lastNumber).Value);
-
-            return second < first;
-        }
-
-
-        private IList<String> GetPrices(HtmlNode product)
-        {
-            Regex priceRegex = new Regex("[1-9]([0-9]{0,2}|\\.)+,");
-            IEnumerable<HtmlNode> pricesHtmlNodes = product.Descendants("span")
-                .Where(node => node.GetAttributeValue("class", "").Equals("price"));
-
-            IList<String> prices = new List<string>();
-            foreach (HtmlNode price in pricesHtmlNodes)
-            {
-                int iterator = 0;
-
-
-                MatchCollection matchCollection = priceRegex.Matches(price.InnerText);
-                foreach (Match match in matchCollection)
-                {
-                    if (price.Descendants("del").Any() && iterator == 0)
-                    {
-                        iterator++;
-                        continue;
-                    }
-
-                    prices.Add(match.Value.Replace(",", ""));
-                }
-            }
-
-            return prices;
         }
     }
 }

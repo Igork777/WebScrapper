@@ -74,12 +74,10 @@ namespace WebScrapper.Scraping
 
             ScrappingHelper.LoadAllProducts(dbContext);
 
-            // _fluggerHorsensDkScrapper.StartScrapping();
-            // _fluggerHelsingorDkScrapper.StartScrapping();
-            //
-            //
-            // _fluggerDk.StartScrapping();
-            _malingHalvprisDk.StartScrapping();
+             _fluggerHorsensDkScrapper.StartScrapping();
+           //  _fluggerHelsingorDkScrapper.StartScrapping();
+            //  _fluggerDk.StartScrapping();
+          //  _malingHalvprisDk.StartScrapping();
             ScrappingHelper.removeDeletedProductsFromDB(dbContext);
         }
     }
