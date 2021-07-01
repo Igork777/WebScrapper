@@ -21,6 +21,7 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
     {
         private DBContext _dbContext;
         private IWebDriver _driver;
+
         public FluggerDkScrapper(DBContext dbContext)
         {
             _dbContext = dbContext;
@@ -28,22 +29,15 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
 
         public void StartScrapping()
         {
-            Console.WriteLine("Starting new scrap");
+            Console.WriteLine("Starting new scrap: Flugger.dk");
 
-            try
-            {
-                Start("https://www.flugger.dk/maling-tapet/indend%C3%B8rs/", TypesOfProduct.Indoors);
-                
-               
-                 Start("https://www.flugger.dk/maling-tapet/udend%C3%B8rs/", TypesOfProduct.Outdoors);
-               
-                 Start("https://www.flugger.dk/maling-tapet/dekoration/", TypesOfProduct.Others);
-                  Start("https://www.flugger.dk/maling-tapet/tapetkl%C3%A6ber/", TypesOfProduct.Others);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.StackTrace);
-            }
+
+            Start("https://www.flugger.dk/maling-tapet/indend%C3%B8rs/", TypesOfProduct.Indoors);
+            Start("https://www.flugger.dk/maling-tapet/udend%C3%B8rs/", TypesOfProduct.Outdoors);
+            Start("https://www.flugger.dk/maling-tapet/dekoration/", TypesOfProduct.Others);
+            Start("https://www.flugger.dk/maling-tapet/tapetkl%C3%A6ber/", TypesOfProduct.Others);
+            _driver.Quit();
+
 
             Console.WriteLine("Scrap is finished!!!");
             Console.WriteLine("----------------------------------------------------------------");
@@ -54,29 +48,38 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
 
         private void Start(String urlToScrap, Enum type)
         {
+            saveProductsAgain:
             _driver?.Quit();
             _driver = new ChromeDriver();
             _driver.Navigate().GoToUrl(urlToScrap);
-            Thread.Sleep(2000);
-            ClearTheWindow();
-            IWebElement product_list_wrapper = _driver.FindElement(By.ClassName("products-grid-list"));
-            
-            List<IWebElement> product_list =
-                product_list_wrapper.FindElements(By.ClassName("products-grid-list-item")).ToList();
-            for (int i = 0; i < product_list.Count; i++)
+            try
             {
+                Thread.Sleep(2000);
+                ClearTheWindow();
+                IWebElement product_list_wrapper = _driver.FindElement(By.ClassName("products-grid-list"));
 
-                product_list_wrapper = _driver.FindElement(By.ClassName("products-grid-list"));
-               List<IWebElement> productList2 =
-                   product_list_wrapper.FindElements(By.ClassName("products-grid-list-item")).ToList();
-                String href = productList2[i].FindElement(By.ClassName("product-blocklinkwrap")).GetAttribute("href");
-               List<Product> products = getProducts(href, type);
-               foreach (Product product in products)
-               {
-                   Console.WriteLine(product.ToString());
-                   ScrappingHelper.SaveOrUpdate(_dbContext, product);
-               }
-               _driver.Navigate().Back();
+                List<IWebElement> product_list =
+                    product_list_wrapper.FindElements(By.ClassName("products-grid-list-item")).ToList();
+                for (int i = 0; i < product_list.Count; i++)
+                {
+                    product_list_wrapper = _driver.FindElement(By.ClassName("products-grid-list"));
+                    List<IWebElement> productList2 =
+                        product_list_wrapper.FindElements(By.ClassName("products-grid-list-item")).ToList();
+                    String href = productList2[i].FindElement(By.ClassName("product-blocklinkwrap"))
+                        .GetAttribute("href");
+                    List<Product> products = getProducts(href, type);
+                    foreach (Product product in products)
+                    {
+                        Console.WriteLine(product.ToString());
+                        ScrappingHelper.SaveOrUpdate(_dbContext, product);
+                    }
+
+                    _driver.Navigate().Back();
+                }
+            }
+            catch (WebDriverException e)
+            {
+                goto saveProductsAgain;
             }
         }
 
@@ -89,20 +92,26 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
             buttons_coockie[0].Click();
             Thread.Sleep(2000);
             IJavaScriptExecutor js = (IJavaScriptExecutor) _driver;
-            js.ExecuteScript(
-                "document.querySelector(`[srcdoc='<!doctype html><html><head></head><body></body></html>']`).contentWindow.document.querySelector('#sleeknote-form div').click()");
+            try
+            {
+                js.ExecuteScript(
+                    "document.querySelector(`[srcdoc='<!doctype html><html><head></head><body></body></html>']`).contentWindow.document.querySelector('#sleeknote-form div').click()");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private List<Product> getProducts(String href, Enum type)
         {
-            
             _driver.Navigate().GoToUrl(href);
             String productName = getProductName();
             String pathToImage = getPathToImage();
             List<Product> products = new List<Product>();
             try
             {
-                Dictionary<float, int> sizeAndPrice =  getSizeAndPrice();
+                Dictionary<float, int> sizeAndPrice = getSizeAndPrice();
                 foreach (KeyValuePair<float, int> pair in sizeAndPrice)
                 {
                     Product finalProdut = new Product();
@@ -117,10 +126,13 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                     }
                     else
                     {
-                        finalProdut.Name = ScrappingHelper.FixInvalidCharacter(productName, ScrappingHelper.InvalidCharacter);
+                        finalProdut.Name =
+                            ScrappingHelper.FixInvalidCharacter(productName, ScrappingHelper.InvalidCharacter);
                     }
+
                     products.Add(finalProdut);
                 }
+
                 return products;
             }
             catch (Exception e)
@@ -135,7 +147,8 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
             IWebElement productPathToImageWrapper = _driver.FindElement(By.ClassName("product-page-primary"));
             try
             {
-                IWebElement productBasket = productPathToImageWrapper.FindElement(By.ClassName("js-product-basket-multiple-wrap"));
+                IWebElement productBasket =
+                    productPathToImageWrapper.FindElement(By.ClassName("js-product-basket-multiple-wrap"));
                 List<IWebElement> product_Sizes_Prices =
                     productBasket.FindElements(By.ClassName("js-product-basket-wrap")).ToList();
                 for (int i = 0; i < product_Sizes_Prices.Count; i++)
@@ -150,6 +163,7 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                         continue;
                     }
                 }
+
                 return sizesAndPrices;
             }
             catch (Exception e)
@@ -163,7 +177,8 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                 js_color_picker.Click();
                 Thread.Sleep(2000);
                 IWebElement productVariantsContent = _driver.FindElement(By.ClassName("product-variants-content"));
-                IWebElement productBasket = productVariantsContent.FindElement(By.ClassName("js-product-basket-multiple-wrap"));
+                IWebElement productBasket =
+                    productVariantsContent.FindElement(By.ClassName("js-product-basket-multiple-wrap"));
                 List<IWebElement> product_Sizes_Prices =
                     productBasket.FindElements(By.ClassName("js-product-basket-wrap")).ToList();
                 for (int i = 0; i < product_Sizes_Prices.Count; i++)
@@ -171,6 +186,7 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                     KeyValuePair<float, int> keyValuePair = getSizePricePair(product_Sizes_Prices[i].Text);
                     sizesAndPrices.Add(keyValuePair.Key, keyValuePair.Value);
                 }
+
                 return sizesAndPrices;
             }
         }
@@ -178,13 +194,14 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
         private KeyValuePair<float, int> getSizePricePair(String productSizesPrices)
         {
             String[] sizeAndPrice = productSizesPrices.Split("\n");
-            sizeAndPrice[0] = sizeAndPrice[0].Replace("\r","").Replace(" L", "").Replace(",", ".").Replace("\n", "");
+            sizeAndPrice[0] = sizeAndPrice[0].Replace("\r", "").Replace(" L", "").Replace(",", ".").Replace("\n", "");
             sizeAndPrice[1] = sizeAndPrice[1].Split(",")[0].Replace(".", "");
             float size = float.Parse(sizeAndPrice[0]);
             int price = Int32.Parse(sizeAndPrice[1]);
             KeyValuePair<float, int> keyValuePair = new KeyValuePair<float, int>(size, price);
             return keyValuePair;
         }
+
         private String getProductName()
         {
             IWebElement productNameWrapper = _driver.FindElement(By.ClassName("product-page-header"));

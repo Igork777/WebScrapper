@@ -29,7 +29,7 @@ namespace WebScrapper.Scraping
 
         public void StartScrapping()
         {
-            Console.WriteLine("Starting new scrap");
+            Console.WriteLine("Starting new scrap: Maling.dk");
             Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_inde/", TypesOfProduct.Indoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_ude/", TypesOfProduct.Outdoors);
              Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-ude/", TypesOfProduct.Outdoors);
@@ -50,16 +50,24 @@ namespace WebScrapper.Scraping
 
              Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-ude/", TypesOfProduct.Outdoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-inde/", TypesOfProduct.Indoors);
+            _driver.Quit();
         }
 
         private void Start(String urlToScrap, Enum type)
         {
+            saveProductsAgain:
             _driver?.Quit();
-
             _driver = new ChromeDriver();
             _driver.Navigate().GoToUrl(urlToScrap);
 
-            GetProductsList(type);
+            try
+            {
+                GetProductsList(type);
+            }
+            catch (WebDriverException e)
+            {
+               goto saveProductsAgain;
+            }
         }
 
 
@@ -69,10 +77,6 @@ namespace WebScrapper.Scraping
             List<IWebElement> productList = allProducts.FindElements(By.ClassName("product")).ToList();
             for (int i = 0; i < productList.Count; i++)
             {
-                if (i == 12)
-                {
-                    Console.WriteLine("Stop");
-                }
 
                 String pathToTheImage = productList[i].FindElement(By.TagName("img")).GetAttribute("src");
                 String nameOfTheProduct = productList[i].FindElement(By.ClassName("woocommerce-loop-product__title")).Text;

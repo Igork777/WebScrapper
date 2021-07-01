@@ -8,7 +8,6 @@ using OpenQA.Selenium.Support.UI;
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Firefox;
 using WebScrapper.Scraping.DTO;
 using WebScrapper.Scraping.Helpers;
 using WebScrapper.Scraping.ScrappingFluggerDk.DB;
@@ -32,55 +31,21 @@ namespace WebScrapper.Scraping
             MessageId = "type: System.String")]
         public void StartScrapping()
         {
+            Console.WriteLine("Starting new scrap : FluggerHelsingorDkScrapper");
             Start(
-                "https://flugger-helsingor.dk/vare-kategori/indendoers-maling/grundere-indendors-maling/",
+                "https://flugger-helsingor.dk/vare-kategori/indendoers-maling/",
                 TypesOfProduct.Indoors);
             
-            Start("https://flugger-helsingor.dk/vare-kategori/udendors-maling/facade/",
+            Start("https://flugger-helsingor.dk/vare-kategori/udendors-maling/",
                 TypesOfProduct.Outdoors);
             
             Start(
-                "https://flugger-helsingor.dk/vare-kategori/udendors-maling/traebeskyttelse-og-metalmaling/",
-                TypesOfProduct.Outdoors);
-            Start(
-                "https://flugger-helsingor.dk/vare-kategori/udendors-maling/grundere-udendors-maling/",
-                TypesOfProduct.Outdoors);
-            
-            Start("https://flugger-helsingor.dk/vare-kategori/gulvbehandling/gulvmaling/",
+                "https://flugger-helsingor.dk/vare-kategori/gulvbehandling/",
                 TypesOfProduct.Others);
             Start(
-                "https://flugger-helsingor.dk/vare-kategori/gulvbehandling/gulvolie-gulvbehandling/",
+                "https://flugger-helsingor.dk/vare-kategori/tilbehor/",
                 TypesOfProduct.Others);
-            
-            
-            Start("https://flugger-helsingor.dk/vare-kategori/handelsvarer/moebelpleje/",
-                TypesOfProduct.Others);
-            
-            
-            Start("https://flugger-helsingor.dk/vare-kategori/handelsvarer/linolier/",
-                TypesOfProduct.Others);
-            Start("https://flugger-helsingor.dk/vare-kategori/handelsvarer/bejdse/",
-                TypesOfProduct.Others);
-            
-            Start("https://flugger-helsingor.dk/vare-kategori/tilbehor/rengoring-og-afdaekning/",
-                TypesOfProduct.Others);
-            
-            Start("https://flugger-helsingor.dk/vare-kategori/tilbehor/spartel-og-fuge/",
-                TypesOfProduct.Tools);
-            Start(
-                "https://flugger-helsingor.dk/vare-kategori/tilbehor/vaegbeklaedning-og-klaebere/",
-                TypesOfProduct.Tools);
-            
-            
-            
-            Start(
-                "https://flugger-helsingor.dk/vare-kategori/indendoers-maling/trae-og-metal/",
-                TypesOfProduct.Indoors);
-            Start(
-                "https://flugger-helsingor.dk/vare-kategori/gulvbehandling/gulvlak-gulvbehandling/",
-                TypesOfProduct.Others);
-            Start("https://flugger-helsingor.dk/vare-kategori/indendoers-maling/loft-og-vaeg/",
-                TypesOfProduct.Indoors);
+            _driver.Quit();
         }
 
         private void Start(String urlToScrap, Enum type)
@@ -92,16 +57,29 @@ namespace WebScrapper.Scraping
             List<String> pages = GetPages(urlToScrap);
             foreach (String page in pages)
             {
-                if (page == null)
+                saveProductAgain:
+                try
                 {
-                    SaveProduct(urlToScrap, urlToScrap, type);
+                   
+                    if (page == null)
+                    {
+                        SaveProduct(urlToScrap, urlToScrap, type);
+                    }
+                    else
+                    {
+                        SaveProduct(urlToScrap, page, type);
+                    }
                 }
-                else
+                catch (WebDriverException webDriverException)
                 {
-                    SaveProduct(urlToScrap, page, type);
+                    _driver?.Quit();
+                    _driver = null;
+                    _driver = new ChromeDriver();
+                    _driver.Navigate().GoToUrl(urlToScrap);
+                    goto saveProductAgain;
                 }
 
-                
+
             }
 
             _driver.Quit();

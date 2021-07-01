@@ -30,121 +30,43 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             Console.WriteLine("Starting new scrap");
             ChromeOptions chromeOptions = new ChromeOptions();
             _driver = new ChromeDriver(chromeOptions);
-            Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/vaegmaling/",
+
+            Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/",
                 TypesOfProduct.Indoors);
 
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/traemaling-indendoers/",
-            //     TypesOfProduct.Indoors);
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/sproejtemaling/",
-            //     TypesOfProduct.Indoors);
-            //
-            // Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/loftmaling/",
-            //     TypesOfProduct.Indoors);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/malerruller/", TypesOfProduct.Tools);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/rulleskafter/",
-            //     TypesOfProduct.Tools);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/malerspande/", TypesOfProduct.Tools);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/malerbakker/", TypesOfProduct.Tools);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/slibevaertoej/",
-            //     TypesOfProduct.Tools);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/rengoering/arbejdshandsker/",
-            //     TypesOfProduct.Tools);
-            // Start("https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/spartler/",
-            //     TypesOfProduct.Tools);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/vaerktoej/fugepistoler/",
-            //     TypesOfProduct.Tools);
-            //
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/indendoers-grunder/",
-            //     TypesOfProduct.Indoors);
-            //
-            // Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/sandmaling/",
-            //     TypesOfProduct.Indoors);
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/indfarvet-spartelmasse-indendoers-maling/",
-            //     TypesOfProduct.Indoors);
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/metalmaling/", TypesOfProduct.Indoors);
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/vaegbeklaedning/",
-            //     TypesOfProduct.Indoors);
-            //
-            // Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/gulvmaling/",
-            //     TypesOfProduct.Indoors);
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/radiatormaling/",
-            //     TypesOfProduct.Indoors);
-            //
-            // Start("https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/",
-            //     TypesOfProduct.Outdoors);
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/udendoers-grunder/",
-            //     TypesOfProduct.Outdoors);
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/traemaling-udendoers/",
-            //     TypesOfProduct.Outdoors);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/vinduesmaling/",
-            //     TypesOfProduct.Outdoors);
-            //
-            //
-            // Start("https://www.flugger-horsens.dk/vare-kategori/tilbehoer/kit/",
-            //     TypesOfProduct.Others);
-            // Start("https://www.flugger-horsens.dk/vare-kategori/tilbehoer/kit/linoliekit/",
-            //     TypesOfProduct.Others);
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/silikonefugemasse/",
-            //     TypesOfProduct.Others);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/acrylfugemasse/",
-            //     TypesOfProduct.Others);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/",
-            //     TypesOfProduct.Others);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/fugemasse/indendoers-fugemasse/vaadrumsfugemasse/",
-            //     TypesOfProduct.Others);
-            //
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningsfilt/",
-            //     TypesOfProduct.Others);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningstape/",
-            //     TypesOfProduct.Others);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningspap/",
-            //     TypesOfProduct.Others);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/afdaekningsplast/",
-            //     TypesOfProduct.Others);
-            // Start(
-            //     "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/afdaekning/udendoers-afdaekningspap/",
-            //     TypesOfProduct.Others);
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/udendoers-maling/",
+                TypesOfProduct.Outdoors);
+
+            Start(
+                "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/",
+                TypesOfProduct.Others);
+            
             _driver.Quit();
         }
 
         private void Start(String urlToScrap, Enum type)
         {
-            currentUrl = urlToScrap;
-            GetAllItems(urlToScrap, type);
+            saveProductsAgain:
+            _driver?.Quit();
+           
+            _driver = new ChromeDriver();
+            _driver.Navigate().GoToUrl(urlToScrap);
+            _driverItem?.Quit();
+          
+            Console.WriteLine("Start scrapping: Flugger Horsnes.dk");
+               tryMainItem:
+                currentUrl = urlToScrap;
+                try
+                {
+                    GetAllItems(urlToScrap, type);
+
+                }
+                catch (WebDriverException e)
+                {
+                    Console.WriteLine(e);
+                    goto tryMainItem;
+                }
         }
 
 
@@ -154,20 +76,29 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             _driver.Navigate()
                 .GoToUrl(urlToScrap);
             Thread.Sleep(3000);
-            CleanWindow();
+            CleanWindow(_driver);
             IWebElement progressOfItems = null;
+            goBackLoading:
             progressOfItems = _driver.FindElement(By.Id("progress_count"));
             IWebElement showMoreButton = null;
             Thread.Sleep(4000);
             showMoreButton = _driver.FindElement(By.Id("loadmore"));
 
             String previousCount = "";
-            Thread.Sleep(4000);
+
             while (!AreAllItemsDisplayed(progressOfItems.Text))
             {
-                showMoreButton.Click();
-                Thread.Sleep(4000);
-                progressOfItems = _driver.FindElement(By.Id("progress_count"));
+                try
+                {
+                    Thread.Sleep(4000);
+                    showMoreButton.Click();
+                    Thread.Sleep(4000);
+                    progressOfItems = _driver.FindElement(By.Id("progress_count"));
+                }
+                catch (Exception e)
+                {
+                    goto goBackLoading;
+                }
 
 
                 if (progressOfItems.Text.Equals(previousCount))
@@ -181,24 +112,32 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             Thread.Sleep(4000);
             items = _driver.FindElements(By.ClassName("woocommerce-LoopProduct-link"));
 
-
-            for (int j = 0; j < items.Count; j++)
+            for (int j = 4; j < items.Count; j++)
             {
-                items = _driver.FindElements(By.ClassName("woocommerce-LoopProduct-link"));
                 String link = GetLink(items[j]);
                 String name = ScrappingHelper.RemoveDiacritics(GetName(items[j]));
-
-
-                Console.WriteLine("Name: " + name);
-                Dictionary<String, String> sizeAndPrice = GetSizeAndPrice(link);
+                Dictionary<float, int> sizeAndPrice;
                 Product product = null;
-                String pathToImage = GetPathToTheImage(link);
-                foreach (KeyValuePair<String, String> i in sizeAndPrice)
+                String pathToImage;
+                tryItemMore:
+                try
+                {
+                    sizeAndPrice = GetSizeAndPrice(link);
+                    pathToImage = GetPathToTheImage(link);
+                }
+                catch (WebDriverException e)
+                {
+                    Console.WriteLine(e);
+                    _driverItem?.Quit();
+                    goto tryItemMore;
+                }
+                _driverItem.Quit();
+                foreach (KeyValuePair<float, int> i in sizeAndPrice)
                 {
                     product = new Product();
                     product.Name = name;
-                    string size = i.Key;
-                    string price = i.Value;
+                    string size = i.Key.ToString();
+                    string price = i.Value.ToString();
                     product.Size = size;
                     product.Price = price;
                     product.PathToImage = pathToImage;
@@ -207,6 +146,8 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                     Console.WriteLine(product.ToString());
                     ScrappingHelper.SaveOrUpdate(_dbContext, product);
                 }
+
+                items = _driver.FindElements(By.ClassName("woocommerce-LoopProduct-link"));
             }
         }
 
@@ -218,11 +159,11 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             Thread.Sleep(2000);
             try
             {
-                _driver.FindElement(By.Id("main_header"));
+                _driverItem.FindElement(By.Id("main_header"));
 
 
                 Thread.Sleep(2000);
-                IWebElement path = _driver.FindElement(By.ClassName("attachment-product-image"));
+                IWebElement path = _driverItem.FindElement(By.ClassName("attachment-product-image"));
                 compoundSrcSet = path.GetAttribute("src");
             }
             catch (NoSuchElementException e)
@@ -230,70 +171,172 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                 Console.WriteLine("Check the path of image exception");
             }
 
-
-            _driver.Navigate().GoToUrl(currentUrl);
             return compoundSrcSet;
         }
 
 
-        private Dictionary<String, String> GetSizeAndPrice(String link)
+        private Dictionary<float, int> GetSizeAndPrice(String link)
         {
             int counter_color = 0;
-            Dictionary<String, String> SizeAndPrice;
+            Dictionary<float, int> SizeAndPrice;
 
-            SizeAndPrice = new Dictionary<String, string>();
-
-            _driver.Navigate()
+            SizeAndPrice = new Dictionary<float, int>();
+            _driverItem = new ChromeDriver();
+            _driverItem.Navigate()
                 .GoToUrl(link);
             Thread.Sleep(2000);
-            CleanWindow();
-            _driver.FindElement(By.Id("main_header"));
-            IWebElement color = _driver.FindElement(By.ClassName("color-box"));
-           
-            Thread.Sleep(4000);
-            if (!color.GetAttribute("class").Contains("active"))
+            try
             {
-                List<IWebElement> colors = _driver.FindElements(By.ClassName("color-box")).ToList();
-                colors[counter_color].Click();
+                CleanWindow(_driverItem);
+                CleanWindow(_driverItem);
             }
-            else
+            catch (UnhandledAlertException e)
             {
-                List<IWebElement> colors = _driver.FindElements(By.ClassName("color-box")).ToList();
-                colors[counter_color].Click();
-                Thread.Sleep(4000);
-                colors[counter_color].Click();
+                IAlert alert = _driverItem.SwitchTo().Alert();
+                alert.Accept();
             }
 
-            Thread.Sleep(2000);
-            List<IWebElement> selectedSize = GetAllSizes();
-            Thread.Sleep(2000);
+            
+            List<IWebElement> colors;
+            colors = _driverItem.FindElements(By.ClassName("color-box")).ToList();
+            if (colors.Count != 0)
+            {
+                Console.WriteLine(colors[counter_color].GetAttribute("class"));
+                if (!colors[counter_color].GetAttribute("class").Contains("active"))
+                {
+                    colors = _driverItem.FindElements(By.ClassName("color-box")).ToList();
+                    colors[counter_color].Click();
+                }
+                else if (colors[counter_color].GetAttribute("class").Contains("active") &&
+                         colors[counter_color].GetAttribute("class").Contains("inactive"))
+                {
+                    goBack3:
+                    try
+                    {
+                        clickTwiceTheFirstColor(counter_color);
+                        colors = _driverItem.FindElements(By.ClassName("color-box")).ToList();
+                        while (colors[counter_color].GetAttribute("class").Contains("active") &&
+                               colors[counter_color].GetAttribute("class").Contains("inactive"))
+                        {
+                            colors = _driverItem.FindElements(By.ClassName("color-box")).ToList();
+                            IWebElement color = colors[++counter_color];
+                            color.Click();
+                            if (color.GetAttribute("id").Contains("color-picker"))
+                            {
+                                Thread.Sleep(3000);
+                                IWebElement listColorWrap =
+                                    _driverItem.FindElement(By.ClassName("flugger-list-color"));
+                              Thread.Sleep(3000);
+                              listColorWrap.Click();
+                              IWebElement fluggerColorWrapBig = _driverItem.FindElement(By.ClassName("flugger-color-wrap-big"));
+                              IWebElement fluggerListColorBig =
+                                  fluggerColorWrapBig.FindElement(By.ClassName("flugger-list-color-big-column"));
+                              IWebElement fluggerListColorBigColumnCell =
+                                  fluggerListColorBig.FindElement(By.ClassName("flugger-list-color-big-column-cell"));
+                              fluggerListColorBigColumnCell.Click();
+                              Thread.Sleep(2000);
+                              IWebElement colorClosePopup =
+                                  _driverItem.FindElement(By.ClassName("select_color_close_popup"));
+                              colorClosePopup.Click();
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        goto goBack3;
+                    }
+                }
+            }
+
             goBack:
+            List<IWebElement> selectedSize = GetAllSizes();
+            String cleanedPrice = "";
             String previous_price = "";
             foreach (IWebElement size in selectedSize)
             {
-                size.Click();
                 Thread.Sleep(4000);
-                IWebElement price = _driver.FindElement(By.Id("price"));
-                String cleanedPrice = CleanPrice(price.FindElement(By.TagName("ins")).Text);
+                size.Click();
+                Thread.Sleep(8000);
+                IWebElement price = _driverItem.FindElement(By.Id("price"));
+                try
+                {
+                    cleanedPrice = CleanPrice(price.FindElement(By.TagName("ins")).Text);
+                }
+                catch (NoSuchElementException exception)
+                {
+                    cleanedPrice = CleanPrice(price.FindElement(By.TagName("bdi")).Text);
+                }
+
                 if (cleanedPrice.Equals(previous_price))
                 {
                     SizeAndPrice.Clear();
-                    List<IWebElement> colors = _driver.FindElements(By.ClassName("color-box")).ToList();
-                    colors[++counter_color].Click();
+                    Thread.Sleep(6000);
+                    colors = _driverItem.FindElements(By.ClassName("color-box")).ToList();
+                    Thread.Sleep(6000);
+                    try
+                    {
+                        colors[++counter_color].Click();
+                    }
+                    catch (ArgumentOutOfRangeException e)
+                    {
+                        Console.WriteLine(e + "\nTry again");
+                        counter_color = 0;
+                    }
+                    catch (ElementClickInterceptedException e)
+                    {
+                        Console.WriteLine(e + "\nTry again");
+                        counter_color = 0;
+                    }
+
                     goto goBack;
                 }
-                previous_price = cleanedPrice; 
+
+                previous_price = cleanedPrice;
 
                 String cleanedSize = CleanSize(size.Text);
-                SizeAndPrice.Add(cleanedSize, cleanedPrice);
+                try
+                {
+                    SizeAndPrice.Add(float.Parse(cleanedSize), Int32.Parse(cleanedPrice));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return new Dictionary<float, int>();
+                }
             }
 
             return SizeAndPrice;
         }
 
+        private void clickTwiceTheFirstColor(int counter_color)
+        {
+            List<IWebElement> colors;
+            colors = _driverItem.FindElements(By.ClassName("color-box")).ToList();
+            try
+            {
+                colors[counter_color].Click();
+                colors[counter_color].Click();
+            }
+            catch (ElementClickInterceptedException e)
+            {
+                goBack2:
+                try
+                {
+                    colors = _driverItem.FindElements(By.ClassName("color-box")).ToList();
+                    Thread.Sleep(4000);
+                    colors[counter_color].Click();
+                }
+                catch (ElementClickInterceptedException exception)
+                {
+                    goto goBack2;
+                }
+            }
+        }
+
         private String CleanSize(String size)
         {
-            String cleanedSize = size.Replace(" liter", "").Replace(",", ".");
+            String cleanedSize = size.Replace(" liter", "").Replace(",", ".").Replace(" stk", "");
             return cleanedSize;
         }
 
@@ -305,44 +348,70 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
 
         private List<IWebElement> GetAllSizes()
         {
-            List<IWebElement> amountBoxes = _driver.FindElements(By.ClassName("amount-box")).ToList();
-            Console.WriteLine(amountBoxes.Count);
-            List<IWebElement> inactiveBoxes = _driver.FindElements(By.ClassName("inactive")).ToList();
-            IWebElement pickerBox = _driver.FindElement(By.Id("amount-picker"));
-
-
-            amountBoxes.Remove(pickerBox);
-            for (int i = 0; i < inactiveBoxes.Count; i++)
+            try
             {
-                amountBoxes.Remove(inactiveBoxes[i]);
-            }
-
-            for (int i = 0; i < amountBoxes.Count; i++)
-            {
-                IWebElement webElement = amountBoxes[i];
-                String classNames = amountBoxes[i].GetAttribute("class");
-                if (classNames.Contains("active"))
+                List<IWebElement> variationsWrap =
+                    _driverItem.FindElements(By.ClassName("custom-variations__wrap")).ToList();
+                if (variationsWrap.Count == 0)
                 {
-                    Thread.Sleep(2000);
-                    webElement.Click();
+                    return new List<IWebElement>();
                 }
+
+                List<IWebElement> amountBoxes;
+                List<IWebElement> inactiveBoxes;
+                if (variationsWrap.Count > 1)
+                {
+                    amountBoxes = variationsWrap[1].FindElements(By.ClassName("amount-box")).ToList();
+                    inactiveBoxes = variationsWrap[1].FindElements(By.ClassName("inactive")).ToList();
+                }
+                else
+                {
+                    amountBoxes = variationsWrap[0].FindElements(By.ClassName("amount-box")).ToList();
+                    inactiveBoxes = variationsWrap[0].FindElements(By.ClassName("inactive")).ToList();
+                }
+
+                Console.WriteLine(amountBoxes.Count);
+                try
+                {
+                    IWebElement pickerBox = _driverItem.FindElement(By.Id("amount-picker"));
+                    amountBoxes.Remove(pickerBox);
+                }
+                catch (Exception e)
+                {
+                }
+
+                for (int i = 0; i < inactiveBoxes.Count; i++)
+                {
+                    amountBoxes.Remove(inactiveBoxes[i]);
+                }
+
+                for (int i = 0; i < amountBoxes.Count; i++)
+                {
+                    IWebElement webElement = amountBoxes[i];
+                    String classNames = amountBoxes[i].GetAttribute("class");
+                    Thread.Sleep(4000);
+                    if (classNames.Contains("active"))
+                    {
+                        webElement.Click();
+                    }
+                }
+
+                return amountBoxes;
             }
-
-            return amountBoxes;
+            catch (NoSuchElementException e)
+            {
+                return new List<IWebElement>();
+            }
         }
 
-        private void CleanWindow2()
-        {
-        }
-
-        private void CleanWindow()
+        private void CleanWindow(IWebDriver driver)
         {
             try
             {
                 IWebElement firstWindow =
-                    _driver.FindElement(By.Id("CybotCookiebotDialogBody"));
+                    driver.FindElement(By.Id("CybotCookiebotDialogBody"));
 
-                IJavaScriptExecutor js = (IJavaScriptExecutor) _driver;
+                IJavaScriptExecutor js = (IJavaScriptExecutor) driver;
                 js.ExecuteScript("arguments[0].remove()", firstWindow);
                 Thread.Sleep(5000);
                 js.ExecuteScript(
