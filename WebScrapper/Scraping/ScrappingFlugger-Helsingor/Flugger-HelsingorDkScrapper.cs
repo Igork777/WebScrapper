@@ -50,7 +50,9 @@ namespace WebScrapper.Scraping
 
         private void Start(String urlToScrap, Enum type)
         {
-            _driver = new ChromeDriver();
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments("headless");
+            _driver = new ChromeDriver(chromeOptions);
             _driver.Navigate().GoToUrl(urlToScrap);
             CleanWindows(_driver);
 
@@ -72,9 +74,11 @@ namespace WebScrapper.Scraping
                 }
                 catch (WebDriverException webDriverException)
                 {
+                    Console.WriteLine(webDriverException);
                     _driver?.Quit();
                     _driver = null;
-                    _driver = new ChromeDriver();
+                    chromeOptions.AddArguments("headless");
+                    _driver = new ChromeDriver(chromeOptions);
                     _driver.Navigate().GoToUrl(urlToScrap);
                     goto saveProductAgain;
                 }
@@ -112,11 +116,10 @@ namespace WebScrapper.Scraping
                 foreach (Product product in products)
                 {
                     product.ProductTypeId = Convert.ToInt32(type);
-                    product.WebsiteId = 2;
                     Console.WriteLine("Product name: " + product.Name);
                     Console.WriteLine("Product size:" + product.Size);
-                    Console.WriteLine("Product price: " + product.Price);
-                    ScrappingHelper.SaveOrUpdate(_dbContext, product);
+                    Console.WriteLine("Product price: " + product.CurrentPrice);
+                    ScrappingHelper.SaveOrUpdateMalligHalvpris(_dbContext, product, WebSite.FluggerHelsingorDk);
                 }
             }
         }
@@ -177,7 +180,7 @@ namespace WebScrapper.Scraping
                 Thread.Sleep(2000);
                 pr = price.FindElement(By.TagName("ins"));
                 priceString = priceRegex.Match(pr.Text).Value.Replace(",", "");
-                Console.WriteLine("Price: " + priceString);
+                Console.WriteLine("CurrentPrice: " + priceString);
             }
             catch (Exception e)
             {
@@ -246,7 +249,7 @@ namespace WebScrapper.Scraping
                         priceString = priceRegex.Match(priceString).Value.Replace(",", "");
 
                         product.Size = Lis[i].Text;
-                        product.Price = priceString;
+                        product.CurrentPrice = priceString;
                         products.Add(product);
                     }
                 }
@@ -256,7 +259,7 @@ namespace WebScrapper.Scraping
                     product.PathToImage = GetImagePath();
                     product.Name = name;
                     product.Size = Lis[0].Text;
-                    product.Price = priceString;
+                    product.CurrentPrice = priceString;
                     products.Add(product);
                 }
             }
@@ -297,7 +300,7 @@ namespace WebScrapper.Scraping
                         string priceAsString = web.FindElement(By.TagName("ins")).Text;
                         priceAsString = priceRegex.Match(priceAsString).Value.Replace(",", "");
                         product.Size = sizeStrings[i];
-                        product.Price = priceAsString;
+                        product.CurrentPrice = priceAsString;
                         products.Add(product);
                     }
                 }
@@ -308,7 +311,7 @@ namespace WebScrapper.Scraping
                     product.PathToImage = GetImagePath();
                     product.Name = name;
                     product.Size = "No data";
-                    product.Price = priceString;
+                    product.CurrentPrice = priceString;
                     products.Add(product);
                 }
             }

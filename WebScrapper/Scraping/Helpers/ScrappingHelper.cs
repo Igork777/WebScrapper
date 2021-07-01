@@ -8,11 +8,14 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using HtmlAgilityPack;
+using Microsoft.EntityFrameworkCore;
 using RestSharp;
 using WebScrapper.Scraping.DTO;
 using WebScrapper.Scraping.ScrappingFluggerDk.DB;
+using WebScrapper.Scraping.ScrappingFluggerDk.Enums;
 
 namespace WebScrapper.Scraping.Helpers
 {
@@ -22,87 +25,52 @@ namespace WebScrapper.Scraping.Helpers
         {
             new ProductType() {ProductTypeId = 1, Type = "Indoor", Products = new List<Product>()},
             new ProductType() {ProductTypeId = 2, Type = "Outdoor", Products = new List<Product>()},
-            new ProductType() {ProductTypeId = 3, Type = "Tool", Products = new List<Product>()},
-            new ProductType() {ProductTypeId = 4, Type = "Other", Products = new List<Product>()}
+            new ProductType() {ProductTypeId = 3, Type = "Other", Products = new List<Product>()}
         };
 
-        public static List<Product> allProducts;
+        public static List<MalingHalvprisProduct> allProductsMalingHalvpris;
+        public static List<FluggerDkProduct> allProductsFluggerDk;
+        public static List<FluggerHelsingorProduct> allProductsFluggerHelsingor;
+        public static List<FluggerHorsensProduct> allProductsFluggerHorsens;
         public static List<Product> productsAddedDuringThisSession = new List<Product>();
-        public static int proxiesCounter = 0;
-
-        public static List<Website> _allWebsites = new List<Website>()
-        {
-            new Website() {WebsiteId = 1, Name = "www.flugger.dk", Products = new List<Product>()},
-            new Website() {WebsiteId = 2, Name = "www.flugger-helsingor.dk", Products = new List<Product>()},
-            new Website() {WebsiteId = 3, Name = "www.maling-halvpris.dk", Products = new List<Product>()},
-            new Website() {WebsiteId = 4, Name = "www.flugger-horsens.dk", Products = new List<Product>()}
-        };
 
         public static readonly Regex InvalidCharacter = new Regex(@"&#[0-9]+[;]|&[A-Za-z]+[;]");
 
-        public static readonly Regex IpRegex =
-            new Regex(
-                @"\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\:[0-9]{1,5}\b");
 
-        public static HtmlDocument GetHtmlDocument(String url)
+        private static async Task<Product> MalingHalvprisExistsAlreadyInTheDatabase(DBContext dbContext, String hash)
         {
-            HtmlWeb web = new HtmlWeb();
-            var htmlDocument = web.Load(url);
-            return htmlDocument;
+            Product websiteProduct =
+                await dbContext.MalingHalvprisProducts.FirstOrDefaultAsync(node => node.Hash.Equals(hash));
+            return websiteProduct;
+        }
+
+        private static async Task<Product> FluggerDkExistsAlreadyInTheDatabase(DBContext dbContext, String hash)
+        {
+            Product websiteProduct =
+                await dbContext.FluggerDkProducts.FirstOrDefaultAsync(node => node.Hash.Equals(hash));
+            return websiteProduct;
+        }
+
+        private static async Task<Product> FluggerHelsingorExistsAlreadyInTheDatabase(DBContext dbContext, String hash)
+        {
+            Product websiteProduct =
+                await dbContext.FluggerHelsingorProducts.FirstOrDefaultAsync(node => node.Hash.Equals(hash));
+            return websiteProduct;
+        }
+
+        private static async Task<Product> FluggerFluggerHorsensExistsAlreadyInTheDatabase(DBContext dbContext,
+            String hash)
+        {
+            Product websiteProduct =
+                await dbContext.FluggerHelsingorProducts.FirstOrDefaultAsync(node => node.Hash.Equals(hash));
+            return websiteProduct;
         }
 
 
-        // public static KeyValuePair<String, String> getFreshIPAndPort()
-        // {
-        //     Dictionary<String, String> proxy_port = new Dictionary<string, string>();
-        //     List<String> allowedCodes = new List<string>()
-        //     {
-        //         "BE", "BG", "CZ", "DK", "DE", "EE", "IE", "GR", "ES", "FR", "HR", "IT", "CY", "LV", "LT", "LU", "HU",
-        //         "MT", "NL", "AT", "PL", "PT", "RO", "SI", "SK", "FI", "SE", "IS", "LI", "NO", "CH", "GB"
-        //     };
-        //     Regex ipFromJson = new Regex("\"ip\"(.*?),");
-        //     Regex portFromJson = new Regex("\"port\"(.*?),");
-        //
-        //     Regex ip_port_Values = new Regex("[1-9]([0-9]+|\\.)+");
-        //
-        //     if (proxiesCounter == allowedCodes.Count)
-        //     {
-        //         proxiesCounter = 0;
-        //     }
-        //
-        //     IRestResponse response;
-        //     do
-        //     {
-        //         var client = new RestClient("https://proxy-orbit1.p.rapidapi.com/v1/?location=" +
-        //                                     allowedCodes[proxiesCounter] + "&protocols=socks4");
-        //         proxiesCounter++;
-        //         var request = new RestRequest(Method.GET);
-        //         request.AddHeader("x-rapidapi-key", "1959d36928msh662f443ae286ccep1b6f5ajsnadb0d5161bee");
-        //         request.AddHeader("x-rapidapi-host", "proxy-orbit1.p.rapidapi.com");
-        //         response = client.Execute(request);
-        //         Console.WriteLine(response.Content);
-        //     } while (!response.IsSuccessful);
-        //
-        //
-        //     String rawProxy = ipFromJson.Match(response.Content).Value;
-        //     String rawPort = portFromJson.Match(response.Content).Value;
-        //     String proxy = ip_port_Values.Match(rawProxy).Value;
-        //     String port = ip_port_Values.Match(rawPort).Value;
-        //     KeyValuePair<String, String> proxyAndPort = new KeyValuePair<string, string>(proxy, port);
-        //     return proxyAndPort;
-        // }
-
-        private static Product ExistsAlreadyInTheDatabase(DBContext dbContext, String hash)
-        {
-            Product product = dbContext.Product.FirstOrDefault(node => node.Hash.Equals(hash));
-            return product;
-        }
-
-
-        private static void AddToProductType(DBContext _dbContext, Product product)
+        private static async void AddToProductType(DBContext _dbContext, Product product)
         {
             ProductType productType =
-                _dbContext.ProductType.FirstOrDefault(node =>
+                await _dbContext.ProductType.FirstOrDefaultAsync(node =>
                     node.ProductTypeId == product.ProductTypeId);
             if (productType == null)
             {
@@ -115,61 +83,36 @@ namespace WebScrapper.Scraping.Helpers
             }
 
             productType.Products.Add(product);
-            _dbContext.SaveChanges();
-        }
-
-        private static void AddToWebsite(DBContext _dbContext, Product product)
-        {
-            Website website = _dbContext.Website.FirstOrDefault(node => node.WebsiteId == product.WebsiteId);
-            if (website == null)
-            {
-                throw new RuntimeWrappedException("The website id must be added");
-            }
-
-            if (website.Products == null)
-            {
-                website.Products = new List<Product>();
-            }
-
-            website.Products.Add(product);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
 
-        public static void SaveOrUpdate(DBContext dbContext, Product product)
+        public static async void SaveOrUpdateMalligHalvpris(DBContext dbContext, Product product, WebSite webSite)
         {
-            String hash = hashData(product.Name + product.Size + product.ProductTypeId + product.WebsiteId +
-                                   product.PathToImage);
+            String hash = hashData(product.Name + product.Size + webSite);
             product.Hash = hash;
             product.Name = product.Name.Trim();
             productsAddedDuringThisSession.Add(product);
-            Product similarProduct = ExistsAlreadyInTheDatabase(dbContext, hash);
+            Product similarProduct = await MalingHalvprisExistsAlreadyInTheDatabase(dbContext, hash);
             if (similarProduct != null)
             {
-                if (!similarProduct.Price.Equals(product.Price))
+                if (!similarProduct.CurrentPrice.Equals(product.CurrentPrice))
                 {
-                    similarProduct.Price = product.Price;
-                    dbContext.SaveChanges();
+                    similarProduct.CurrentPrice = product.CurrentPrice;
+                    await dbContext.SaveChangesAsync();
                 }
             }
             else
             {
-                IEnumerable<Product> products = from s in dbContext.Product.ToList()
-                    where s.Name.Equals(product.Name) &&
-                          s.Price.Equals(product.Price) && s.ProductTypeId.Equals(product.ProductTypeId) &&
-                          s.WebsiteId.Equals(product.WebsiteId)
-                    select s;
+                IEnumerable<MalingHalvprisProduct> products = await dbContext.MalingHalvprisProducts.Where(p =>
+                        p.Name.Equals(product.Name) &&
+                        p.CurrentPrice.Equals(product.CurrentPrice) && p.ProductTypeId.Equals(product.ProductTypeId))
+                    .ToListAsync();
 
-                var enumerable = products.ToList();
-                if (enumerable.Any())
-                {
-                    dbContext.Product.Remove(enumerable.ToList()[0]);
-                }
 
-                dbContext.Product.Add(product);
-                dbContext.SaveChanges();
+                dbContext.MalingHalvprisProducts.Add((MalingHalvprisProduct) product);
+                await dbContext.SaveChangesAsync();
                 AddToProductType(dbContext, product);
-                AddToWebsite(dbContext, product);
             }
         }
 
@@ -195,10 +138,26 @@ namespace WebScrapper.Scraping.Helpers
         }
 
 
-        public static void LoadAllProducts(DBContext dbContext)
+        public static async void LoadAllMalligHalvPrisProducts(DBContext dbContext)
         {
-            allProducts = dbContext.Product.ToList();
+            allProductsMalingHalvpris = dbContext.MalingHalvprisProducts.ToList();
         }
+
+        public static async void LoadAllFluggerDk(DBContext dbContext)
+        {
+            allProductsFluggerDk = dbContext.FluggerDkProducts.ToList();
+        }
+
+        public static async void LoadAllFluggerHelsingorDk(DBContext dbContext)
+        {
+            allProductsFluggerHelsingor = dbContext.FluggerHelsingorProducts.ToList();
+        }
+
+        public static async void LoadAllFluggerHorsensDk(DBContext dbContext)
+        {
+            allProductsFluggerHorsens = dbContext.FluggerHorsensProducts.ToList();
+        }
+
 
         [SuppressMessage("ReSharper.DPA", "DPA0004: Closure object allocation")]
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -229,46 +188,6 @@ namespace WebScrapper.Scraping.Helpers
 
                 isFound = false;
             }
-        }
-
-
-        public static HtmlDocument GetHtmlDocument(String url, String proxy, int port)
-        {
-            WebProxy prox = new WebProxy(proxy, port);
-            prox.UseDefaultCredentials = true;
-            prox.Credentials = CredentialCache.DefaultCredentials;
-
-            WebClient client = new WebClient();
-            client.Proxy = prox;
-
-            String baseHtml = "";
-            byte[] pageContent = client.DownloadData(url);
-            UTF8Encoding utf = new UTF8Encoding();
-            baseHtml = utf.GetString(pageContent);
-            HtmlDocument pageHtml = new HtmlDocument();
-            pageHtml.LoadHtml(baseHtml);
-
-            return pageHtml;
-        }
-
-        public static Dictionary<String, int> GetProxyAndPort()
-        {
-            Dictionary<String, int> proxyAndPort = new Dictionary<string, int>();
-            string[] lines = File.ReadAllLines("Scraping\\ip.txt");
-
-            foreach (string line in lines)
-            {
-                List<String> prox_port = line.Split(":").ToList();
-                try
-                {
-                    proxyAndPort.Add(prox_port[0], Int32.Parse(prox_port[1]));
-                }
-                catch (Exception e)
-                {
-                }
-            }
-
-            return proxyAndPort;
         }
 
 

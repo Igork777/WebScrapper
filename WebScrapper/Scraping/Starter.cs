@@ -38,12 +38,7 @@ namespace WebScrapper.Scraping
                 dbContext.SaveChanges();
             }
 
-            int amountOfWebsites = dbContext.Website.Count();
-            if (amountOfWebsites == 0)
-            {
-                dbContext.Website.AddRange(ScrappingHelper._allWebsites);
-                dbContext.SaveChanges();
-            }
+         
 
             int amountOfUsers = dbContext.Users.Count();
             if (amountOfUsers < 2)
@@ -72,7 +67,7 @@ namespace WebScrapper.Scraping
             }
 
 
-            ScrappingHelper.LoadAllProducts(dbContext);
+            ScrappingHelper.LoadAllMalligHalvPrisProducts(dbContext);
 
             _malingHalvprisDk.StartScrapping();
             _fluggerDk.StartScrapping();

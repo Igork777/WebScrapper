@@ -50,7 +50,9 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
         {
             saveProductsAgain:
             _driver?.Quit();
-            _driver = new ChromeDriver();
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments("headless");
+            _driver = new ChromeDriver(chromeOptions);
             _driver.Navigate().GoToUrl(urlToScrap);
             try
             {
@@ -68,10 +70,10 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                     String href = productList2[i].FindElement(By.ClassName("product-blocklinkwrap"))
                         .GetAttribute("href");
                     List<Product> products = getProducts(href, type);
-                    foreach (Product product in products)
+                    foreach (MalingHalvprisProduct product in products)
                     {
                         Console.WriteLine(product.ToString());
-                        ScrappingHelper.SaveOrUpdate(_dbContext, product);
+                        ScrappingHelper.SaveOrUpdateMalligHalvpris(_dbContext, product, WebSite.FluggerDk);
                     }
 
                     _driver.Navigate().Back();
@@ -117,8 +119,7 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                     Product finalProdut = new Product();
                     finalProdut.PathToImage = pathToImage;
                     finalProdut.Size = pair.Key.ToString();
-                    finalProdut.Price = pair.Value.ToString();
-                    finalProdut.WebsiteId = 1;
+                    finalProdut.CurrentPrice = pair.Value.ToString();
                     finalProdut.ProductTypeId = Convert.ToInt32(type);
                     if (!ScrappingHelper.CheckIfInvalidCharacter(productName, ScrappingHelper.InvalidCharacter))
                     {

@@ -29,6 +29,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
         {
             Console.WriteLine("Starting new scrap");
             ChromeOptions chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments("headless");
             _driver = new ChromeDriver(chromeOptions);
 
             Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/",
@@ -49,8 +50,10 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
         {
             saveProductsAgain:
             _driver?.Quit();
-           
-            _driver = new ChromeDriver();
+            ChromeOptions chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments("headless");
+            _driver = new ChromeDriver(chromeOptions);
+            
             _driver.Navigate().GoToUrl(urlToScrap);
             _driverItem?.Quit();
           
@@ -112,7 +115,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             Thread.Sleep(4000);
             items = _driver.FindElements(By.ClassName("woocommerce-LoopProduct-link"));
 
-            for (int j = 4; j < items.Count; j++)
+            for (int j = 0; j < items.Count; j++)
             {
                 String link = GetLink(items[j]);
                 String name = ScrappingHelper.RemoveDiacritics(GetName(items[j]));
@@ -134,17 +137,16 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                 _driverItem.Quit();
                 foreach (KeyValuePair<float, int> i in sizeAndPrice)
                 {
-                    product = new Product();
+                    product = new FluggerHorsensProduct();
                     product.Name = name;
                     string size = i.Key.ToString();
                     string price = i.Value.ToString();
                     product.Size = size;
-                    product.Price = price;
+                    product.CurrentPrice = price;
                     product.PathToImage = pathToImage;
                     product.ProductTypeId = Convert.ToInt32(type);
-                    product.WebsiteId = 4;
                     Console.WriteLine(product.ToString());
-                    ScrappingHelper.SaveOrUpdate(_dbContext, product);
+                    ScrappingHelper.SaveOrUpdateMalligHalvpris(_dbContext, product, WebSite.FluggerHorsensDk);
                 }
 
                 items = _driver.FindElements(By.ClassName("woocommerce-LoopProduct-link"));
@@ -181,7 +183,9 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             Dictionary<float, int> SizeAndPrice;
 
             SizeAndPrice = new Dictionary<float, int>();
-            _driverItem = new ChromeDriver();
+            ChromeOptions chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments("headless");
+            _driverItem = new ChromeDriver(chromeOptions);
             _driverItem.Navigate()
                 .GoToUrl(link);
             Thread.Sleep(2000);
@@ -213,6 +217,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                     goBack3:
                     try
                     {
+                        Thread.Sleep(4000);
                         clickTwiceTheFirstColor(counter_color);
                         colors = _driverItem.FindElements(By.ClassName("color-box")).ToList();
                         while (colors[counter_color].GetAttribute("class").Contains("active") &&

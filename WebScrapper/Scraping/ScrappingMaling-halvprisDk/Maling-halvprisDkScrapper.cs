@@ -57,7 +57,9 @@ namespace WebScrapper.Scraping
         {
             saveProductsAgain:
             _driver?.Quit();
-            _driver = new ChromeDriver();
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments("headless");
+            _driver = new ChromeDriver(chromeOptions);
             _driver.Navigate().GoToUrl(urlToScrap);
 
             try
@@ -89,9 +91,9 @@ namespace WebScrapper.Scraping
         {
             foreach (KeyValuePair<double, int> iterator in sizesAndPrices)
             {
-                Product finalProduct = new Product()
+                Product finalProduct = new MalingHalvprisProduct()
                 {
-                    Name = nameOfTheProduct, Price = iterator.Value.ToString(), Size = iterator.Key.ToString(), WebsiteId = 3,
+                    Name = nameOfTheProduct, CurrentPrice = iterator.Value.ToString(), Size = iterator.Key.ToString(),
                     ProductTypeId = Convert.ToInt32(type), PathToImage = pathToImage
                 };
                 if (ScrappingHelper.CheckIfInvalidCharacter(finalProduct.Name, ScrappingHelper.InvalidCharacter))
@@ -109,7 +111,7 @@ namespace WebScrapper.Scraping
 
                 Console.WriteLine(finalProduct.ToString());
 
-                ScrappingHelper.SaveOrUpdate(_dbContext, finalProduct);
+                ScrappingHelper.SaveOrUpdateMalligHalvpris(_dbContext, finalProduct, WebSite.MalingHalvprisDk);
             }
         }
 
@@ -200,7 +202,7 @@ namespace WebScrapper.Scraping
             try
             {
                 IWebElement currentPrice = priceWrapper.FindElement(By.TagName("ins"));
-                IWebElement exactPrice = currentPrice.FindElement(By.ClassName("woocommerce-Price-amount"));
+                IWebElement exactPrice = currentPrice.FindElement(By.ClassName("woocommerce-CurrentPrice-amount"));
                 return CleanPrice(exactPrice.Text);
             }
             catch (Exception exception)
@@ -208,12 +210,12 @@ namespace WebScrapper.Scraping
                 try
                 {
                     IWebElement currentPrice = supplementaryForm.FindElement(By.TagName("ins"));
-                    IWebElement exactPrice = currentPrice.FindElement(By.ClassName("woocommerce-Price-amount"));
+                    IWebElement exactPrice = currentPrice.FindElement(By.ClassName("woocommerce-CurrentPrice-amount"));
                     return CleanPrice(exactPrice.Text);
                 }
                 catch (Exception ex)
                 {
-                    IWebElement exactPrice = supplementaryForm.FindElement(By.ClassName("woocommerce-Price-amount"));
+                    IWebElement exactPrice = supplementaryForm.FindElement(By.ClassName("woocommerce-CurrentPrice-amount"));
                     Console.WriteLine(exactPrice.Text);
                     return CleanPrice(exactPrice.Text);
                 }
@@ -307,17 +309,17 @@ namespace WebScrapper.Scraping
             List<String> separatedStrings = nameToCorrect.Split(" ").ToList();
             for (int i = separatedStrings.Count - 1; i > 0; i--)
             {
-                List<Product> products = _dbContext.Product.Where(product => product.WebsiteId != 3).ToList()
-                    .Where(product => product.Name == nameToCorrect).ToList();
-                if (products.Count > 0)
-                {
-                    temp = nameToCorrect.Trim();
-                    return temp;
+                // List<Product> products = _dbContext.Product.Where(product => product.WebsiteId != 3).ToList()
+                //     .Where(product => product.Name == nameToCorrect).ToList();
+                // if (products.Count > 0)
+                // {
+                //     temp = nameToCorrect.Trim();
+                //     return temp;
                 }
-
-                nameToCorrect = nameToCorrect.Replace(separatedStrings[i], "");
-                nameToCorrect = nameToCorrect.Trim();
-            }
+            //
+            //     nameToCorrect = nameToCorrect.Replace(separatedStrings[i], "");
+            //     nameToCorrect = nameToCorrect.Trim();
+            // }
 
             return temp;
         }

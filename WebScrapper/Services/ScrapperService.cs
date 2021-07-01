@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using WebScrapper.Scraping.DTO;
 using WebScrapper.Scraping.Helpers;
 using WebScrapper.Scraping.ScrappingFluggerDk.DB;
@@ -44,10 +39,10 @@ namespace WebScrapper.Services
             Dictionary<string, IList<Product>> listOfProducts = new Dictionary<string, IList<Product>>();
             List<Product> products = _dbContext.Product.Where(node => node.Name.Equals(name)).ToList();
 
-            listOfProducts.Add("flugger.dk", products.Where(node => node.WebsiteId == 1).ToList());
-            listOfProducts.Add("flugger-helsingor.dk", products.Where(node => node.WebsiteId == 2).ToList());
-            listOfProducts.Add("www.maling-halvpris.dk", products.Where(node => node.WebsiteId == 3).ToList());
-            listOfProducts.Add("www.flugger-horsens.dk", products.Where(node => node.WebsiteId == 4).ToList());
+            // listOfProducts.Add("flugger.dk", products.Where(node => node.WebsiteId == 1).ToList());
+            // listOfProducts.Add("flugger-helsingor.dk", products.Where(node => node.WebsiteId == 2).ToList());
+            // listOfProducts.Add("www.maling-halvpris.dk", products.Where(node => node.WebsiteId == 3).ToList());
+            // listOfProducts.Add("www.flugger-horsens.dk", products.Where(node => node.WebsiteId == 4).ToList());
             
             return listOfProducts;
         }
