@@ -15,8 +15,10 @@ namespace WebScrapper.Scraping.DTO
         
         public string Name { get; set; }
         public string Size { get; set; }
-        public string Price { get; set; }
-        
+        public string CurrentPrice { get; set; }
+        public string OldPrice { get; set; }
+        public DateTime UpdatedAt { get; set; }
+
         public string PathToImage { get; set; }
         public ProductType ProductType { get; set; }
         public int ProductTypeId { get; set; }
@@ -26,7 +28,7 @@ namespace WebScrapper.Scraping.DTO
 
         public override string ToString()
         {
-            return "Name: " + Name + "\n" + "Size: " + Size + "\n" + "Price: " + Price + "\n" + "Path to image: " +
+            return "Name: " + Name + "\n" + "Size: " + Size + "\n" + "CurrentPrice: " + CurrentPrice + "\n" + "Path to image: " +
                    PathToImage;
         }
     }

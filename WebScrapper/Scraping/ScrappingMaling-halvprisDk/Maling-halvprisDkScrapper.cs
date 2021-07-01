@@ -57,7 +57,9 @@ namespace WebScrapper.Scraping
         {
             saveProductsAgain:
             _driver?.Quit();
-            _driver = new ChromeDriver();
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments("headless");
+            _driver = new ChromeDriver(chromeOptions);
             _driver.Navigate().GoToUrl(urlToScrap);
 
             try
@@ -91,7 +93,7 @@ namespace WebScrapper.Scraping
             {
                 Product finalProduct = new Product()
                 {
-                    Name = nameOfTheProduct, Price = iterator.Value.ToString(), Size = iterator.Key.ToString(), WebsiteId = 3,
+                    Name = nameOfTheProduct, CurrentPrice = iterator.Value.ToString(), Size = iterator.Key.ToString(), WebsiteId = 3,
                     ProductTypeId = Convert.ToInt32(type), PathToImage = pathToImage
                 };
                 if (ScrappingHelper.CheckIfInvalidCharacter(finalProduct.Name, ScrappingHelper.InvalidCharacter))
@@ -200,7 +202,7 @@ namespace WebScrapper.Scraping
             try
             {
                 IWebElement currentPrice = priceWrapper.FindElement(By.TagName("ins"));
-                IWebElement exactPrice = currentPrice.FindElement(By.ClassName("woocommerce-Price-amount"));
+                IWebElement exactPrice = currentPrice.FindElement(By.ClassName("woocommerce-CurrentPrice-amount"));
                 return CleanPrice(exactPrice.Text);
             }
             catch (Exception exception)
@@ -208,12 +210,12 @@ namespace WebScrapper.Scraping
                 try
                 {
                     IWebElement currentPrice = supplementaryForm.FindElement(By.TagName("ins"));
-                    IWebElement exactPrice = currentPrice.FindElement(By.ClassName("woocommerce-Price-amount"));
+                    IWebElement exactPrice = currentPrice.FindElement(By.ClassName("woocommerce-CurrentPrice-amount"));
                     return CleanPrice(exactPrice.Text);
                 }
                 catch (Exception ex)
                 {
-                    IWebElement exactPrice = supplementaryForm.FindElement(By.ClassName("woocommerce-Price-amount"));
+                    IWebElement exactPrice = supplementaryForm.FindElement(By.ClassName("woocommerce-CurrentPrice-amount"));
                     Console.WriteLine(exactPrice.Text);
                     return CleanPrice(exactPrice.Text);
                 }

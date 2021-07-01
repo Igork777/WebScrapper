@@ -33,6 +33,22 @@ namespace WebScrapper.Controllers
         {
             return _scrapperService.GetAllProducts(name);
         }
-        
+
+        [HttpGet]
+        [Route("api/products/lowerPrice")]
+        public IEnumerable<ComparedProduct> getComparedProduct()
+        {
+            return _scrapperService.GetAllProductsThatAreWorseThenFluggers();
+        }
+
+        [HttpGet]
+        [Route("api/products/latestPriceChange")]
+        public IEnumerable<Product> getLatestPriceChange()
+        {
+            return _scrapperService.GetLatestPriceUpdatedProduct();
+        }
+
+
+
     }
 }

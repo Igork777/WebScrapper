@@ -50,7 +50,9 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
         {
             saveProductsAgain:
             _driver?.Quit();
-            _driver = new ChromeDriver();
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments("headless");
+            _driver = new ChromeDriver(chromeOptions);
             _driver.Navigate().GoToUrl(urlToScrap);
             try
             {
@@ -117,7 +119,7 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk
                     Product finalProdut = new Product();
                     finalProdut.PathToImage = pathToImage;
                     finalProdut.Size = pair.Key.ToString();
-                    finalProdut.Price = pair.Value.ToString();
+                    finalProdut.CurrentPrice = pair.Value.ToString();
                     finalProdut.WebsiteId = 1;
                     finalProdut.ProductTypeId = Convert.ToInt32(type);
                     if (!ScrappingHelper.CheckIfInvalidCharacter(productName, ScrappingHelper.InvalidCharacter))

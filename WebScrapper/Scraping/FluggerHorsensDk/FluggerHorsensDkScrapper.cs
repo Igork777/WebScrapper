@@ -28,7 +28,8 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
         public void StartScrapping()
         {
             Console.WriteLine("Starting new scrap");
-            ChromeOptions chromeOptions = new ChromeOptions();
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments("headless");
             _driver = new ChromeDriver(chromeOptions);
 
             Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/",
@@ -139,7 +140,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                     string size = i.Key.ToString();
                     string price = i.Value.ToString();
                     product.Size = size;
-                    product.Price = price;
+                    product.CurrentPrice = price;
                     product.PathToImage = pathToImage;
                     product.ProductTypeId = Convert.ToInt32(type);
                     product.WebsiteId = 4;
@@ -181,7 +182,9 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             Dictionary<float, int> SizeAndPrice;
 
             SizeAndPrice = new Dictionary<float, int>();
-            _driverItem = new ChromeDriver();
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments("headless");
+            _driverItem = new ChromeDriver(chromeOptions);
             _driverItem.Navigate()
                 .GoToUrl(link);
             Thread.Sleep(2000);

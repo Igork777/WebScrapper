@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -51,6 +52,67 @@ namespace WebScrapper.Services
             
             return listOfProducts;
         }
+
+        public IEnumerable<ComparedProduct> GetAllProductsThatAreWorseThenFluggers()
+        {
+            IList<ComparedProduct> comparedProducts = new List<ComparedProduct>();
+            List<Product> retirevedProducts = new List<Product>();
+            
+           List<Product> allFluggerProducts = _dbContext.Product.Where(node => node.WebsiteId == 4).ToList();
+           foreach (Product product in allFluggerProducts)
+           {
+               retirevedProducts.AddRange(_dbContext.Product.Where(node => node.Name.Equals(product.Name) && node.Size.Equals(product.Size) && node.WebsiteId != 4));
+               foreach (Product p in retirevedProducts)
+               {
+                   ComparedProduct comparedProduct = getComparedProduct(p);
+                   if(comparedProduct == null || comparedProduct.lowerPrices.Count == 0)
+                       continue;
+                   comparedProducts.Add(comparedProduct);
+               }
+           }
+
+           return comparedProducts;
+        }
+
+
+        public IList<Product> GetLatestPriceUpdatedProduct()
+        {
+            List<Product> latestUpdatedProducts = _dbContext.Product
+                .Where(p => p.WebsiteId != 4 && p.UpdatedAt > DateTime.Now.AddDays(-30)).ToList();
+            return latestUpdatedProducts;
+        }
+
+        private ComparedProduct getComparedProduct (Product product)
+        {
+            ComparedProduct comparedProduct = new ComparedProduct();
+            List<Product> products = _dbContext.Product.Where(node => node.Name.Equals(product.Name) && node.Size.Equals(product.Size) && node.WebsiteId != 4).ToList();
+            if (products.Count == 0)
+            {
+                return null;
+            }
+
+            if (products.Count > 3)
+            {
+                throw new RuntimeWrappedException("WTF Igor");
+            }
+            
+            for (int i = 0; i < products.Count; i++)
+            {
+                if (Double.Parse(products[i].CurrentPrice) < Double.Parse(product.CurrentPrice))
+                {
+                    comparedProduct.lowerPrices.Add(products[i]);
+                }
+                else
+                {
+                    comparedProduct.higherOrSamePrice.Add(products[i]);
+                }
+            }
+
+            comparedProduct.fluggerProduct = product;
+            return comparedProduct;
+        }
+        
+        
     }
     
 }

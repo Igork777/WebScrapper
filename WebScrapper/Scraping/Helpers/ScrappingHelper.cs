@@ -22,13 +22,11 @@ namespace WebScrapper.Scraping.Helpers
         {
             new ProductType() {ProductTypeId = 1, Type = "Indoor", Products = new List<Product>()},
             new ProductType() {ProductTypeId = 2, Type = "Outdoor", Products = new List<Product>()},
-            new ProductType() {ProductTypeId = 3, Type = "Tool", Products = new List<Product>()},
-            new ProductType() {ProductTypeId = 4, Type = "Other", Products = new List<Product>()}
+            new ProductType() {ProductTypeId = 3, Type = "Other", Products = new List<Product>()}
         };
 
         public static List<Product> allProducts;
         public static List<Product> productsAddedDuringThisSession = new List<Product>();
-        public static int proxiesCounter = 0;
 
         public static List<Website> _allWebsites = new List<Website>()
         {
@@ -40,57 +38,7 @@ namespace WebScrapper.Scraping.Helpers
 
         public static readonly Regex InvalidCharacter = new Regex(@"&#[0-9]+[;]|&[A-Za-z]+[;]");
 
-        public static readonly Regex IpRegex =
-            new Regex(
-                @"\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\:[0-9]{1,5}\b");
-
-        public static HtmlDocument GetHtmlDocument(String url)
-        {
-            HtmlWeb web = new HtmlWeb();
-            var htmlDocument = web.Load(url);
-            return htmlDocument;
-        }
-
-
-        // public static KeyValuePair<String, String> getFreshIPAndPort()
-        // {
-        //     Dictionary<String, String> proxy_port = new Dictionary<string, string>();
-        //     List<String> allowedCodes = new List<string>()
-        //     {
-        //         "BE", "BG", "CZ", "DK", "DE", "EE", "IE", "GR", "ES", "FR", "HR", "IT", "CY", "LV", "LT", "LU", "HU",
-        //         "MT", "NL", "AT", "PL", "PT", "RO", "SI", "SK", "FI", "SE", "IS", "LI", "NO", "CH", "GB"
-        //     };
-        //     Regex ipFromJson = new Regex("\"ip\"(.*?),");
-        //     Regex portFromJson = new Regex("\"port\"(.*?),");
-        //
-        //     Regex ip_port_Values = new Regex("[1-9]([0-9]+|\\.)+");
-        //
-        //     if (proxiesCounter == allowedCodes.Count)
-        //     {
-        //         proxiesCounter = 0;
-        //     }
-        //
-        //     IRestResponse response;
-        //     do
-        //     {
-        //         var client = new RestClient("https://proxy-orbit1.p.rapidapi.com/v1/?location=" +
-        //                                     allowedCodes[proxiesCounter] + "&protocols=socks4");
-        //         proxiesCounter++;
-        //         var request = new RestRequest(Method.GET);
-        //         request.AddHeader("x-rapidapi-key", "1959d36928msh662f443ae286ccep1b6f5ajsnadb0d5161bee");
-        //         request.AddHeader("x-rapidapi-host", "proxy-orbit1.p.rapidapi.com");
-        //         response = client.Execute(request);
-        //         Console.WriteLine(response.Content);
-        //     } while (!response.IsSuccessful);
-        //
-        //
-        //     String rawProxy = ipFromJson.Match(response.Content).Value;
-        //     String rawPort = portFromJson.Match(response.Content).Value;
-        //     String proxy = ip_port_Values.Match(rawProxy).Value;
-        //     String port = ip_port_Values.Match(rawPort).Value;
-        //     KeyValuePair<String, String> proxyAndPort = new KeyValuePair<string, string>(proxy, port);
-        //     return proxyAndPort;
-        // }
+      
 
         private static Product ExistsAlreadyInTheDatabase(DBContext dbContext, String hash)
         {
@@ -138,33 +86,34 @@ namespace WebScrapper.Scraping.Helpers
 
         public static void SaveOrUpdate(DBContext dbContext, Product product)
         {
-            String hash = hashData(product.Name + product.Size + product.ProductTypeId + product.WebsiteId +
-                                   product.PathToImage);
+            String hash = hashData(product.Name + product.Size + product.WebsiteId);
             product.Hash = hash;
             product.Name = product.Name.Trim();
             productsAddedDuringThisSession.Add(product);
             Product similarProduct = ExistsAlreadyInTheDatabase(dbContext, hash);
             if (similarProduct != null)
             {
-                if (!similarProduct.Price.Equals(product.Price))
+                if (!similarProduct.CurrentPrice.Equals(product.CurrentPrice))
                 {
-                    similarProduct.Price = product.Price;
+                    similarProduct.OldPrice = similarProduct.CurrentPrice;
+                    similarProduct.CurrentPrice = product.CurrentPrice;
+                    similarProduct.UpdatedAt = DateTime.Now;
                     dbContext.SaveChanges();
                 }
             }
             else
             {
-                IEnumerable<Product> products = from s in dbContext.Product.ToList()
-                    where s.Name.Equals(product.Name) &&
-                          s.Price.Equals(product.Price) && s.ProductTypeId.Equals(product.ProductTypeId) &&
-                          s.WebsiteId.Equals(product.WebsiteId)
-                    select s;
-
-                var enumerable = products.ToList();
-                if (enumerable.Any())
-                {
-                    dbContext.Product.Remove(enumerable.ToList()[0]);
-                }
+                // IEnumerable<Product> products = from s in dbContext.Product.ToList()
+                //     where s.Name.Equals(product.Name) &&
+                //           s.CurrentPrice.Equals(product.CurrentPrice) && s.ProductTypeId.Equals(product.ProductTypeId) &&
+                //           s.WebsiteId.Equals(product.WebsiteId)
+                //     select s;
+                //
+                // var enumerable = products.ToList();
+                // if (enumerable.Any())
+                // {
+                //     dbContext.Product.Remove(enumerable.ToList()[0]);
+                // }
 
                 dbContext.Product.Add(product);
                 dbContext.SaveChanges();
@@ -209,68 +158,15 @@ namespace WebScrapper.Scraping.Helpers
             bool isFound = false;
             for (int i = 0; i < allProducts.Count; i++)
             {
-                for (int j = 0; j < productsAddedDuringThisSession.Count; j++)
-                {
-                    if (allProducts[i].Hash.Equals(productsAddedDuringThisSession[j].Hash))
+              
+                    Product correspondentProduct = productsAddedDuringThisSession.FirstOrDefault(node => node.Hash.Equals(allProducts[i].Hash));
+                    if (correspondentProduct == null)
                     {
-                        Console.WriteLine(allProducts[i].Name + "corresponds");
-                        isFound = true;
-                        break;
+                        Console.WriteLine(allProducts[i] + " was deleted");
+                        dbContext.Product.Remove(allProducts[i]);
                     }
-                }
-
-                if (!isFound)
-                {
-                    Console.WriteLine(allProducts[i].Name + "doesn't correspond");
-                    dbContext.Product.Remove(allProducts[i]);
-                    dbContext.SaveChanges();
-                    Console.WriteLine(dbContext.Product.ToList().Count);
-                }
-
-                isFound = false;
             }
         }
-
-
-        public static HtmlDocument GetHtmlDocument(String url, String proxy, int port)
-        {
-            WebProxy prox = new WebProxy(proxy, port);
-            prox.UseDefaultCredentials = true;
-            prox.Credentials = CredentialCache.DefaultCredentials;
-
-            WebClient client = new WebClient();
-            client.Proxy = prox;
-
-            String baseHtml = "";
-            byte[] pageContent = client.DownloadData(url);
-            UTF8Encoding utf = new UTF8Encoding();
-            baseHtml = utf.GetString(pageContent);
-            HtmlDocument pageHtml = new HtmlDocument();
-            pageHtml.LoadHtml(baseHtml);
-
-            return pageHtml;
-        }
-
-        public static Dictionary<String, int> GetProxyAndPort()
-        {
-            Dictionary<String, int> proxyAndPort = new Dictionary<string, int>();
-            string[] lines = File.ReadAllLines("Scraping\\ip.txt");
-
-            foreach (string line in lines)
-            {
-                List<String> prox_port = line.Split(":").ToList();
-                try
-                {
-                    proxyAndPort.Add(prox_port[0], Int32.Parse(prox_port[1]));
-                }
-                catch (Exception e)
-                {
-                }
-            }
-
-            return proxyAndPort;
-        }
-
 
         public static String FixInvalidCharacter(String name, Regex invalidCharacter)
         {

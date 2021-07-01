@@ -4,7 +4,6 @@
     {
         Indoors = 1,
         Outdoors = 2,
-        Tools = 3,
-        Others = 4
+        Others = 3
     }
 }

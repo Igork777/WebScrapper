@@ -11,5 +11,7 @@ namespace WebScrapper.Services
     { 
         public IList<Suggestion> GetAllSuggestions(String name);
         public Dictionary<string, IList<Product>> GetAllProducts(string name);
+        public IEnumerable<ComparedProduct> GetAllProductsThatAreWorseThenFluggers();
+        public IList<Product> GetLatestPriceUpdatedProduct();
     }
 }
