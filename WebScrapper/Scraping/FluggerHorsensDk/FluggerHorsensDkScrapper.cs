@@ -50,8 +50,9 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
         {
             saveProductsAgain:
             _driver?.Quit();
-           
-            _driver = new ChromeDriver();
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments("headless");
+            _driver = new ChromeDriver(chromeOptions);
             _driver.Navigate().GoToUrl(urlToScrap);
             _driverItem?.Quit();
           
