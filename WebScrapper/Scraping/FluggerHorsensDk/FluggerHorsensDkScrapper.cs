@@ -27,10 +27,9 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
 
         public void StartScrapping()
         {
-            Console.WriteLine("Starting new scrap");
-            var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArguments("headless");
-            _driver = new ChromeDriver(chromeOptions);
+            Console.WriteLine("Starting new scrap Flugger Horsens Dk");
+           
+            _driver = new ChromeDriver();
 
             Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/",
                 TypesOfProduct.Indoors);
@@ -50,9 +49,8 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
         {
             saveProductsAgain:
             _driver?.Quit();
-            var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArguments("headless");
-            _driver = new ChromeDriver(chromeOptions);
+          
+            _driver = new ChromeDriver();
             _driver.Navigate().GoToUrl(urlToScrap);
             _driverItem?.Quit();
           
@@ -114,7 +112,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             Thread.Sleep(4000);
             items = _driver.FindElements(By.ClassName("woocommerce-LoopProduct-link"));
 
-            for (int j = 4; j < items.Count; j++)
+            for (int j = 0; j < items.Count; j++)
             {
                 String link = GetLink(items[j]);
                 String name = ScrappingHelper.RemoveDiacritics(GetName(items[j]));
@@ -181,11 +179,8 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
         {
             int counter_color = 0;
             Dictionary<float, int> SizeAndPrice;
-
             SizeAndPrice = new Dictionary<float, int>();
-            var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArguments("headless");
-            _driverItem = new ChromeDriver(chromeOptions);
+            _driverItem = new ChromeDriver();
             _driverItem.Navigate()
                 .GoToUrl(link);
             Thread.Sleep(2000);
@@ -259,7 +254,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             String previous_price = "";
             foreach (IWebElement size in selectedSize)
             {
-                Thread.Sleep(4000);
+                Thread.Sleep(8000);
                 size.Click();
                 Thread.Sleep(8000);
                 IWebElement price = _driverItem.FindElement(By.Id("price"));
@@ -412,10 +407,10 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
         {
             try
             {
+                IJavaScriptExecutor js = (IJavaScriptExecutor) driver;
                 IWebElement firstWindow =
                     driver.FindElement(By.Id("CybotCookiebotDialogBody"));
-
-                IJavaScriptExecutor js = (IJavaScriptExecutor) driver;
+                
                 js.ExecuteScript("arguments[0].remove()", firstWindow);
                 Thread.Sleep(5000);
                 js.ExecuteScript(
@@ -427,6 +422,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             }
             catch (Exception e)
             {
+                
                 Console.WriteLine("Clear windows not needed");
             }
         }

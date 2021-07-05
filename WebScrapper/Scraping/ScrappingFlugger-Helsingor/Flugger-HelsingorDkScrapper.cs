@@ -180,7 +180,7 @@ namespace WebScrapper.Scraping
             {
                 Thread.Sleep(2000);
                 pr = price.FindElement(By.TagName("ins"));
-                priceString = priceRegex.Match(pr.Text).Value.Replace(",", "");
+                priceString = priceRegex.Match(pr.Text).Value.Replace(",", ".").Replace(" ", "").Replace("L","");
                 Console.WriteLine("CurrentPrice: " + priceString);
             }
             catch (Exception e)

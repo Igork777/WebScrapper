@@ -32,11 +32,13 @@ namespace WebScrapper.Scraping
             Console.WriteLine("Starting new scrap: Maling.dk");
             Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_inde/", TypesOfProduct.Indoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_ude/", TypesOfProduct.Outdoors);
-             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-ude/", TypesOfProduct.Outdoors);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-ude/", TypesOfProduct.Outdoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/facademaling/", TypesOfProduct.Others);
-             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-inde/", TypesOfProduct.Others);
-            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/panel-og-traemaling/", TypesOfProduct.Others);
-            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/gulvmaling-fra-beckers/", TypesOfProduct.Others);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-inde/", TypesOfProduct.Others);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/panel-og-traemaling/",
+                TypesOfProduct.Others);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/gulvmaling-fra-beckers/",
+                TypesOfProduct.Others);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/glasfilt/", TypesOfProduct.Others);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/afvask-og-algebehandling/",
                 TypesOfProduct.Others);
@@ -46,9 +48,9 @@ namespace WebScrapper.Scraping
             Start("https://www.maling-halvpris.dk/butik-kob-maling/iso-paint/", TypesOfProduct.Others);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/junckers/", TypesOfProduct.Others);
 
-           Start("https://www.maling-halvpris.dk/butik-kob-maling/terrasseolie/", TypesOfProduct.Outdoors);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/terrasseolie/", TypesOfProduct.Outdoors);
 
-             Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-ude/", TypesOfProduct.Outdoors);
+            Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-ude/", TypesOfProduct.Outdoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-inde/", TypesOfProduct.Indoors);
             _driver.Quit();
         }
@@ -68,6 +70,7 @@ namespace WebScrapper.Scraping
             }
             catch (WebDriverException e)
             {
+                Console.WriteLine(e);
                goto saveProductsAgain;
             }
         }
@@ -117,7 +120,6 @@ namespace WebScrapper.Scraping
 
         private Dictionary<double, int> GetAllSizesAndPrices(IWebElement product)
         {
-
             try
             {
                 IWebElement form = product.FindElement(By.ClassName("variations_form"));
@@ -202,22 +204,32 @@ namespace WebScrapper.Scraping
             try
             {
                 IWebElement currentPrice = priceWrapper.FindElement(By.TagName("ins"));
-                IWebElement exactPrice = currentPrice.FindElement(By.ClassName("woocommerce-CurrentPrice-amount"));
-                return CleanPrice(exactPrice.Text);
+               // IWebElement exactPrice = currentPrice.FindElement(By.ClassName("woocommerce-CurrentPrice-amount"));
+                return CleanPrice(currentPrice.Text);
             }
-            catch (Exception exception)
+            catch (NoSuchElementException exception)
             {
                 try
                 {
-                    IWebElement currentPrice = supplementaryForm.FindElement(By.TagName("ins"));
-                    IWebElement exactPrice = currentPrice.FindElement(By.ClassName("woocommerce-CurrentPrice-amount"));
+                    IWebElement currentPrice = supplementaryForm.FindElement(By.ClassName("price"));
+                    IWebElement exactPrice = currentPrice.FindElement(By.TagName("ins"));
                     return CleanPrice(exactPrice.Text);
                 }
-                catch (Exception ex)
+                catch (NoSuchElementException ex)
                 {
-                    IWebElement exactPrice = supplementaryForm.FindElement(By.ClassName("woocommerce-CurrentPrice-amount"));
-                    Console.WriteLine(exactPrice.Text);
-                    return CleanPrice(exactPrice.Text);
+                    try
+                    {
+                        IWebElement exactPrice = priceWrapper.FindElement(By.ClassName("price"));
+                        Console.WriteLine(exactPrice.Text);
+                        return CleanPrice(exactPrice.Text);
+                    }
+                    catch (NoSuchElementException e)
+                    {
+                        IWebElement exactPrice = supplementaryForm.FindElement(By.ClassName("price"));
+                        Console.WriteLine(exactPrice.Text);
+                        return CleanPrice(exactPrice.Text);
+                    }
+                    
                 }
 
                 
@@ -229,7 +241,7 @@ namespace WebScrapper.Scraping
 
         private int CleanPrice(String uncleanedPrices)
         {
-            String cleanedPrice = uncleanedPrices.Replace("DKK ", "").Replace(",00", "").Replace(".","");
+            String cleanedPrice = uncleanedPrices.Replace("DKK ", "").Replace(",00", "").Replace(".","").Replace(" ","").Replace("kr","");
             return Int32.Parse(cleanedPrice);
         }
 
@@ -237,7 +249,7 @@ namespace WebScrapper.Scraping
         {
             String temp = "";
             double size = -1;
-            temp = uncleanedSize.Replace("L", "").Replace(",", ".").Replace(" ", "").Replace("liter", "");
+            temp = uncleanedSize.Replace("l","").Replace("L", "").Replace(",", ".").Replace(" ", "").Replace("liter", "");
             try
             {
                  size = Double.Parse(temp);

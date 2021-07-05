@@ -16,6 +16,7 @@ namespace WebScrapper.Services
     public class ScrapperService : IScrapperService
     {
         private DBContext _dbContext;
+
         public ScrapperService(DBContext dbContext)
         {
             _dbContext = dbContext;
@@ -25,9 +26,10 @@ namespace WebScrapper.Services
         {
             HashSet<String> names = new HashSet<string>();
             IList<Suggestion> suggestions = new List<Suggestion>();
-            IList<Product> products = _dbContext.Product.Where(product => product.Name.ToLower().Contains(name.ToLower())).ToList();
-            
-            
+            IList<Product> products = _dbContext.Product
+                .Where(product => product.Name.ToLower().Contains(name.ToLower())).ToList();
+
+
             foreach (Product product in products)
             {
                 names.Add(product.Name);
@@ -35,8 +37,10 @@ namespace WebScrapper.Services
 
             foreach (String n in names)
             {
-                suggestions.Add(new Suggestion {label = n, value = ScrappingHelper.RemoveDiacritics(n.Replace(" ", "-").ToLower())});
+                suggestions.Add(new Suggestion
+                    {label = n, value = ScrappingHelper.RemoveDiacritics(n.Replace(" ", "-").ToLower())});
             }
+
             return suggestions;
         }
 
@@ -49,7 +53,7 @@ namespace WebScrapper.Services
             listOfProducts.Add("flugger-helsingor.dk", products.Where(node => node.WebsiteId == 2).ToList());
             listOfProducts.Add("www.maling-halvpris.dk", products.Where(node => node.WebsiteId == 3).ToList());
             listOfProducts.Add("www.flugger-horsens.dk", products.Where(node => node.WebsiteId == 4).ToList());
-            
+
             return listOfProducts;
         }
 
@@ -57,21 +61,22 @@ namespace WebScrapper.Services
         {
             IList<ComparedProduct> comparedProducts = new List<ComparedProduct>();
             List<Product> retirevedProducts = new List<Product>();
-            
-           List<Product> allFluggerProducts = _dbContext.Product.Where(node => node.WebsiteId == 4).ToList();
-           foreach (Product product in allFluggerProducts)
-           {
-               retirevedProducts.AddRange(_dbContext.Product.Where(node => node.Name.Equals(product.Name) && node.Size.Equals(product.Size) && node.WebsiteId != 4));
-               foreach (Product p in retirevedProducts)
-               {
-                   ComparedProduct comparedProduct = getComparedProduct(p);
-                   if(comparedProduct == null || comparedProduct.lowerPrices.Count == 0)
-                       continue;
-                   comparedProducts.Add(comparedProduct);
-               }
-           }
 
-           return comparedProducts;
+            List<Product> allFluggerProducts = _dbContext.Product.Where(node => node.WebsiteId == 4).ToList();
+            foreach (Product product in allFluggerProducts)
+            {
+                retirevedProducts.Clear();
+                retirevedProducts.AddRange(_dbContext.Product.Where(node =>
+                    node.Name.Equals(product.Name) && node.Size.Equals(product.Size) && node.WebsiteId != 4));
+
+                ComparedProduct comparedProduct = getComparedProduct(product, retirevedProducts);
+                if (comparedProduct == null || comparedProduct.lowerPrices.Count == 0)
+                    continue;
+                
+                comparedProducts.Add(comparedProduct);
+            }
+
+            return comparedProducts;
         }
 
 
@@ -82,37 +87,34 @@ namespace WebScrapper.Services
             return latestUpdatedProducts;
         }
 
-        private ComparedProduct getComparedProduct (Product product)
+        private ComparedProduct getComparedProduct(Product productFromFluggerHorsens, List<Product> productsToCompare)
         {
             ComparedProduct comparedProduct = new ComparedProduct();
-            List<Product> products = _dbContext.Product.Where(node => node.Name.Equals(product.Name) && node.Size.Equals(product.Size) && node.WebsiteId != 4).ToList();
-            if (products.Count == 0)
+           
+            if (productsToCompare.Count == 0)
             {
                 return null;
             }
 
-            if (products.Count > 3)
+            if (productsToCompare.Count > 3)
             {
                 throw new RuntimeWrappedException("WTF Igor");
             }
-            
-            for (int i = 0; i < products.Count; i++)
+
+            for (int i = 0; i < productsToCompare.Count; i++)
             {
-                if (Double.Parse(products[i].CurrentPrice) < Double.Parse(product.CurrentPrice))
+                if (Double.Parse(productsToCompare[i].CurrentPrice) < Double.Parse(productFromFluggerHorsens.CurrentPrice))
                 {
-                    comparedProduct.lowerPrices.Add(products[i]);
+                    comparedProduct.lowerPrices.Add(productsToCompare[i]);
                 }
                 else
                 {
-                    comparedProduct.higherOrSamePrice.Add(products[i]);
+                    comparedProduct.higherOrSamePrice.Add(productsToCompare[i]);
                 }
             }
 
-            comparedProduct.fluggerProduct = product;
+            comparedProduct.fluggerProduct = productFromFluggerHorsens;
             return comparedProduct;
         }
-        
-        
     }
-    
 }
