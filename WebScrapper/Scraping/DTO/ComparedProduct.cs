@@ -5,20 +5,12 @@ namespace WebScrapper.Scraping.DTO
 {
     public class ComparedProduct
     {
-        public Product fluggerProduct { get; set; }
-        public IList<Product> lowerPrices = new List<Product>();
-        public IList<Product> higherOrSamePrice = new List<Product>();
+        public ProductLowerPriceComparison fluggerHorsens { get; set; }
 
-        public IList<Product> LowerPrices
-        {
-            get => lowerPrices;
-            set => lowerPrices = value;
-        }
+        public ProductLowerPriceComparison malingHalvpris { get; set; }
 
-        public IList<Product> HigherOrSamePrice
-        {
-            get => higherOrSamePrice;
-            set => higherOrSamePrice = value;
-        }
+        public ProductLowerPriceComparison flugger { get; set; }
+
+        public ProductLowerPriceComparison fluggerHelsingor { get; set; }
     }
 }

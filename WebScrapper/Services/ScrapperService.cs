@@ -70,7 +70,7 @@ namespace WebScrapper.Services
                     node.Name.Equals(product.Name) && node.Size.Equals(product.Size) && node.WebsiteId != 4));
 
                 ComparedProduct comparedProduct = getComparedProduct(product, retirevedProducts);
-                if (comparedProduct == null || comparedProduct.lowerPrices.Count == 0)
+                if (comparedProduct == null)
                     continue;
                 
                 comparedProducts.Add(comparedProduct);
@@ -89,11 +89,12 @@ namespace WebScrapper.Services
 
         private ComparedProduct getComparedProduct(Product productFromFluggerHorsens, List<Product> productsToCompare)
         {
-            ComparedProduct comparedProduct = new ComparedProduct();
+            List<Product> smallerOrTheSame = new List<Product>();
+            ComparedProduct comparedProduct = null;
            
             if (productsToCompare.Count == 0)
             {
-                return null;
+                return comparedProduct;
             }
 
             if (productsToCompare.Count > 3)
@@ -105,16 +106,67 @@ namespace WebScrapper.Services
             {
                 if (Double.Parse(productsToCompare[i].CurrentPrice) < Double.Parse(productFromFluggerHorsens.CurrentPrice))
                 {
-                    comparedProduct.lowerPrices.Add(productsToCompare[i]);
-                }
-                else
-                {
-                    comparedProduct.higherOrSamePrice.Add(productsToCompare[i]);
+                    smallerOrTheSame.Add(productsToCompare[i]);
                 }
             }
 
-            comparedProduct.fluggerProduct = productFromFluggerHorsens;
+            if (smallerOrTheSame.Count > 0)
+            {
+                ProductLowerPriceComparison fluggerHorsensProduct  = InitializeProductLowerPriceComparison(productFromFluggerHorsens);
+                comparedProduct = new ComparedProduct();
+                comparedProduct.fluggerHorsens = fluggerHorsensProduct;
+                for (int q = 0; q < productsToCompare.Count; q++)
+                {
+                    if (productsToCompare[q].WebsiteId == 1)
+                    {
+                        comparedProduct.flugger =InitializeProductLowerPriceComparison(productsToCompare[q]);
+                    }
+
+                    else if (productsToCompare[q].WebsiteId == 2)
+                    {
+                        comparedProduct.fluggerHelsingor = InitializeProductLowerPriceComparison(productsToCompare[q]);
+                    }
+                    else
+                    {
+                        comparedProduct.malingHalvpris = InitializeProductLowerPriceComparison(productsToCompare[q]);
+                    }
+
+
+                }
+            }
             return comparedProduct;
+        }
+
+        private ProductLowerPriceComparison InitializeProductLowerPriceComparison(Product product)
+        {
+            ProductLowerPriceComparison fluggerProduct = new ProductLowerPriceComparison();
+            fluggerProduct.productId = product.ProductId;
+            fluggerProduct.productUrl = product.PathToImage;
+            fluggerProduct.name = product.Name;
+            fluggerProduct.size = product.Size;
+            fluggerProduct.currentPrice = product.CurrentPrice;
+            if (product.WebsiteId == 1)
+            {
+                fluggerProduct.shopName = "Flugger DK";
+                fluggerProduct.website = "flugger.dk";
+            }
+            if (product.WebsiteId == 2)
+            {
+                fluggerProduct.shopName = "Flugger Helsingor";
+                fluggerProduct.website = "flugger-helsingor.dk";
+            }
+            else if (product.WebsiteId == 3)
+            {
+                fluggerProduct.shopName = "Maling Halvpris";
+                fluggerProduct.website = "maling-halvpris.dk";
+            }
+            else
+            {
+                fluggerProduct.shopName = "Flugger Horsens";
+                fluggerProduct.website = "flugger-horsens.dk";
+            }
+
+            return fluggerProduct;
         }
     }
 }
