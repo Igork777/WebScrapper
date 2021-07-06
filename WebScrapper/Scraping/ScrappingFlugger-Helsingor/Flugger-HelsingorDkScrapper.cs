@@ -180,14 +180,14 @@ namespace WebScrapper.Scraping
             {
                 Thread.Sleep(2000);
                 pr = price.FindElement(By.TagName("ins"));
-                priceString = priceRegex.Match(pr.Text).Value.Replace(",", ".").Replace(" ", "").Replace("L","");
+                priceString = priceRegex.Match(pr.Text).Value.Replace(",", ".").Replace(" ", "").Replace("L","").Replace(".", "");
                 Console.WriteLine("CurrentPrice: " + priceString);
             }
             catch (Exception e)
             {
                 Console.WriteLine("Exception : " + e);
                 Console.WriteLine("No old price");
-                priceString = priceRegex.Match(price.Text).Value.Replace(",", "");
+                priceString = priceRegex.Match(price.Text).Value.Replace(",", ".").Replace(" ", "").Replace("L","").Replace(".","");
             }
 
             try
@@ -247,10 +247,10 @@ namespace WebScrapper.Scraping
                             priceString = web.Text;
                         }
 
-                        priceString = priceRegex.Match(priceString).Value.Replace(",", "");
+                        priceString = priceRegex.Match(priceString).Value.Replace(",", ".").Replace(" ", "").Replace("L","").Replace(".","");
 
-                        product.Size = Lis[i].Text;
-                        product.CurrentPrice = priceString;
+                        product.Size = Lis[i].Text.Replace(",", ".").Replace(" ", "").Replace("L","");;
+                        product.CurrentPrice = priceString.Replace(",", ".").Replace(" ", "").Replace("L","").Replace(".","");
                         products.Add(product);
                     }
                 }
@@ -259,8 +259,9 @@ namespace WebScrapper.Scraping
                     Product product = new Product();
                     product.PathToImage = GetImagePath();
                     product.Name = name;
-                    product.Size = Lis[0].Text;
-                    product.CurrentPrice = priceString;
+                    product.Size = Lis[0].Text.Replace(",", ".").Replace(" ", "").Replace("L","").Replace(".","");
+                    product.CurrentPrice = priceString.Replace(",", ".").Replace(" ", "").Replace("L", "")
+                        .Replace(".", "").Replace(".", "");
                     products.Add(product);
                 }
             }
@@ -300,8 +301,8 @@ namespace WebScrapper.Scraping
                         Thread.Sleep(2000);
                         string priceAsString = web.FindElement(By.TagName("ins")).Text;
                         priceAsString = priceRegex.Match(priceAsString).Value.Replace(",", "");
-                        product.Size = sizeStrings[i];
-                        product.CurrentPrice = priceAsString;
+                        product.Size = sizeStrings[i].Replace(",", ".").Replace(" ", "").Replace("L","");;
+                        product.CurrentPrice = priceAsString.Replace(",", ".").Replace(" ", "").Replace("L","");;
                         products.Add(product);
                     }
                 }
@@ -312,7 +313,7 @@ namespace WebScrapper.Scraping
                     product.PathToImage = GetImagePath();
                     product.Name = name;
                     product.Size = "No data";
-                    product.CurrentPrice = priceString;
+                    product.CurrentPrice = priceString.Replace(",", ".").Replace(" ", "").Replace("L","");;
                     products.Add(product);
                 }
             }

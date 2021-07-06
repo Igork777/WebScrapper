@@ -89,6 +89,7 @@ namespace WebScrapper.Scraping.Helpers
             String hash = hashData(product.Name + product.Size + product.WebsiteId);
             product.Hash = hash;
             product.Name = product.Name.Trim();
+            product.UpdatedAt = DateTime.Now;
             productsAddedDuringThisSession.Add(product);
             Product similarProduct = ExistsAlreadyInTheDatabase(dbContext, hash);
             if (similarProduct != null)

@@ -28,8 +28,9 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
         public void StartScrapping()
         {
             Console.WriteLine("Starting new scrap Flugger Horsens Dk");
-           
-            _driver = new ChromeDriver();
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments("headless");
+            _driver = new ChromeDriver(chromeOptions);
 
             Start("https://www.flugger-horsens.dk/vare-kategori/indendoers-maling/",
                 TypesOfProduct.Indoors);
@@ -41,7 +42,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             Start(
                 "https://www.flugger-horsens.dk/vare-kategori/tilbehoer/",
                 TypesOfProduct.Others);
-            
+
             _driver.Quit();
         }
 
@@ -49,24 +50,24 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
         {
             saveProductsAgain:
             _driver?.Quit();
-          
-            _driver = new ChromeDriver();
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments("headless");
+            _driver = new ChromeDriver(chromeOptions);
             _driver.Navigate().GoToUrl(urlToScrap);
             _driverItem?.Quit();
-          
-            Console.WriteLine("Start scrapping: Flugger Horsnes.dk");
-               tryMainItem:
-                currentUrl = urlToScrap;
-                try
-                {
-                    GetAllItems(urlToScrap, type);
 
-                }
-                catch (WebDriverException e)
-                {
-                    Console.WriteLine(e);
-                    goto tryMainItem;
-                }
+            Console.WriteLine("Start scrapping: Flugger Horsnes.dk");
+            tryMainItem:
+            currentUrl = urlToScrap;
+            try
+            {
+                GetAllItems(urlToScrap, type);
+            }
+            catch (WebDriverException e)
+            {
+                Console.WriteLine(e);
+                goto tryMainItem;
+            }
         }
 
 
@@ -131,6 +132,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                     _driverItem?.Quit();
                     goto tryItemMore;
                 }
+
                 _driverItem.Quit();
                 foreach (KeyValuePair<float, int> i in sizeAndPrice)
                 {
@@ -180,7 +182,9 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             int counter_color = 0;
             Dictionary<float, int> SizeAndPrice;
             SizeAndPrice = new Dictionary<float, int>();
-            _driverItem = new ChromeDriver();
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments("headless");
+            _driverItem = new ChromeDriver(chromeOptions);
             _driverItem.Navigate()
                 .GoToUrl(link);
             Thread.Sleep(2000);
@@ -195,7 +199,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                 alert.Accept();
             }
 
-            
+
             List<IWebElement> colors;
             colors = _driverItem.FindElements(By.ClassName("color-box")).ToList();
             if (colors.Count != 0)
@@ -225,18 +229,19 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                                 Thread.Sleep(3000);
                                 IWebElement listColorWrap =
                                     _driverItem.FindElement(By.ClassName("flugger-list-color"));
-                              Thread.Sleep(3000);
-                              listColorWrap.Click();
-                              IWebElement fluggerColorWrapBig = _driverItem.FindElement(By.ClassName("flugger-color-wrap-big"));
-                              IWebElement fluggerListColorBig =
-                                  fluggerColorWrapBig.FindElement(By.ClassName("flugger-list-color-big-column"));
-                              IWebElement fluggerListColorBigColumnCell =
-                                  fluggerListColorBig.FindElement(By.ClassName("flugger-list-color-big-column-cell"));
-                              fluggerListColorBigColumnCell.Click();
-                              Thread.Sleep(2000);
-                              IWebElement colorClosePopup =
-                                  _driverItem.FindElement(By.ClassName("select_color_close_popup"));
-                              colorClosePopup.Click();
+                                Thread.Sleep(3000);
+                                listColorWrap.Click();
+                                IWebElement fluggerColorWrapBig =
+                                    _driverItem.FindElement(By.ClassName("flugger-color-wrap-big"));
+                                IWebElement fluggerListColorBig =
+                                    fluggerColorWrapBig.FindElement(By.ClassName("flugger-list-color-big-column"));
+                                IWebElement fluggerListColorBigColumnCell =
+                                    fluggerListColorBig.FindElement(By.ClassName("flugger-list-color-big-column-cell"));
+                                fluggerListColorBigColumnCell.Click();
+                                Thread.Sleep(2000);
+                                IWebElement colorClosePopup =
+                                    _driverItem.FindElement(By.ClassName("select_color_close_popup"));
+                                colorClosePopup.Click();
                             }
                         }
                     }
@@ -255,7 +260,22 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             foreach (IWebElement size in selectedSize)
             {
                 Thread.Sleep(8000);
+
+                IJavaScriptExecutor jss = (IJavaScriptExecutor) _driverItem;
+                jss.ExecuteScript("document.querySelector(`.sleeknote-anchor`).remove()");
+                Thread.Sleep(2000);
                 size.Click();
+                //     catch (Exception e)
+                // {
+                //     Console.WriteLine(e);
+                //     IJavaScriptExecutor js = (IJavaScriptExecutor) _driverItem;
+                //     Console.WriteLine("\n\n\nThe HTML scrapper started");
+                //
+                //     //   js.ExecuteScript("console.log(document.body.innerHTML).remove()");
+                //     Thread.Sleep(2000);
+                //     size.Click();
+                //     Console.WriteLine("\n\n\nThe HTML scrapper finished");
+                // }
                 Thread.Sleep(8000);
                 IWebElement price = _driverItem.FindElement(By.Id("price"));
                 try
@@ -300,7 +320,6 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
                     return new Dictionary<float, int>();
                 }
             }
@@ -408,9 +427,10 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             try
             {
                 IJavaScriptExecutor js = (IJavaScriptExecutor) driver;
+                Thread.Sleep(10000);
                 IWebElement firstWindow =
                     driver.FindElement(By.Id("CybotCookiebotDialogBody"));
-                
+
                 js.ExecuteScript("arguments[0].remove()", firstWindow);
                 Thread.Sleep(5000);
                 js.ExecuteScript(
@@ -422,7 +442,6 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             }
             catch (Exception e)
             {
-                
                 Console.WriteLine("Clear windows not needed");
             }
         }

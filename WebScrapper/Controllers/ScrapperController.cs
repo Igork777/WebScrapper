@@ -43,12 +43,9 @@ namespace WebScrapper.Controllers
 
         [HttpGet]
         [Route("api/products/latestPriceChange")]
-        public IEnumerable<Product> getLatestPriceChange()
+        public IEnumerable<ProductChangedPrice> getLatestPriceChange()
         {
             return _scrapperService.GetLatestPriceUpdatedProduct();
         }
-
-
-
     }
 }

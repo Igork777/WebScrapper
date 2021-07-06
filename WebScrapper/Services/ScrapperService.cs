@@ -80,11 +80,37 @@ namespace WebScrapper.Services
         }
 
 
-        public IList<Product> GetLatestPriceUpdatedProduct()
+        public IList<ProductChangedPrice> GetLatestPriceUpdatedProduct()
         {
+            IList<ProductChangedPrice> productChangedPrices = new List<ProductChangedPrice>();
             List<Product> latestUpdatedProducts = _dbContext.Product
-                .Where(p => p.WebsiteId != 4 && p.UpdatedAt > DateTime.Now.AddDays(-30)).ToList();
-            return latestUpdatedProducts;
+                .Where(p => p.WebsiteId != 4 && p.OldPrice != null && p.UpdatedAt > DateTime.Now.AddDays(-30)).OrderByDescending(p => p.UpdatedAt).ToList();
+            for (int i = 0; i < latestUpdatedProducts.Count; i++)
+            {
+                ProductChangedPrice productChangedPrice = new ProductChangedPrice();
+                Product currentProduct = latestUpdatedProducts[i];
+                productChangedPrice.productId = currentProduct.ProductId;
+                productChangedPrice.name = currentProduct.Name;
+                productChangedPrice.date = currentProduct.UpdatedAt;
+                productChangedPrice.size = currentProduct.Size;
+                productChangedPrice.currentPrice = currentProduct.CurrentPrice;
+                productChangedPrice.oldPrice = currentProduct.OldPrice;
+                productChangedPrice.productUrl = currentProduct.PathToImage;
+                if (currentProduct.WebsiteId == 1)
+                {
+                    productChangedPrice.website = "www.flugger.dk";
+                }
+                else if (currentProduct.WebsiteId == 2)
+                {
+                    productChangedPrice.website = "www.flugger-helsingor.dk";
+                }
+                else if (currentProduct.WebsiteId == 3)
+                {
+                    productChangedPrice.website = "www.maling-halvpris.dk";
+                }
+                productChangedPrices.Add(productChangedPrice);
+            }
+            return productChangedPrices;
         }
 
         private ComparedProduct getComparedProduct(Product productFromFluggerHorsens, List<Product> productsToCompare)
