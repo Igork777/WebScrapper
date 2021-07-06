@@ -108,11 +108,14 @@ namespace WebScrapper
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
-            
-            backgroundJobClient.Enqueue(() => Console.WriteLine("Handfire job"));
-                 recurringJobManager.AddOrUpdate("Run every day",
-                () =>  
-                    serviceProvider.GetService<Starter>().Start()
+
+
+  
+
+             backgroundJobClient.Enqueue(() => Console.WriteLine("Handfire job"));
+                  recurringJobManager.AddOrUpdate("Run every day",
+                 () =>  
+                     serviceProvider.GetService<Starter>().Start()
                 , Cron.Daily);
         }
     }
