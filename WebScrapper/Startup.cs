@@ -85,9 +85,6 @@ namespace WebScrapper
             //3.Resolve the services from the service provider
              var myDbContext = sp.GetService<DBContext>();
              if (myDbContext != null) myDbContext.Database.Migrate();
-
-           Starter starter = new Starter();
-           starter.Start();
         }
 
 
@@ -112,11 +109,11 @@ namespace WebScrapper
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             
-            // backgroundJobClient.Enqueue(() => Console.WriteLine("Handfire job"));
-            //      recurringJobManager.AddOrUpdate("Run every week",
-            //     () =>  
-            //         serviceProvider.GetService<Starter>().Start()
-            //     , Cron.Weekly);
+            backgroundJobClient.Enqueue(() => Console.WriteLine("Handfire job"));
+                 recurringJobManager.AddOrUpdate("Run every day",
+                () =>  
+                    serviceProvider.GetService<Starter>().Start()
+                , Cron.Daily);
         }
     }
 }

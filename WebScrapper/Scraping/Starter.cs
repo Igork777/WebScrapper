@@ -70,17 +70,13 @@ namespace WebScrapper.Scraping
 
                 dbContext.SaveChanges();
             }
-
-            Product product = new Product();
-            product.Name = "Flutex 2S";
-            ScrappingHelper.SaveOrUpdate(dbContext, product);
-
-            // ScrappingHelper.LoadAllProducts(dbContext);
-            // _malingHalvprisDk.StartScrapping();
-            // _fluggerHelsingorDkScrapper.StartScrapping();
-            // _fluggerHorsensDkScrapper.StartScrapping();
-            // _fluggerDk.StartScrapping();
-            //  ScrappingHelper.removeDeletedProductsFromDB(dbContext);
+            
+            ScrappingHelper.LoadAllProducts(dbContext);
+            _malingHalvprisDk.StartScrapping();
+            _fluggerHelsingorDkScrapper.StartScrapping();
+            _fluggerHorsensDkScrapper.StartScrapping();
+            _fluggerDk.StartScrapping();
+             ScrappingHelper.removeDeletedProductsFromDB(dbContext);
         }
     }
 }
