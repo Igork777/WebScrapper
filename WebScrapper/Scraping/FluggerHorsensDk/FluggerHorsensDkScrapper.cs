@@ -257,19 +257,20 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             List<IWebElement> selectedSize = GetAllSizes();
             String cleanedPrice = "";
             String previous_price = "";
+            Thread.Sleep(8000);
+
+            try
+            {
+                CleanWindow2();
+                 
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("No need to clear window 2: " + e);
+            }
             foreach (IWebElement size in selectedSize)
             {
-                Thread.Sleep(8000);
-
-                try
-                {
-                    CleanWindow2();
-                 
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
+               
                 size.Click();
                 Thread.Sleep(8000);
                 IWebElement price = _driverItem.FindElement(By.Id("price"));
@@ -413,6 +414,15 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                     amountBoxes.Remove(inactiveBoxes[i]);
                 }
 
+                try
+                {
+                    CleanWindow2();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Clean window 2" + e);
+                }
+               
                 for (int i = 0; i < amountBoxes.Count; i++)
                 {
                     IWebElement webElement = amountBoxes[i];
@@ -420,7 +430,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                     Thread.Sleep(4000);
                     if (classNames.Contains("active"))
                     {
-                        CleanWindow2();
+                       
                         webElement.Click();
                     }
                 }
