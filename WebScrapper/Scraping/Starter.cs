@@ -73,8 +73,8 @@ namespace WebScrapper.Scraping
             
               // ScrappingHelper.LoadAllProducts(dbContext);
               // _malingHalvprisDk.StartScrapping();
-            _fluggerHelsingorDkScrapper.StartScrapping();
-            // _fluggerHorsensDkScrapper.StartScrapping();
+          //  _fluggerHelsingorDkScrapper.StartScrapping();
+             _fluggerHorsensDkScrapper.StartScrapping();
             //   _fluggerDk.StartScrapping();
             //    ScrappingHelper.removeDeletedProductsFromDB(dbContext);
         }

@@ -31,24 +31,21 @@ namespace WebScrapper.Scraping
             MessageId = "type: System.String")]
         public void StartScrapping()
         {
-           IList<Product> product = GetProduct("https://flugger-helsingor.dk/product/skovsgaard-frydensberg-stenolie/");
-           product[0].ProductTypeId = 1;
-           product[0].WebsiteId = 2;
-            ScrappingHelper.SaveOrUpdate(_dbContext, product[0]);
-            // Console.WriteLine("Starting new scrap : FluggerHelsingorDkScrapper");
-            // Start(
-            //     "https://flugger-helsingor.dk/vare-kategori/indendoers-maling/",
-            //     TypesOfProduct.Indoors);
-            //
-            // Start("https://flugger-helsingor.dk/vare-kategori/udendors-maling/",
-            //     TypesOfProduct.Outdoors);
-            //
-            // Start(
-            //     "https://flugger-helsingor.dk/vare-kategori/gulvbehandling/",
-            //     TypesOfProduct.Others);
-            // Start(
-            //     "https://flugger-helsingor.dk/vare-kategori/tilbehor/",
-            //     TypesOfProduct.Others);
+          
+            Console.WriteLine("Starting new scrap : FluggerHelsingorDkScrapper");
+            Start(
+                "https://flugger-helsingor.dk/vare-kategori/indendoers-maling/",
+                TypesOfProduct.Indoors);
+            
+            Start("https://flugger-helsingor.dk/vare-kategori/udendors-maling/",
+                TypesOfProduct.Outdoors);
+            
+            Start(
+                "https://flugger-helsingor.dk/vare-kategori/gulvbehandling/",
+                TypesOfProduct.Others);
+            Start(
+                "https://flugger-helsingor.dk/vare-kategori/tilbehor/",
+                TypesOfProduct.Others);
             _driver.Quit();
         }
 
