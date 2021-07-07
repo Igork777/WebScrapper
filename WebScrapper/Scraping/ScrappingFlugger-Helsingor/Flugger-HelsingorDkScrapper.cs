@@ -31,20 +31,24 @@ namespace WebScrapper.Scraping
             MessageId = "type: System.String")]
         public void StartScrapping()
         {
-            Console.WriteLine("Starting new scrap : FluggerHelsingorDkScrapper");
-            Start(
-                "https://flugger-helsingor.dk/vare-kategori/indendoers-maling/",
-                TypesOfProduct.Indoors);
-            
-            Start("https://flugger-helsingor.dk/vare-kategori/udendors-maling/",
-                TypesOfProduct.Outdoors);
-            
-            Start(
-                "https://flugger-helsingor.dk/vare-kategori/gulvbehandling/",
-                TypesOfProduct.Others);
-            Start(
-                "https://flugger-helsingor.dk/vare-kategori/tilbehor/",
-                TypesOfProduct.Others);
+           IList<Product> product = GetProduct("https://flugger-helsingor.dk/product/skovsgaard-frydensberg-stenolie/");
+           product[0].ProductTypeId = 1;
+           product[0].WebsiteId = 2;
+            ScrappingHelper.SaveOrUpdate(_dbContext, product[0]);
+            // Console.WriteLine("Starting new scrap : FluggerHelsingorDkScrapper");
+            // Start(
+            //     "https://flugger-helsingor.dk/vare-kategori/indendoers-maling/",
+            //     TypesOfProduct.Indoors);
+            //
+            // Start("https://flugger-helsingor.dk/vare-kategori/udendors-maling/",
+            //     TypesOfProduct.Outdoors);
+            //
+            // Start(
+            //     "https://flugger-helsingor.dk/vare-kategori/gulvbehandling/",
+            //     TypesOfProduct.Others);
+            // Start(
+            //     "https://flugger-helsingor.dk/vare-kategori/tilbehor/",
+            //     TypesOfProduct.Others);
             _driver.Quit();
         }
 
@@ -153,6 +157,9 @@ namespace WebScrapper.Scraping
             goBack:
             try
             {
+                var chromeOptions = new ChromeOptions();
+                chromeOptions.AddArguments("headless");
+                _driver = new ChromeDriver(chromeOptions);
                 _driver.Navigate().GoToUrl(link);
                 CleanWindows(_driver);
             }
@@ -249,7 +256,7 @@ namespace WebScrapper.Scraping
 
                         priceString = priceRegex.Match(priceString).Value.Replace(",", ".").Replace(" ", "").Replace("L","").Replace(".","");
 
-                        product.Size = Lis[i].Text.Replace(",", ".").Replace(" ", "").Replace("L","");;
+                        product.Size = Lis[i].Text.Replace(",", ".").Replace(" ", "").Replace("L","").Replace("ml", "").Replace("kg","").Replace("Gram","");
                         product.CurrentPrice = priceString.Replace(",", ".").Replace(" ", "").Replace("L","").Replace(".","");
                         products.Add(product);
                     }
@@ -259,9 +266,9 @@ namespace WebScrapper.Scraping
                     Product product = new Product();
                     product.PathToImage = GetImagePath();
                     product.Name = name;
-                    product.Size = Lis[0].Text.Replace(",", ".").Replace(" ", "").Replace("L","").Replace(".","");
-                    product.CurrentPrice = priceString.Replace(",", ".").Replace(" ", "").Replace("L", "")
-                        .Replace(".", "").Replace(".", "");
+                    product.Size = Lis[0].Text.Replace(",", ".").Replace(" ", "").Replace("L", "").Replace("ml", "")
+                        .Replace("kg", "").Replace("Gram", "");
+                    product.CurrentPrice = priceString.Replace(",", ".").Replace(" ", "").Replace("L","").Replace(".","");
                     products.Add(product);
                 }
             }
@@ -279,7 +286,8 @@ namespace WebScrapper.Scraping
                     foreach (IWebElement size in sizeOption)
                     {
                         Console.WriteLine(size.Text);
-                        sizeStrings.Add(size.Text);
+                        sizeStrings.Add(size.Text.Replace(",", ".").Replace(" ", "").Replace("L", "").Replace("ml", "")
+                            .Replace("kg", "").Replace("Gram", ""));
                     }
 
                     SelectElement colorsSelect = new SelectElement(colors);
@@ -302,7 +310,7 @@ namespace WebScrapper.Scraping
                         string priceAsString = web.FindElement(By.TagName("ins")).Text;
                         priceAsString = priceRegex.Match(priceAsString).Value.Replace(",", "");
                         product.Size = sizeStrings[i].Replace(",", ".").Replace(" ", "").Replace("L","");;
-                        product.CurrentPrice = priceAsString.Replace(",", ".").Replace(" ", "").Replace("L","");;
+                        product.CurrentPrice = priceAsString.Replace(",", ".").Replace(" ", "").Replace("L","").Replace(".","");
                         products.Add(product);
                     }
                 }
@@ -313,7 +321,7 @@ namespace WebScrapper.Scraping
                     product.PathToImage = GetImagePath();
                     product.Name = name;
                     product.Size = "No data";
-                    product.CurrentPrice = priceString.Replace(",", ".").Replace(" ", "").Replace("L","");;
+                    product.CurrentPrice = priceString.Replace(",", ".").Replace(" ", "").Replace("L","").Replace(".","");
                     products.Add(product);
                 }
             }

@@ -261,21 +261,16 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             {
                 Thread.Sleep(8000);
 
-                IJavaScriptExecutor jss = (IJavaScriptExecutor) _driverItem;
-                jss.ExecuteScript("document.querySelector(`.sleeknote-anchor`).remove()");
-                Thread.Sleep(2000);
+                try
+                {
+                    CleanWindow2();
+                 
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
                 size.Click();
-                //     catch (Exception e)
-                // {
-                //     Console.WriteLine(e);
-                //     IJavaScriptExecutor js = (IJavaScriptExecutor) _driverItem;
-                //     Console.WriteLine("\n\n\nThe HTML scrapper started");
-                //
-                //     //   js.ExecuteScript("console.log(document.body.innerHTML).remove()");
-                //     Thread.Sleep(2000);
-                //     size.Click();
-                //     Console.WriteLine("\n\n\nThe HTML scrapper finished");
-                // }
                 Thread.Sleep(8000);
                 IWebElement price = _driverItem.FindElement(By.Id("price"));
                 try
@@ -325,6 +320,21 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             }
 
             return SizeAndPrice;
+        }
+
+        private void CleanWindow2()
+        {
+            try
+            {
+                IJavaScriptExecutor jss = (IJavaScriptExecutor) _driverItem;
+                jss.ExecuteScript("document.querySelector(`.sleeknote-anchor`).remove()");
+                Thread.Sleep(2000);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+           
         }
 
         private void clickTwiceTheFirstColor(int counter_color)
@@ -410,6 +420,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                     Thread.Sleep(4000);
                     if (classNames.Contains("active"))
                     {
+                        CleanWindow2();
                         webElement.Click();
                     }
                 }

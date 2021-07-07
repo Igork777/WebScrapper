@@ -94,10 +94,12 @@ namespace WebScrapper.Scraping.Helpers
             Product similarProduct = ExistsAlreadyInTheDatabase(dbContext, hash);
             if (similarProduct != null)
             {
-                if (!similarProduct.CurrentPrice.Equals(product.CurrentPrice))
+                Console.WriteLine(similarProduct.CurrentPrice);
+                Console.WriteLine(product.CurrentPrice);
+                if (Int32.Parse(similarProduct.CurrentPrice) != Int32.Parse(product.CurrentPrice))
                 {
-                    similarProduct.OldPrice = similarProduct.CurrentPrice;
-                    similarProduct.CurrentPrice = product.CurrentPrice;
+                    similarProduct.OldPrice = similarProduct.CurrentPrice.Replace(",", ".").Replace(" ", "").Replace("L","").Replace(".", "");
+                    similarProduct.CurrentPrice = product.CurrentPrice.Replace(",", ".").Replace(" ", "").Replace("L","").Replace(".", "");
                     similarProduct.UpdatedAt = DateTime.Now;
                     dbContext.SaveChanges();
                 }

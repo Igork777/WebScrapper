@@ -98,15 +98,15 @@ namespace WebScrapper.Services
                 productChangedPrice.productUrl = currentProduct.PathToImage;
                 if (currentProduct.WebsiteId == 1)
                 {
-                    productChangedPrice.website = "www.flugger.dk";
+                    productChangedPrice.website = "flugger.dk";
                 }
                 else if (currentProduct.WebsiteId == 2)
                 {
-                    productChangedPrice.website = "www.flugger-helsingor.dk";
+                    productChangedPrice.website = "flugger-helsingor.dk";
                 }
                 else if (currentProduct.WebsiteId == 3)
                 {
-                    productChangedPrice.website = "www.maling-halvpris.dk";
+                    productChangedPrice.website = "maling-halvpris.dk";
                 }
                 productChangedPrices.Add(productChangedPrice);
             }

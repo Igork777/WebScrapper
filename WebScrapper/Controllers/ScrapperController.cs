@@ -10,7 +10,7 @@ using WebScrapper.Services;
 namespace WebScrapper.Controllers
 {
     [ApiController]
-    [Authorize]
+   // [Authorize]
     public class ScrapperController : ControllerBase
     {
         private IScrapperService _scrapperService;
@@ -20,6 +20,7 @@ namespace WebScrapper.Controllers
             _scrapperService = scrapperService;
         }
 
+        
         [HttpGet]
         [Route("api/suggestions/{name}")]
         public IList<Suggestion> GetAllSugestion(string name)
