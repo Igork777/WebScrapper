@@ -47,7 +47,7 @@ namespace WebScrapper.Services
         public Dictionary<string, IList<Product>> GetAllProducts(string name)
         {
             Dictionary<string, IList<Product>> listOfProducts = new Dictionary<string, IList<Product>>();
-            List<Product> products = _dbContext.Product.Where(node => node.Name.Equals(name)).ToList();
+            List<Product> products = _dbContext.Product.Where(node => node.Name.ToLower().Equals(name.ToLower())).ToList();
 
             listOfProducts.Add("flugger.dk", products.Where(node => node.WebsiteId == 1).ToList());
             listOfProducts.Add("flugger-helsingor.dk", products.Where(node => node.WebsiteId == 2).ToList());

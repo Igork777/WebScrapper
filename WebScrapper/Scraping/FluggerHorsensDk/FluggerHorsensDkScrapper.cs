@@ -258,16 +258,6 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             String cleanedPrice = "";
             String previous_price = "";
             Thread.Sleep(8000);
-
-            try
-            {
-                CleanWindow2();
-                 
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("No need to clear window 2: " + e);
-            }
             foreach (IWebElement size in selectedSize)
             {
                
@@ -341,6 +331,7 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
         private void clickTwiceTheFirstColor(int counter_color)
         {
             List<IWebElement> colors;
+            Thread.Sleep(3000);
             colors = _driverItem.FindElements(By.ClassName("color-box")).ToList();
             try
             {
@@ -428,9 +419,10 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
                     IWebElement webElement = amountBoxes[i];
                     String classNames = amountBoxes[i].GetAttribute("class");
                     Thread.Sleep(4000);
+                    CleanWindow2();
                     if (classNames.Contains("active"))
                     {
-                       
+                        
                         webElement.Click();
                     }
                 }

@@ -107,11 +107,12 @@ namespace WebScrapper
             app.UseCors("CorsPolicy");
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-         
-            backgroundJobClient.Enqueue(() => Console.WriteLine("Handfire job"));
-                  recurringJobManager.AddOrUpdate("Run every day",
-                 () =>  
-                     serviceProvider.GetService<Starter>().Start(), Cron.Daily);
+            Starter starter = new Starter();
+            starter.Start();
+            // backgroundJobClient.Enqueue(() => Console.WriteLine("Handfire job"));
+            //       recurringJobManager.AddOrUpdate("Run every day",
+            //      () =>  
+            //          serviceProvider.GetService<Starter>().Start(), Cron.Daily);
         }
     }
 }

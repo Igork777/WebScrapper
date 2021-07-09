@@ -20,9 +20,9 @@ namespace WebScrapper.Scraping.Helpers
     {
         public static List<ProductType> _allProductTypes = new List<ProductType>()
         {
-            new ProductType() {ProductTypeId = 1, Type = "Indoor", Products = new List<Product>()},
-            new ProductType() {ProductTypeId = 2, Type = "Outdoor", Products = new List<Product>()},
-            new ProductType() {ProductTypeId = 3, Type = "Other", Products = new List<Product>()}
+            new() {ProductTypeId = 1, Type = "Indoor", Products = new List<Product>()},
+            new() {ProductTypeId = 2, Type = "Outdoor", Products = new List<Product>()},
+            new() {ProductTypeId = 3, Type = "Other", Products = new List<Product>()}
         };
 
         public static List<Product> allProducts;
@@ -30,15 +30,15 @@ namespace WebScrapper.Scraping.Helpers
 
         public static List<Website> _allWebsites = new List<Website>()
         {
-            new Website() {WebsiteId = 1, Name = "www.flugger.dk", Products = new List<Product>()},
-            new Website() {WebsiteId = 2, Name = "www.flugger-helsingor.dk", Products = new List<Product>()},
-            new Website() {WebsiteId = 3, Name = "www.maling-halvpris.dk", Products = new List<Product>()},
-            new Website() {WebsiteId = 4, Name = "www.flugger-horsens.dk", Products = new List<Product>()}
+            new() {WebsiteId = 1, Name = "www.flugger.dk", Products = new List<Product>()},
+            new() {WebsiteId = 2, Name = "www.flugger-helsingor.dk", Products = new List<Product>()},
+            new() {WebsiteId = 3, Name = "www.maling-halvpris.dk", Products = new List<Product>()},
+            new() {WebsiteId = 4, Name = "www.flugger-horsens.dk", Products = new List<Product>()},
+            new() {WebsiteId = 5, Name = "www.flugger-naerum.dk", Products = new List<Product>()}
         };
 
         public static readonly Regex InvalidCharacter = new Regex(@"&#[0-9]+[;]|&[A-Za-z]+[;]");
 
-      
 
         private static Product ExistsAlreadyInTheDatabase(DBContext dbContext, String hash)
         {
@@ -98,26 +98,16 @@ namespace WebScrapper.Scraping.Helpers
                 Console.WriteLine(product.CurrentPrice);
                 if (Int32.Parse(similarProduct.CurrentPrice) != Int32.Parse(product.CurrentPrice))
                 {
-                    similarProduct.OldPrice = similarProduct.CurrentPrice.Replace(",", ".").Replace(" ", "").Replace("L","").Replace(".", "");
-                    similarProduct.CurrentPrice = product.CurrentPrice.Replace(",", ".").Replace(" ", "").Replace("L","").Replace(".", "");
+                    similarProduct.OldPrice = similarProduct.CurrentPrice.Replace(",", ".").Replace(" ", "")
+                        .Replace("L", "").Replace(".", "");
+                    similarProduct.CurrentPrice = product.CurrentPrice.Replace(",", ".").Replace(" ", "")
+                        .Replace("L", "").Replace(".", "");
                     similarProduct.UpdatedAt = DateTime.Now;
                     dbContext.SaveChanges();
                 }
             }
             else
             {
-                // IEnumerable<Product> products = from s in dbContext.Product.ToList()
-                //     where s.Name.Equals(product.Name) &&
-                //           s.CurrentPrice.Equals(product.CurrentPrice) && s.ProductTypeId.Equals(product.ProductTypeId) &&
-                //           s.WebsiteId.Equals(product.WebsiteId)
-                //     select s;
-                //
-                // var enumerable = products.ToList();
-                // if (enumerable.Any())
-                // {
-                //     dbContext.Product.Remove(enumerable.ToList()[0]);
-                // }
-
                 dbContext.Product.Add(product);
                 dbContext.SaveChanges();
                 AddToProductType(dbContext, product);
@@ -161,13 +151,13 @@ namespace WebScrapper.Scraping.Helpers
             bool isFound = false;
             for (int i = 0; i < allProducts.Count; i++)
             {
-              
-                    Product correspondentProduct = productsAddedDuringThisSession.FirstOrDefault(node => node.Hash.Equals(allProducts[i].Hash));
-                    if (correspondentProduct == null)
-                    {
-                        Console.WriteLine(allProducts[i] + " was deleted");
-                        dbContext.Product.Remove(allProducts[i]);
-                    }
+                Product correspondentProduct =
+                    productsAddedDuringThisSession.FirstOrDefault(node => node.Hash.Equals(allProducts[i].Hash));
+                if (correspondentProduct == null)
+                {
+                    Console.WriteLine(allProducts[i] + " was deleted");
+                    dbContext.Product.Remove(allProducts[i]);
+                }
             }
         }
 

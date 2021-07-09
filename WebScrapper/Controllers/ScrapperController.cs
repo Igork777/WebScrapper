@@ -10,7 +10,7 @@ using WebScrapper.Services;
 namespace WebScrapper.Controllers
 {
     [ApiController]
-   // [Authorize]
+    [Authorize]
     public class ScrapperController : ControllerBase
     {
         private IScrapperService _scrapperService;
