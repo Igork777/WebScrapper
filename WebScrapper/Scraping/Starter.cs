@@ -6,6 +6,7 @@ using WebScrapper.Scraping.FluggerHorsensDk;
 using WebScrapper.Scraping.Helpers;
 using WebScrapper.Scraping.ScrappingFluggerDk;
 using WebScrapper.Scraping.ScrappingFluggerDk.DB;
+using WebScrapper.Scraping.ScrappingFluggernaerumDk;
 
 namespace WebScrapper.Scraping
 {
@@ -15,6 +16,7 @@ namespace WebScrapper.Scraping
         private FluggerHelsingorDkScrapper _fluggerHelsingorDkScrapper;
         private FluggerDkScrapper _fluggerDk;
         private Maling_halvprisDk _malingHalvprisDk;
+        private FluggerNaerumDkScrapper fluggerNaerum;
         private DBContext _dbContext;
 
         public Starter()
@@ -25,6 +27,7 @@ namespace WebScrapper.Scraping
             _fluggerHorsensDkScrapper = new FluggerHorsensDkScrapper(_dbContext);
             _fluggerHelsingorDkScrapper = new FluggerHelsingorDkScrapper(_dbContext);
             _malingHalvprisDk = new Maling_halvprisDk(_dbContext);
+            fluggerNaerum = new FluggerNaerumDkScrapper(_dbContext);
         }
 
         public void Start()
@@ -71,10 +74,11 @@ namespace WebScrapper.Scraping
                 dbContext.SaveChanges();
             }
             
+            fluggerNaerum.StartScrapping();
            //    ScrappingHelper.LoadAllProducts(dbContext);
            //    _malingHalvprisDk.StartScrapping();
            // _fluggerHelsingorDkScrapper.StartScrapping();
-             _fluggerHorsensDkScrapper.StartScrapping();
+         //    _fluggerHorsensDkScrapper.StartScrapping();
             // _fluggerDk.StartScrapping();
             //  ScrappingHelper.removeDeletedProductsFromDB(dbContext);
         }
