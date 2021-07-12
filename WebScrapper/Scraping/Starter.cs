@@ -75,12 +75,12 @@ namespace WebScrapper.Scraping
             }
             
             fluggerNaerum.StartScrapping();
-           //    ScrappingHelper.LoadAllProducts(dbContext);
-           //    _malingHalvprisDk.StartScrapping();
-           // _fluggerHelsingorDkScrapper.StartScrapping();
-         //    _fluggerHorsensDkScrapper.StartScrapping();
-            // _fluggerDk.StartScrapping();
-            //  ScrappingHelper.removeDeletedProductsFromDB(dbContext);
+            //    ScrappingHelper.LoadAllProducts(dbContext);
+            //    _malingHalvprisDk.StartScrapping();
+            // _fluggerHelsingorDkScrapper.StartScrapping();
+            // _fluggerHorsensDkScrapper.StartScrapping();
+            //  _fluggerDk.StartScrapping();
+            //   ScrappingHelper.removeDeletedProductsFromDB(dbContext);
         }
     }
 }

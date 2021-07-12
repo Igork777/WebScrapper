@@ -12,5 +12,6 @@ namespace WebScrapper.Scraping.DTO
         public ProductLowerPriceComparison flugger { get; set; }
 
         public ProductLowerPriceComparison fluggerHelsingor { get; set; }
+        public ProductLowerPriceComparison fluggerNaerum { get; set; }
     }
 }

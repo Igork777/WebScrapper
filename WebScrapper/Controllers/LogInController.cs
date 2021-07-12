@@ -13,7 +13,7 @@ namespace WebScrapper.Controllers
     [ApiController]
     public class LogInController : ControllerBase
     {
-        private ILogInService _logInService;
+        private readonly ILogInService _logInService;
         private readonly IJwtAuthenticationManager JwtAuthenticationManager;
         
         public LogInController(ILogInService logInService, IJwtAuthenticationManager jwtAuthenticationManager)

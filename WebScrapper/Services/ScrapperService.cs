@@ -53,7 +53,7 @@ namespace WebScrapper.Services
             listOfProducts.Add("flugger-helsingor.dk", products.Where(node => node.WebsiteId == 2).ToList());
             listOfProducts.Add("www.maling-halvpris.dk", products.Where(node => node.WebsiteId == 3).ToList());
             listOfProducts.Add("www.flugger-horsens.dk", products.Where(node => node.WebsiteId == 4).ToList());
-
+            listOfProducts.Add("www.flugger-naerum.dk", products.Where(node => node.WebsiteId == 5).ToList());
             return listOfProducts;
         }
 
@@ -108,6 +108,10 @@ namespace WebScrapper.Services
                 {
                     productChangedPrice.website = "maling-halvpris.dk";
                 }
+                else if (currentProduct.WebsiteId == 5)
+                {
+                    productChangedPrice.website = "flugger-naerum.dk";
+                }
                 productChangedPrices.Add(productChangedPrice);
             }
             return productChangedPrices;
@@ -123,7 +127,7 @@ namespace WebScrapper.Services
                 return comparedProduct;
             }
 
-            if (productsToCompare.Count > 3)
+            if (productsToCompare.Count > 4)
             {
                 throw new RuntimeWrappedException("WTF Igor");
             }
@@ -152,9 +156,13 @@ namespace WebScrapper.Services
                     {
                         comparedProduct.fluggerHelsingor = InitializeProductLowerPriceComparison(productsToCompare[q]);
                     }
-                    else
+                    else if (productsToCompare[q].WebsiteId == 3)
                     {
                         comparedProduct.malingHalvpris = InitializeProductLowerPriceComparison(productsToCompare[q]);
+                    }
+                    else
+                    {
+                        comparedProduct.fluggerNaerum = InitializeProductLowerPriceComparison(productsToCompare[q]);
                     }
 
 
@@ -186,10 +194,15 @@ namespace WebScrapper.Services
                 fluggerProduct.shopName = "Maling Halvpris";
                 fluggerProduct.website = "maling-halvpris.dk";
             }
-            else
+            else if (product.WebsiteId == 4)
             {
                 fluggerProduct.shopName = "Flugger Horsens";
                 fluggerProduct.website = "flugger-horsens.dk";
+            }
+            else
+            {
+                fluggerProduct.shopName = "Flugger Naerum";
+                fluggerProduct.website = "flugger-naerum.dk";
             }
 
             return fluggerProduct;
