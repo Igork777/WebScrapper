@@ -51,9 +51,9 @@ namespace WebScrapper.Services
 
             listOfProducts.Add("flugger.dk", products.Where(node => node.WebsiteId == 1).ToList());
             listOfProducts.Add("flugger-helsingor.dk", products.Where(node => node.WebsiteId == 2).ToList());
-            listOfProducts.Add("www.maling-halvpris.dk", products.Where(node => node.WebsiteId == 3).ToList());
-            listOfProducts.Add("www.flugger-horsens.dk", products.Where(node => node.WebsiteId == 4).ToList());
-            listOfProducts.Add("www.flugger-naerum.dk", products.Where(node => node.WebsiteId == 5).ToList());
+            listOfProducts.Add("maling-halvpris.dk", products.Where(node => node.WebsiteId == 3).ToList());
+            listOfProducts.Add("flugger-horsens.dk", products.Where(node => node.WebsiteId == 4).ToList());
+            listOfProducts.Add("flugger-naerum.dk", products.Where(node => node.WebsiteId == 5).ToList());
             return listOfProducts;
         }
 

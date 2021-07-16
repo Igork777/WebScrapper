@@ -73,14 +73,15 @@ namespace WebScrapper.Scraping
 
                 dbContext.SaveChanges();
             }
-            
+
+
+            ScrappingHelper.LoadAllProducts(dbContext);
+            _malingHalvprisDk.StartScrapping();
+            _fluggerHelsingorDkScrapper.StartScrapping();
+            _fluggerHorsensDkScrapper.StartScrapping();
+            _fluggerDk.StartScrapping();
             fluggerNaerum.StartScrapping();
-            //    ScrappingHelper.LoadAllProducts(dbContext);
-            //    _malingHalvprisDk.StartScrapping();
-            // _fluggerHelsingorDkScrapper.StartScrapping();
-            // _fluggerHorsensDkScrapper.StartScrapping();
-            //  _fluggerDk.StartScrapping();
-            //   ScrappingHelper.removeDeletedProductsFromDB(dbContext);
+            ScrappingHelper.removeDeletedProductsFromDB(dbContext);
         }
     }
 }

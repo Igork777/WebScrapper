@@ -32,7 +32,9 @@ namespace WebScrapper.Scraping.ScrappingFluggernaerumDk
         private void Start(String urlToScrap, TypesOfProduct type)
         {
             List<String> linksToAllThePages = new List<string>();
-            _driver = new ChromeDriver();
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments("headless");
+            _driver = new ChromeDriver(chromeOptions);
             _driver.Navigate().GoToUrl(urlToScrap);
             ClearWindow(_driver);
             IWebElement wrapPageNumbers = _driver.FindElement(By.ClassName("page-numbers"));
@@ -86,7 +88,9 @@ namespace WebScrapper.Scraping.ScrappingFluggernaerumDk
         private List<Product> GetProducts(string linkToAProduct, TypesOfProduct typesOfProduct)
         {
             List<Product> products = new List<Product>();
-            _driverItem = new ChromeDriver();
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments("headless");
+            _driverItem = new ChromeDriver(chromeOptions);
             _driverItem.Navigate().GoToUrl(linkToAProduct);
             ClearWindow(_driverItem);
             Thread.Sleep(2000);

@@ -170,7 +170,7 @@ namespace WebScrapper.Scraping
            
             
             IWebElement nameElement = _driver.FindElement(By.ClassName("et_pb_module_inner"));
-            String name = ScrappingHelper.RemoveDiacritics(nameElement.Text.Trim());
+            String name = ScrappingHelper.RemoveDiacritics(nameElement.Text.Trim()).Replace("Flugger ", "");
             if (name.Contains("Tonet"))
             {
                 _driver.Navigate().Back();
