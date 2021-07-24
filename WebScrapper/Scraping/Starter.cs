@@ -19,10 +19,9 @@ namespace WebScrapper.Scraping
         private FluggerNaerumDkScrapper fluggerNaerum;
         private DBContext _dbContext;
 
-        public Starter()
+        public Starter(DBContext dbContext)
         {
-            _dbContext = new DBContext();
-
+            _dbContext = dbContext;
             _fluggerDk = new FluggerDkScrapper(_dbContext);
             _fluggerHorsensDkScrapper = new FluggerHorsensDkScrapper(_dbContext);
             _fluggerHelsingorDkScrapper = new FluggerHelsingorDkScrapper(_dbContext);
@@ -32,28 +31,27 @@ namespace WebScrapper.Scraping
 
         public void Start()
         {
-            DBContext dbContext = new DBContext();
-            dbContext.Database.Migrate();
-            int amountOfProductType = dbContext.ProductType.Count();
+            _dbContext.Database.Migrate();
+            int amountOfProductType = _dbContext.ProductType.Count();
             if (amountOfProductType == 0)
             {
-                dbContext.ProductType.AddRange(ScrappingHelper._allProductTypes);
-                dbContext.SaveChanges();
+                _dbContext.ProductType.AddRange(ScrappingHelper._allProductTypes);
+                _dbContext.SaveChanges();
             }
 
-            int amountOfWebsites = dbContext.Website.Count();
+            int amountOfWebsites = _dbContext.Website.Count();
             if (amountOfWebsites == 0)
             {
-                dbContext.Website.AddRange(ScrappingHelper._allWebsites);
-                dbContext.SaveChanges();
+                _dbContext.Website.AddRange(ScrappingHelper._allWebsites);
+                _dbContext.SaveChanges();
             }
 
-            int amountOfUsers = dbContext.Users.Count();
+            int amountOfUsers = _dbContext.Users.Count();
             if (amountOfUsers < 2)
             {
                 try
                 {
-                    dbContext.Users.Add(new User()
+                    _dbContext.Users.Add(new User()
                         {userName = "Cliff", password = ScrappingHelper.hashData("CliffChecksEverybody")});
                 }
                 catch (Exception e)
@@ -63,7 +61,7 @@ namespace WebScrapper.Scraping
 
                 try
                 {
-                    dbContext.Users.Add(new User()
+                    _dbContext.Users.Add(new User()
                         {userName = "Mikkel", password = ScrappingHelper.hashData("MikkelChecksEverybody")});
                 }
                 catch (Exception e)
@@ -71,17 +69,17 @@ namespace WebScrapper.Scraping
                     // ignored
                 }
 
-                dbContext.SaveChanges();
+                _dbContext.SaveChanges();
             }
 
 
-            ScrappingHelper.LoadAllProducts(dbContext);
-            _malingHalvprisDk.StartScrapping();
-            _fluggerHelsingorDkScrapper.StartScrapping();
+            ScrappingHelper.LoadAllProducts(_dbContext);
             _fluggerHorsensDkScrapper.StartScrapping();
             _fluggerDk.StartScrapping();
             fluggerNaerum.StartScrapping();
-            ScrappingHelper.removeDeletedProductsFromDB(dbContext);
+            _malingHalvprisDk.StartScrapping();
+            _fluggerHelsingorDkScrapper.StartScrapping();
+            ScrappingHelper.removeDeletedProductsFromDB(_dbContext);
         }
     }
 }

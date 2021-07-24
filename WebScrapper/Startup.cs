@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-using System.Web.Http;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,10 +24,8 @@ namespace WebScrapper
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            
         }
 
-       
 
         public IConfiguration Configuration { get; }
 
@@ -54,7 +51,10 @@ namespace WebScrapper
                     ValidateAudience = false
                 };
             });
-            
+        //    services.AddDbContext<DBContext>(options =>
+        //        options.UseSqlServer(
+        //            "Server=localhost;Database=ScrapperDk;Trusted_Connection=True;MultipleActiveResultSets=true"));
+       //     services.AddEntityFrameworkSqlServer().AddDbContext<DBContext>();
             services.AddSingleton<IJwtAuthenticationManager>(new JwtAuthenticationManager(key));
             services.AddSwaggerGen(c =>
             {
@@ -65,31 +65,33 @@ namespace WebScrapper
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseDefaultTypeSerializer()
                 .UseMemoryStorage());
-            
+
             services.AddCors(options =>
             {
-                options.AddPolicy("CorsPolicy", policy =>
-                {
-                    policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-                });
+                options.AddPolicy("CorsPolicy",
+                    policy => { policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
             });
 
 
             services.AddHangfireServer();
             services.AddScoped<IScrapperService, ScrapperService>();
             services.AddScoped<ILogInService, LogInService>();
-            services.AddSingleton<Starter>();
-             services.AddEntityFrameworkSqlite().AddDbContext<DBContext>();
-             var sp = services.BuildServiceProvider();
-
-            //3.Resolve the services from the service provider
-             var myDbContext = sp.GetService<DBContext>();
-             if (myDbContext != null) myDbContext.Database.Migrate();
+            services.AddScoped<Starter>();
+          //  String connection = Configuration.GetConnectionString("MyConnectionString");
+            services.AddDbContext<DBContext>(options => options.UseSqlServer(Configuration["Data:ScrapperDatabase:ConnectionString"]));
+            var sp = services.BuildServiceProvider();
+            //
+            // //3.Resolve the services from the service provider
+              var myDbContext = sp.GetService<DBContext>();
+              if (myDbContext != null) 
+                myDbContext.Database.Migrate();
         }
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IBackgroundJobClient backgroundJobClient, IRecurringJobManager recurringJobManager, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
+            IBackgroundJobClient backgroundJobClient, IRecurringJobManager recurringJobManager,
+            IServiceProvider serviceProvider, DBContext dbContext)
         {
             if (env.IsDevelopment())
             {
@@ -105,10 +107,12 @@ namespace WebScrapper
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseCors("CorsPolicy");
-            
+
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-            backgroundJobClient.Enqueue(() => Console.WriteLine("Handfire job"));
-                   recurringJobManager.AddOrUpdate("Run every day", () => serviceProvider.GetService<Starter>().Start(), Cron.Daily);
+           // Starter starter = new Starter(dbContext);
+           // starter.Start();
+             backgroundJobClient.Enqueue(() => Console.WriteLine("Handfire job"));
+                    recurringJobManager.AddOrUpdate("Run every day", () => serviceProvider.GetService<Starter>().Start(), Cron.Daily);
         }
     }
 }

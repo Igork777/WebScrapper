@@ -260,7 +260,8 @@ namespace WebScrapper.Scraping.FluggerHorsensDk
             Thread.Sleep(8000);
             foreach (IWebElement size in selectedSize)
             {
-               
+                CleanWindow2();
+                Thread.Sleep(2000);
                 size.Click();
                 Thread.Sleep(8000);
                 IWebElement price = _driverItem.FindElement(By.Id("price"));

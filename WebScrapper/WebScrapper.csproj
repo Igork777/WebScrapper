@@ -6,6 +6,7 @@
         <StartupObject>WebScrapper.Program</StartupObject>
         <OutputType>Exe</OutputType>
         <NoWin32Manifest>true</NoWin32Manifest>
+        <ApplicationInsightsResourceId>/subscriptions/c2a6bff8-0cd0-4ca2-960f-7f61b1ef8644/resourceGroups/rgApiScrapper/providers/microsoft.insights/components/ScrapperDB</ApplicationInsightsResourceId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -25,14 +26,13 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.4" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0-preview.1.21102.2" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0-preview.1.21102.2">
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.8" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.8">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0-preview.1.21102.2" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.1">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.8" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.8">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

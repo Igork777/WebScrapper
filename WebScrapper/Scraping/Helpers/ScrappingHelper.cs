@@ -20,9 +20,9 @@ namespace WebScrapper.Scraping.Helpers
     {
         public static List<ProductType> _allProductTypes = new List<ProductType>()
         {
-            new() {ProductTypeId = 1, Type = "Indoor", Products = new List<Product>()},
-            new() {ProductTypeId = 2, Type = "Outdoor", Products = new List<Product>()},
-            new() {ProductTypeId = 3, Type = "Other", Products = new List<Product>()}
+            new() { Type = "Indoor", Products = new List<Product>()},
+            new() { Type = "Outdoor", Products = new List<Product>()},
+            new() { Type = "Other", Products = new List<Product>()}
         };
 
         public static List<Product> allProducts;
@@ -30,11 +30,11 @@ namespace WebScrapper.Scraping.Helpers
 
         public static List<Website> _allWebsites = new List<Website>()
         {
-            new() {WebsiteId = 1, Name = "www.flugger.dk", Products = new List<Product>()},
-            new() {WebsiteId = 2, Name = "www.flugger-helsingor.dk", Products = new List<Product>()},
-            new() {WebsiteId = 3, Name = "www.maling-halvpris.dk", Products = new List<Product>()},
-            new() {WebsiteId = 4, Name = "www.flugger-horsens.dk", Products = new List<Product>()},
-            new() {WebsiteId = 5, Name = "www.flugger-naerum.dk", Products = new List<Product>()}
+            new() { Name = "www.flugger.dk", Products = new List<Product>()},
+            new() { Name = "www.flugger-helsingor.dk", Products = new List<Product>()},
+            new() { Name = "www.maling-halvpris.dk", Products = new List<Product>()},
+            new() { Name = "www.flugger-horsens.dk", Products = new List<Product>()},
+            new() { Name = "www.flugger-naerum.dk", Products = new List<Product>()}
         };
 
         public static readonly Regex InvalidCharacter = new Regex(@"&#[0-9]+[;]|&[A-Za-z]+[;]");

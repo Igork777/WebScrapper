@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Protocols;
 using WebScrapper.Scraping.DTO;
 
 namespace WebScrapper.Scraping.ScrappingFluggerDk.DB
@@ -9,10 +10,16 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk.DB
         public DbSet<ProductType> ProductType { get; set; }
         public DbSet<Website> Website { get; set; }
         public DbSet<User> Users { get; set; }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+
+        public DBContext(DbContextOptions<DBContext> options) : base(options)
         {
-            optionsBuilder.UseSqlite("Data Source = Flugger.db");
+            
         }
+        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        // {
+        //     optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+        //     base.OnConfiguring(optionsBuilder);
+        // }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

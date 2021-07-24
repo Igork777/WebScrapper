@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
-using HtmlAgilityPack;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.DevTools.V89.DOM;
 using WebScrapper.Scraping.DTO;
 using WebScrapper.Scraping.Helpers;
 using WebScrapper.Scraping.ScrappingFluggerDk.DB;
