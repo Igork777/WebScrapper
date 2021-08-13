@@ -6,6 +6,7 @@ using WebScrapper.Services;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebScrapper.Scraping;
 
 namespace WebScrapper.Controllers
 {
@@ -34,6 +35,14 @@ namespace WebScrapper.Controllers
               return Unauthorized();
           
           return Ok(new Token(){token = t});
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("api/Start")]
+        public void Start()
+        {
+            
         }
     }
 }

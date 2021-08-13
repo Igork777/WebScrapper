@@ -51,10 +51,6 @@ namespace WebScrapper
                     ValidateAudience = false
                 };
             });
-        //    services.AddDbContext<DBContext>(options =>
-        //        options.UseSqlServer(
-        //            "Server=localhost;Database=ScrapperDk;Trusted_Connection=True;MultipleActiveResultSets=true"));
-       //     services.AddEntityFrameworkSqlServer().AddDbContext<DBContext>();
             services.AddSingleton<IJwtAuthenticationManager>(new JwtAuthenticationManager(key));
             services.AddSwaggerGen(c =>
             {
@@ -77,7 +73,6 @@ namespace WebScrapper
             services.AddScoped<IScrapperService, ScrapperService>();
             services.AddScoped<ILogInService, LogInService>();
             services.AddScoped<Starter>();
-          //  String connection = Configuration.GetConnectionString("MyConnectionString");
             services.AddDbContext<DBContext>(options => options.UseSqlServer(Configuration["Data:ScrapperDatabase:ConnectionString"]));
             var sp = services.BuildServiceProvider();
             //
@@ -110,9 +105,9 @@ namespace WebScrapper
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
            // Starter starter = new Starter(dbContext);
-           // starter.Start();
-             backgroundJobClient.Enqueue(() => Console.WriteLine("Handfire job"));
-                    recurringJobManager.AddOrUpdate("Run every day", () => serviceProvider.GetService<Starter>().Start(), Cron.Daily);
+           //  starter.Start();
+        //     backgroundJobClient.Enqueue(() => Console.WriteLine("Handfire job"));
+          //          recurringJobManager.AddOrUpdate("Run every day", () => serviceProvider.GetService<Starter>().Start(), Cron.Daily);
         }
     }
 }

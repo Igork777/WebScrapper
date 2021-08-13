@@ -15,11 +15,6 @@ namespace WebScrapper.Scraping.ScrappingFluggerDk.DB
         {
             
         }
-        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        // {
-        //     optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-        //     base.OnConfiguring(optionsBuilder);
-        // }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

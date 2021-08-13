@@ -1,6 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebScrapper", "WebScrapper\WebScrapper.csproj", "{3BF8A174-0708-4338-8884-1F60505A8104}"
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31515.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebScrapper", "WebScrapper\WebScrapper.csproj", "{3BF8A174-0708-4338-8884-1F60505A8104}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebJobStarter", "WebJobStarter\WebJobStarter.csproj", "{A7F3509D-8AAF-4AAC-AD5C-AA287C40D392}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +17,15 @@ Global
 		{3BF8A174-0708-4338-8884-1F60505A8104}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BF8A174-0708-4338-8884-1F60505A8104}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BF8A174-0708-4338-8884-1F60505A8104}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7F3509D-8AAF-4AAC-AD5C-AA287C40D392}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7F3509D-8AAF-4AAC-AD5C-AA287C40D392}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7F3509D-8AAF-4AAC-AD5C-AA287C40D392}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7F3509D-8AAF-4AAC-AD5C-AA287C40D392}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {585FF055-F6E4-41B2-A8C2-767DF963991E}
 	EndGlobalSection
 EndGlobal

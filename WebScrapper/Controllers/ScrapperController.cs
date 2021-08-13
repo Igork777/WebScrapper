@@ -20,6 +20,7 @@ namespace WebScrapper.Controllers
             _scrapperService = scrapperService;
         }
 
+        [HttpGet]
         
         [HttpGet]
         [Route("api/suggestions/{name}")]
