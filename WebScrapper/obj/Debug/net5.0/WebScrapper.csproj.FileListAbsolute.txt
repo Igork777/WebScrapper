@@ -26,7 +26,6 @@ D:\PaintingProject\WebScrapper\WebScrapper\obj\Debug\net5.0\WebScrapper.dll
 D:\PaintingProject\WebScrapper\WebScrapper\obj\Debug\net5.0\ref\WebScrapper.dll
 D:\PaintingProject\WebScrapper\WebScrapper\obj\Debug\net5.0\WebScrapper.pdb
 D:\PaintingProject\WebScrapper\WebScrapper\obj\Debug\net5.0\WebScrapper.genruntimeconfig.cache
-D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\HtmlAgilityPack.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\NeoSmart.Unicode.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Hangfire.AspNetCore.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Hangfire.Core.dll
@@ -53,7 +52,6 @@ D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\System.Diagnostics.D
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.Extensions.DependencyModel.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\WebDriver.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\SeleniumExtras.WaitHelpers.dll
-D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\WebDriver.Support.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
