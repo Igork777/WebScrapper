@@ -68,18 +68,6 @@
           "lib/netstandard2.0/Azure.Security.KeyVault.Secrets.dll": {}
         }
       },
-      "DotNetSeleniumExtras.WaitHelpers/3.11.0": {
-        "type": "package",
-        "dependencies": {
-          "Selenium.WebDriver": "3.10.0"
-        },
-        "compile": {
-          "lib/netstandard2.0/SeleniumExtras.WaitHelpers.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/SeleniumExtras.WaitHelpers.dll": {}
-        }
-      },
       "Hangfire.AspNetCore/1.7.19": {
         "type": "package",
         "dependencies": {
@@ -1186,15 +1174,6 @@
           "lib/netstandard1.3/Newtonsoft.Json.Bson.dll": {}
         }
       },
-      "RestSharp/106.11.7": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard2.0/RestSharp.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/RestSharp.dll": {}
-        }
-      },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
         "type": "package",
         "runtimeTargets": {
@@ -1364,24 +1343,6 @@
             "assetType": "native",
             "rid": "ubuntu.16.10-x64"
           }
-        }
-      },
-      "Selenium.WebDriver/3.10.0": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "10.0.3"
-        },
-        "compile": {
-          "lib/netstandard2.0/WebDriver.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/WebDriver.dll": {}
-        }
-      },
-      "Selenium.WebDriver.ChromeDriver/91.0.4472.10100": {
-        "type": "package",
-        "build": {
-          "build/Selenium.WebDriver.ChromeDriver.targets": {}
         }
       },
       "Swashbuckle.AspNetCore/5.6.3": {
@@ -2698,21 +2659,6 @@
         "lib/netstandard2.0/Azure.Security.KeyVault.Secrets.dll",
         "lib/netstandard2.0/Azure.Security.KeyVault.Secrets.xml",
         "pkgicon.png"
-      ]
-    },
-    "DotNetSeleniumExtras.WaitHelpers/3.11.0": {
-      "sha512": "xc6jVVl5ymgk3ZNWnC/KHxkEup1QpnwYbrwF+NQoCOGERsD8YMlLwmsX4lGhLXCLo/YQTRTIwlKCN9E/doGUNg==",
-      "type": "package",
-      "path": "dotnetseleniumextras.waithelpers/3.11.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "dotnetseleniumextras.waithelpers.3.11.0.nupkg.sha512",
-        "dotnetseleniumextras.waithelpers.nuspec",
-        "lib/net35/SeleniumExtras.WaitHelpers.dll",
-        "lib/net40/SeleniumExtras.WaitHelpers.dll",
-        "lib/net45/SeleniumExtras.WaitHelpers.dll",
-        "lib/netstandard2.0/SeleniumExtras.WaitHelpers.dll"
       ]
     },
     "Hangfire.AspNetCore/1.7.19": {
@@ -4189,22 +4135,6 @@
         "newtonsoft.json.bson.nuspec"
       ]
     },
-    "RestSharp/106.11.7": {
-      "sha512": "NzndH096CTulvq+ihr7u1mBJ29oukdi9A8bypQJk+kaHxbRzTTrtgsEEQAb04ptTUZmQa7cgo7uF5z7NuEPX1Q==",
-      "type": "package",
-      "path": "restsharp/106.11.7",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net452/RestSharp.dll",
-        "lib/net452/RestSharp.xml",
-        "lib/netstandard2.0/RestSharp.dll",
-        "lib/netstandard2.0/RestSharp.xml",
-        "restsharp.106.11.7.nupkg.sha512",
-        "restsharp.nuspec",
-        "restsharp.png"
-      ]
-    },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
       "sha512": "HdSSp5MnJSsg08KMfZThpuLPJpPwE5hBXvHwoKWosyHHfe8Mh5WKT0ylEOf6yNzX6Ngjxe4Whkafh5q7Ymac4Q==",
       "type": "package",
@@ -4427,43 +4357,6 @@
         "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
         "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.nuspec",
         "runtimes/ubuntu.16.10-x64/native/System.Security.Cryptography.Native.OpenSsl.so"
-      ]
-    },
-    "Selenium.WebDriver/3.10.0": {
-      "sha512": "UQAJ3FQ4YddtgRnjQilgKuP83lsrbnHCHLMMWF0UNhZz3Gv1X61gPWHetJpSj5K6D4eAJT7+gRjLzJvrmsDFOQ==",
-      "type": "package",
-      "path": "selenium.webdriver/3.10.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net35/WebDriver.dll",
-        "lib/net35/WebDriver.xml",
-        "lib/net40/WebDriver.dll",
-        "lib/net40/WebDriver.xml",
-        "lib/net45/WebDriver.dll",
-        "lib/net45/WebDriver.xml",
-        "lib/netstandard2.0/WebDriver.dll",
-        "lib/netstandard2.0/WebDriver.xml",
-        "selenium.webdriver.3.10.0.nupkg.sha512",
-        "selenium.webdriver.nuspec"
-      ]
-    },
-    "Selenium.WebDriver.ChromeDriver/91.0.4472.10100": {
-      "sha512": "RalhItuJ6BZdD9HHVUHdpgDP/NQAUrr1yEAHWet+Ww33wbcuei0A2sF4+9duKaLQuZO3lcid7pKe2+km3sOGBQ==",
-      "type": "package",
-      "path": "selenium.webdriver.chromedriver/91.0.4472.10100",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "README.md",
-        "build/DefinePropertiesChromeDriver.targets",
-        "build/Selenium.WebDriver.ChromeDriver.targets",
-        "driver/linux64/chromedriver",
-        "driver/mac64/chromedriver",
-        "driver/win32/chromedriver.exe",
-        "nupkg-icon.png",
-        "selenium.webdriver.chromedriver.91.0.4472.10100.nupkg.sha512",
-        "selenium.webdriver.chromedriver.nuspec"
       ]
     },
     "Swashbuckle.AspNetCore/5.6.3": {
@@ -8287,7 +8180,6 @@
   },
   "projectFileDependencyGroups": {
     "net5.0": [
-      "DotNetSeleniumExtras.WaitHelpers >= 3.11.0",
       "Hangfire.AspNetCore >= 1.7.19",
       "Hangfire.Core >= 1.7.19",
       "Hangfire.MemoryStorage >= 1.7.0",
@@ -8302,8 +8194,6 @@
       "Microsoft.EntityFrameworkCore.Tools >= 5.0.8",
       "Microsoft.Identity.Web >= 1.1.0",
       "Microsoft.Identity.Web.UI >= 1.1.0",
-      "RestSharp >= 106.11.7",
-      "Selenium.WebDriver.ChromeDriver >= 91.0.4472.10100",
       "Swashbuckle.AspNetCore >= 5.6.3",
       "Unicode.net >= 0.1.3"
     ]
@@ -8347,10 +8237,6 @@
       "net5.0": {
         "targetAlias": "net5.0",
         "dependencies": {
-          "DotNetSeleniumExtras.WaitHelpers": {
-            "target": "Package",
-            "version": "[3.11.0, )"
-          },
           "Hangfire.AspNetCore": {
             "target": "Package",
             "version": "[1.7.19, )"
@@ -8410,14 +8296,6 @@
           "Microsoft.Identity.Web.UI": {
             "target": "Package",
             "version": "[1.1.0, )"
-          },
-          "RestSharp": {
-            "target": "Package",
-            "version": "[106.11.7, )"
-          },
-          "Selenium.WebDriver.ChromeDriver": {
-            "target": "Package",
-            "version": "[91.0.4472.10100, )"
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",

@@ -50,8 +50,6 @@ D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.EntityFram
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.Extensions.DependencyInjection.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.Extensions.DependencyModel.dll
-D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\WebDriver.dll
-D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\SeleniumExtras.WaitHelpers.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
@@ -59,7 +57,6 @@ D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.IdentityMo
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\RestSharp.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.Data.SqlClient.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.SqlServer.dll
 D:\PaintingProject\WebScrapper\WebScrapper\bin\Debug\net5.0\Microsoft.Identity.Client.dll

@@ -9,8 +9,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
-using HtmlAgilityPack;
-using RestSharp;
 using WebScrapper.Scraping.DTO;
 using WebScrapper.Scraping.ScrappingFluggerDk.DB;
 
