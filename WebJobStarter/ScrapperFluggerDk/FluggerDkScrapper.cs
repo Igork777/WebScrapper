@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
@@ -28,7 +27,7 @@ namespace WebJobStarter.ScrapperFluggerDk
         {
             Console.WriteLine("Starting new scrap: Flugger.dk");
             _driver = new RemoteWebDriver(new Uri("https://chrome.browserless.io/webdriver"), _options.ToCapabilities());
-
+            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             Start("https://www.flugger.dk/maling-tapet/indend%C3%B8rs/", TypesOfProduct.Indoors);
             Start("https://www.flugger.dk/maling-tapet/udend%C3%B8rs/", TypesOfProduct.Outdoors);
             Start("https://www.flugger.dk/maling-tapet/dekoration/", TypesOfProduct.Others);
@@ -46,12 +45,11 @@ namespace WebJobStarter.ScrapperFluggerDk
         private void Start(String urlToScrap, Enum type)
         {
             saveProductsAgain:
-            _driver?.Quit();
-           
             _driver.Navigate().GoToUrl(urlToScrap);
             try
             {
-               // Thread.Sleep(2000);
+               
+              //  Thread.Sleep(2000);
                 ClearTheWindow();
                 IWebElement product_list_wrapper = _driver.FindElement(By.ClassName("products-grid-list"));
 
@@ -76,18 +74,27 @@ namespace WebJobStarter.ScrapperFluggerDk
             }
             catch (WebDriverException e)
             {
+                _driver = new RemoteWebDriver(new Uri("https://chrome.browserless.io/webdriver"), _options.ToCapabilities());
                 goto saveProductsAgain;
             }
         }
 
         private void ClearTheWindow()
         {
-            IWebElement coockie_window = _driver.FindElement(By.Id("coiPage-1"));
-            IWebElement coockieFooter = coockie_window.FindElement(By.ClassName("coi-banner__page-footer"));
-            IWebElement coockieButtonGroup = coockieFooter.FindElement(By.ClassName("coi-button-group"));
-            List<IWebElement> buttons_coockie = coockieButtonGroup.FindElements(By.TagName("button")).ToList();
-            buttons_coockie[0].Click();
-           // Thread.Sleep(2000);
+            try
+            {
+                IWebElement coockie_window = _driver.FindElement(By.Id("coiPage-1"));
+                IWebElement coockieFooter = coockie_window.FindElement(By.ClassName("coi-banner__page-footer"));
+                IWebElement coockieButtonGroup = coockieFooter.FindElement(By.ClassName("coi-button-group"));
+                List<IWebElement> buttons_coockie = coockieButtonGroup.FindElements(By.TagName("button")).ToList();
+                buttons_coockie[0].Click();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception appeared while clearing the window");
+            }
+            
+            //Thread.Sleep(2000);
             IJavaScriptExecutor js = (IJavaScriptExecutor) _driver;
             try
             {
@@ -168,7 +175,7 @@ namespace WebJobStarter.ScrapperFluggerDk
                 IWebElement customColorsList =
                     productPathToImageWrapper.FindElement(By.ClassName("popular-colors-list-item-color"));
                 customColorsList.Click();
-                //Thread.Sleep(2000);
+               // Thread.Sleep(2000);
                 IWebElement modalBody = _driver.FindElement(By.ClassName("modal-body"));
                 IWebElement js_color_picker = modalBody.FindElement(By.ClassName("js-color-picker-color"));
                 js_color_picker.Click();

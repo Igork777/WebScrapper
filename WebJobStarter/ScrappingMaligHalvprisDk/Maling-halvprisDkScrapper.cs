@@ -32,6 +32,7 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
         {
             Console.WriteLine("Starting new scrap: Maling.dk");
             _driver = new RemoteWebDriver(new Uri("https://chrome.browserless.io/webdriver"), options.ToCapabilities());
+            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_inde/", TypesOfProduct.Indoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_ude/", TypesOfProduct.Outdoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-ude/", TypesOfProduct.Outdoors);
