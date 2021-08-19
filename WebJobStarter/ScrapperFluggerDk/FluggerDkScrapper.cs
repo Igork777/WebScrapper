@@ -74,6 +74,7 @@ namespace WebJobStarter.ScrapperFluggerDk
             }
             catch (WebDriverException e)
             {
+                _driver?.Quit();
                 _driver = new RemoteWebDriver(new Uri("https://chrome.browserless.io/webdriver"), _options.ToCapabilities());
                 goto saveProductsAgain;
             }
