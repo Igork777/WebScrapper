@@ -21,6 +21,7 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
         private IWebDriver _driver;
         private ChromeOptions options;
 
+        
         public Maling_halvprisDkScrapper(DBContext dbContext)
         {
             _dbContext = dbContext;
@@ -47,6 +48,7 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
 
         public void StartScrapping()
         {
+         
             Console.WriteLine("Starting new scrap: Maling.dk");
             Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_inde/", TypesOfProduct.Indoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_ude/", TypesOfProduct.Outdoors);
