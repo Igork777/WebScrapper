@@ -41,7 +41,7 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
             options.AddArgument("--metrics-recording-only");
             options.AddArgument("--mute-audio");
             options.AddArgument("--headless");
-            options.AddArgument("--no-sandbox");
+            //options.AddArgument("--no-sandbox");
             options.AddAdditionalCapability("browserless.token", "4df70c47-9938-437f-aef0-6ea89533a03c", true);
         }
 
