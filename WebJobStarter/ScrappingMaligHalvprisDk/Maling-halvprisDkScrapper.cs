@@ -42,6 +42,7 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
             options.AddArgument("--headless");
             options.AddArgument("--no-sandbox");
             options.AddAdditionalCapability("browserless.token", "4df70c47-9938-437f-aef0-6ea89533a03c", true);
+            _driver = new RemoteWebDriver(new Uri("https://chrome.browserless.io/webdriver"), options.ToCapabilities());
         }
 
         public void StartScrapping()
@@ -75,9 +76,8 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
         private void Start(String urlToScrap, Enum type)
         {
             saveProductsAgain:
-            _driver?.Quit();
-            _driver = new RemoteWebDriver(new Uri("https://chrome.browserless.io/webdriver"), options.ToCapabilities());
-            _driver.Navigate().GoToUrl(urlToScrap);
+           // _driver?.Quit();
+           _driver.Navigate().GoToUrl(urlToScrap);
 
             try
             {
