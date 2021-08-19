@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Remote;
 using WebJobStarter.DbContext;
 using WebJobStarter.DTO;
 using WebJobStarter.Enums;
@@ -16,10 +19,29 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
     {
           private DBContext _dbContext;
         private IWebDriver _driver;
+        private ChromeOptions options;
 
         public Maling_halvprisDkScrapper(DBContext dbContext)
         {
             _dbContext = dbContext;
+            options = new ChromeOptions();
+            options.AddArgument("--disable-background-timer-throttling");
+            options.AddArgument("--disable-backgrounding-occluded-windows");
+            options.AddArgument("--disable-breakpad");
+            options.AddArgument("--disable-component-extensions-with-background-pages");
+            options.AddArgument("--disable-dev-shm-usage");
+            options.AddArgument("--disable-extensions");
+            options.AddArgument("--disable-features=TranslateUI,BlinkGenPropertyTrees");
+            options.AddArgument("--disable-ipc-flooding-protection");
+            options.AddArgument("--disable-renderer-backgrounding");
+            options.AddArgument("--enable-features=NetworkService,NetworkServiceInProcess");
+            options.AddArgument("--force-color-profile=srgb");
+            options.AddArgument("--hide-scrollbars");
+            options.AddArgument("--metrics-recording-only");
+            options.AddArgument("--mute-audio");
+            options.AddArgument("--headless");
+            options.AddArgument("--no-sandbox");
+            options.AddAdditionalCapability("browserless.token", "4df70c47-9938-437f-aef0-6ea89533a03c", true);
         }
 
         public void StartScrapping()
@@ -54,9 +76,7 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
         {
             saveProductsAgain:
             _driver?.Quit();
-            var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArguments("headless");
-            _driver = new ChromeDriver(chromeOptions);
+            _driver = new RemoteWebDriver(new Uri("https://chrome.browserless.io/webdriver"), options.ToCapabilities());
             _driver.Navigate().GoToUrl(urlToScrap);
 
             try
@@ -179,8 +199,7 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
                 {
                     return new Dictionary<double, int>();
                 }
-
-                Thread.Sleep(2000);
+                
                 int cleanedPrice = GetPrice(form, supplementaryForm);
                 sizeAndPrice.Add(cleanedSize, cleanedPrice);
             }

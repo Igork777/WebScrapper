@@ -76,10 +76,10 @@ namespace WebJobStarter
 
             ScrappingHelper.LoadAllProducts(_dbContext);
             _malingHalvprisDk.StartScrapping();
-            _fluggerDk.StartScrapping();
-            _fluggerHelsingorDkScrapper.StartScrapping();
-            fluggerNaerum.StartScrapping();
-            _fluggerHorsensDkScrapper.StartScrapping();
+            // _fluggerDk.StartScrapping();
+            // _fluggerHelsingorDkScrapper.StartScrapping();
+            // fluggerNaerum.StartScrapping();
+            // _fluggerHorsensDkScrapper.StartScrapping();
             ScrappingHelper.removeDeletedProductsFromDB(_dbContext);
         }
     }
