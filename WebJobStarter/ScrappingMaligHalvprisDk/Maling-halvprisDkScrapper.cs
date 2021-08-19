@@ -43,13 +43,12 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
             options.AddArgument("--headless");
             options.AddArgument("--no-sandbox");
             options.AddAdditionalCapability("browserless.token", "4df70c47-9938-437f-aef0-6ea89533a03c", true);
-            _driver = new RemoteWebDriver(new Uri("https://chrome.browserless.io/webdriver"), options.ToCapabilities());
         }
 
         public void StartScrapping()
         {
-         
             Console.WriteLine("Starting new scrap: Maling.dk");
+            _driver = new RemoteWebDriver(new Uri("https://chrome.browserless.io/webdriver"), options.ToCapabilities());
             Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_inde/", TypesOfProduct.Indoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_ude/", TypesOfProduct.Outdoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-ude/", TypesOfProduct.Outdoors);
