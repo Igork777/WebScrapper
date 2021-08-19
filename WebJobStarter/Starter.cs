@@ -75,8 +75,8 @@ namespace WebJobStarter
 
 
             ScrappingHelper.LoadAllProducts(_dbContext);
+            _fluggerDk.StartScrapping();
             _malingHalvprisDk.StartScrapping();
-            // _fluggerDk.StartScrapping();
             // _fluggerHelsingorDkScrapper.StartScrapping();
             // fluggerNaerum.StartScrapping();
             // _fluggerHorsensDkScrapper.StartScrapping();

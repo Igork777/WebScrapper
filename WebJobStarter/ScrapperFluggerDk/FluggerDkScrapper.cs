@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Remote;
 using WebJobStarter.DbContext;
 using WebJobStarter.DTO;
 using WebJobStarter.Enums;
@@ -15,16 +16,18 @@ namespace WebJobStarter.ScrapperFluggerDk
     {
         private DBContext _dbContext;
         private IWebDriver _driver;
+        private ChromeOptions _options;
 
         public FluggerDkScrapper(DBContext dbContext)
         {
             _dbContext = dbContext;
+            _options = ScrappingHelper.getOptions();
         }
 
         public void StartScrapping()
         {
             Console.WriteLine("Starting new scrap: Flugger.dk");
-
+            _driver = new RemoteWebDriver(new Uri("https://chrome.browserless.io/webdriver"), _options.ToCapabilities());
 
             Start("https://www.flugger.dk/maling-tapet/indend%C3%B8rs/", TypesOfProduct.Indoors);
             Start("https://www.flugger.dk/maling-tapet/udend%C3%B8rs/", TypesOfProduct.Outdoors);
@@ -44,13 +47,11 @@ namespace WebJobStarter.ScrapperFluggerDk
         {
             saveProductsAgain:
             _driver?.Quit();
-            var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArguments("headless");
-            _driver = new ChromeDriver(chromeOptions);
+           
             _driver.Navigate().GoToUrl(urlToScrap);
             try
             {
-                Thread.Sleep(2000);
+               // Thread.Sleep(2000);
                 ClearTheWindow();
                 IWebElement product_list_wrapper = _driver.FindElement(By.ClassName("products-grid-list"));
 
@@ -86,7 +87,7 @@ namespace WebJobStarter.ScrapperFluggerDk
             IWebElement coockieButtonGroup = coockieFooter.FindElement(By.ClassName("coi-button-group"));
             List<IWebElement> buttons_coockie = coockieButtonGroup.FindElements(By.TagName("button")).ToList();
             buttons_coockie[0].Click();
-            Thread.Sleep(2000);
+           // Thread.Sleep(2000);
             IJavaScriptExecutor js = (IJavaScriptExecutor) _driver;
             try
             {
@@ -167,11 +168,11 @@ namespace WebJobStarter.ScrapperFluggerDk
                 IWebElement customColorsList =
                     productPathToImageWrapper.FindElement(By.ClassName("popular-colors-list-item-color"));
                 customColorsList.Click();
-                Thread.Sleep(2000);
+                //Thread.Sleep(2000);
                 IWebElement modalBody = _driver.FindElement(By.ClassName("modal-body"));
                 IWebElement js_color_picker = modalBody.FindElement(By.ClassName("js-color-picker-color"));
                 js_color_picker.Click();
-                Thread.Sleep(2000);
+                //Thread.Sleep(2000);
                 IWebElement productVariantsContent = _driver.FindElement(By.ClassName("product-variants-content"));
                 IWebElement productBasket =
                     productVariantsContent.FindElement(By.ClassName("js-product-basket-multiple-wrap"));

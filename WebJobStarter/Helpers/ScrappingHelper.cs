@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using OpenQA.Selenium.Chrome;
 using WebJobStarter.DbContext;
 using WebJobStarter.DTO;
 
@@ -174,6 +175,16 @@ namespace WebJobStarter.Helpers
         public static bool CheckIfInvalidCharacter(String name, Regex regex)
         {
             return regex.IsMatch(name);
+        }
+
+        public static ChromeOptions getOptions()
+        {
+            ChromeOptions options = new ChromeOptions();
+            options.AddArgument("--headless");
+            options.AddArgument("--no-sandbox");
+            options.AddAdditionalCapability("browserless.token", "4df70c47-9938-437f-aef0-6ea89533a03c", true);
+            return options;
+
         }
     }
 }

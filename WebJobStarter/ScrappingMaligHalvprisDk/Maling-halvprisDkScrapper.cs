@@ -25,24 +25,7 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
         public Maling_halvprisDkScrapper(DBContext dbContext)
         {
             _dbContext = dbContext;
-            options = new ChromeOptions();
-            // options.AddArgument("--disable-background-timer-throttling");
-            // options.AddArgument("--disable-backgrounding-occluded-windows");
-            // options.AddArgument("--disable-breakpad");
-            // options.AddArgument("--disable-component-extensions-with-background-pages");
-            // options.AddArgument("--disable-dev-shm-usage");
-            // options.AddArgument("--disable-extensions");
-            // options.AddArgument("--disable-features=TranslateUI,BlinkGenPropertyTrees");
-            // options.AddArgument("--disable-ipc-flooding-protection");
-            // options.AddArgument("--disable-renderer-backgrounding");
-            // options.AddArgument("--enable-features=NetworkService,NetworkServiceInProcess");
-            // options.AddArgument("--force-color-profile=srgb");
-            // options.AddArgument("--hide-scrollbars");
-            // options.AddArgument("--metrics-recording-only");
-            // options.AddArgument("--mute-audio");
-            options.AddArgument("--headless");
-            options.AddArgument("--no-sandbox");
-            options.AddAdditionalCapability("browserless.token", "4df70c47-9938-437f-aef0-6ea89533a03c", true);
+            options = ScrappingHelper.getOptions();
         }
 
         public void StartScrapping()
@@ -52,7 +35,7 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
             Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_inde/", TypesOfProduct.Indoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_ude/", TypesOfProduct.Outdoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-ude/", TypesOfProduct.Outdoors);
-            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/facademaling/", TypesOfProduct.Others);
+            Start("https://www.maling-halvpris.dk/butik-kob-malin/beckers/facademaling/", TypesOfProduct.Others);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-inde/", TypesOfProduct.Others);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/panel-og-traemaling/",
                 TypesOfProduct.Others);
