@@ -26,22 +26,22 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
         {
             _dbContext = dbContext;
             options = new ChromeOptions();
-            options.AddArgument("--disable-background-timer-throttling");
-            options.AddArgument("--disable-backgrounding-occluded-windows");
-            options.AddArgument("--disable-breakpad");
-            options.AddArgument("--disable-component-extensions-with-background-pages");
-            options.AddArgument("--disable-dev-shm-usage");
-            options.AddArgument("--disable-extensions");
-            options.AddArgument("--disable-features=TranslateUI,BlinkGenPropertyTrees");
-            options.AddArgument("--disable-ipc-flooding-protection");
-            options.AddArgument("--disable-renderer-backgrounding");
-            options.AddArgument("--enable-features=NetworkService,NetworkServiceInProcess");
-            options.AddArgument("--force-color-profile=srgb");
-            options.AddArgument("--hide-scrollbars");
-            options.AddArgument("--metrics-recording-only");
-            options.AddArgument("--mute-audio");
+            // options.AddArgument("--disable-background-timer-throttling");
+            // options.AddArgument("--disable-backgrounding-occluded-windows");
+            // options.AddArgument("--disable-breakpad");
+            // options.AddArgument("--disable-component-extensions-with-background-pages");
+            // options.AddArgument("--disable-dev-shm-usage");
+            // options.AddArgument("--disable-extensions");
+            // options.AddArgument("--disable-features=TranslateUI,BlinkGenPropertyTrees");
+            // options.AddArgument("--disable-ipc-flooding-protection");
+            // options.AddArgument("--disable-renderer-backgrounding");
+            // options.AddArgument("--enable-features=NetworkService,NetworkServiceInProcess");
+            // options.AddArgument("--force-color-profile=srgb");
+            // options.AddArgument("--hide-scrollbars");
+            // options.AddArgument("--metrics-recording-only");
+            // options.AddArgument("--mute-audio");
             options.AddArgument("--headless");
-            //options.AddArgument("--no-sandbox");
+            options.AddArgument("--no-sandbox");
             options.AddAdditionalCapability("browserless.token", "4df70c47-9938-437f-aef0-6ea89533a03c", true);
         }
 
