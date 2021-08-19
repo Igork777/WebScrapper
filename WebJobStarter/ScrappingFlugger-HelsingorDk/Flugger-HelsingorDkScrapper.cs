@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using WebJobStarter.DbContext;
 using WebJobStarter.DTO;
@@ -18,11 +19,13 @@ namespace WebJobStarter
     {
         private DBContext _dbContext;
         private IWebDriver _driver;
+        private ChromeOptions options;
 
 
         public Flugger_HelsingorDkScrapper(DBContext dbContext)
         {
             _dbContext = dbContext;
+            options = ScrappingHelper.getOptions();
         }
 
         [SuppressMessage("ReSharper.DPA", "DPA0002: Excessive memory allocations in SOH",
@@ -30,6 +33,8 @@ namespace WebJobStarter
         public void StartScrapping()
         {
             Console.WriteLine("Starting new scrap : FluggerHelsingorDkScrapper");
+            _driver = new RemoteWebDriver(new Uri("https://chrome.browserless.io/webdriver"), options.ToCapabilities());
+            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             Start(
                 "https://flugger-helsingor.dk/vare-kategori/indendoers-maling/",
                 TypesOfProduct.Indoors);
@@ -48,17 +53,13 @@ namespace WebJobStarter
 
         private void Start(String urlToScrap, Enum type)
         {
-            var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArguments("headless");
-            _driver = new ChromeDriver(chromeOptions);
             _driver.Navigate().GoToUrl(urlToScrap);
             CleanWindows(_driver);
             int counter = 1;
             List<String> pages = GetPages(urlToScrap);
             foreach (String page in pages)
             {
-                // if (counter == 3)
-                // {
+              
                     saveProductAgain:
                     try
                     {
@@ -75,17 +76,15 @@ namespace WebJobStarter
                     {
                         _driver?.Quit();
                         _driver = null;
-                        chromeOptions = new ChromeOptions();
-                        chromeOptions.AddArguments("headless");
-                        _driver = new ChromeDriver(chromeOptions);
+                        _driver = new RemoteWebDriver(new Uri("https://chrome.browserless.io/webdriver"), options.ToCapabilities());
+                        _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
                         _driver.Navigate().GoToUrl(urlToScrap);
                         goto saveProductAgain;
                     }
 
                     _driver.Quit();
-                // }
 
-                counter++;
+                    counter++;
             }
         }
 
@@ -132,7 +131,7 @@ namespace WebJobStarter
             String href = "No data";
             try
             {
-                Thread.Sleep(2000);
+              //  Thread.Sleep(2000);
                 IWebElement a = pathToImage.FindElement(By.TagName("a"));
                 href = a.GetAttribute("href");
             }
@@ -181,7 +180,7 @@ namespace WebJobStarter
             String priceString = "";
             try
             {
-                Thread.Sleep(2000);
+                //Thread.Sleep(2000);
                 pr = price.FindElement(By.TagName("ins"));
                 priceString = priceRegex.Match(pr.Text).Value.Replace(",", ".").Replace(" ", "").Replace("L", "")
                     .Replace(".", "");
@@ -199,7 +198,7 @@ namespace WebJobStarter
             try
             {
                 IWebElement colorsRadio = _driver.FindElement(By.Id("picker_pa_color"));
-                Thread.Sleep(2000);
+                //Thread.Sleep(2000);
                 optionss = colorsRadio.FindElements(By.ClassName("select-option")).ToList();
                 if (optionss.Count > 1)
                 {
@@ -215,7 +214,7 @@ namespace WebJobStarter
             try
             {
                 IWebElement ulOfRadios = _driver.FindElement(By.Id("picker_pa_stoerrelse_ml"));
-                Thread.Sleep(2000);
+                //Thread.Sleep(2000);
                 List<IWebElement> Lis = ulOfRadios.FindElements(By.TagName("li")).ToList();
                 if (Lis.Count != 1)
                 {
@@ -228,20 +227,20 @@ namespace WebJobStarter
                         tryToClick:
                         try
                         {
-                            Thread.Sleep(2000);
+                            //Thread.Sleep(2000);
                             IWebElement radioOption = Lis[i].FindElement(By.ClassName("radio-option"));
                             radioOption.Click();
                         }
                         catch (Exception e)
                         {
                             Console.WriteLine(e);
-                            Thread.Sleep(2000);
+                           // Thread.Sleep(2000);
                             goto tryToClick;
                         }
 
 
                         IWebElement arr = _driver.FindElement(By.ClassName("single_variation_wrap"));
-                        Thread.Sleep(2000);
+                       // Thread.Sleep(2000);
                         IWebElement woocommerce_variation_price =
                             arr.FindElement(By.ClassName("woocommerce-variation-price"));
                         IWebElement web = woocommerce_variation_price.FindElement(By.ClassName("price"));
@@ -251,7 +250,7 @@ namespace WebJobStarter
                             if (priceString.Equals(""))
                             {
                                 optionss[0].Click();
-                                Thread.Sleep(3000);
+                                //Thread.Sleep(3000);
                                  arr = _driver.FindElement(By.ClassName("single_variation_wrap"));
                                  woocommerce_variation_price =
                                     arr.FindElement(By.ClassName("woocommerce-variation-price"));
@@ -317,9 +316,9 @@ namespace WebJobStarter
 
 
                         IWebElement arr = _driver.FindElement(By.ClassName("single_variation_wrap"));
-                        Thread.Sleep(2000);
+                       // Thread.Sleep(2000);
                         IWebElement web = arr.FindElement(By.ClassName("price"));
-                        Thread.Sleep(2000);
+                       // Thread.Sleep(2000);
                         string priceAsString = web.FindElement(By.TagName("ins")).Text;
                         priceAsString = priceRegex.Match(priceAsString).Value.Replace(",", "");
                         product.Size = sizeStrings[i].Replace(",", ".").Replace(" ", "").Replace("L", "");
@@ -361,7 +360,7 @@ namespace WebJobStarter
 
         private void CleanWindows(IWebDriver driver)
         {
-            Thread.Sleep(4000);
+            //Thread.Sleep(4000);
             try
             {
                 IWebElement cookieElement = driver.FindElement(By.Id("cookie-notice"));
@@ -378,7 +377,7 @@ namespace WebJobStarter
         private List<String> GetPages(String urlToScrap)
         {
             HashSet<String> pages = new HashSet<string>();
-            Thread.Sleep(4000);
+            //Thread.Sleep(4000);
             List<IWebElement> pagination = _driver.FindElements(By.ClassName("page-numbers")).ToList();
 
             if (pagination.Count <= 2)

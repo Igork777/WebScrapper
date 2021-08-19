@@ -74,13 +74,13 @@ namespace WebJobStarter
             }
 
 
-            ScrappingHelper.LoadAllProducts(_dbContext);
-            _fluggerDk.StartScrapping();
-           // _malingHalvprisDk.StartScrapping();
-            // _fluggerHelsingorDkScrapper.StartScrapping();
+           // ScrappingHelper.LoadAllProducts(_dbContext);
+            // _fluggerDk.StartScrapping();
+            // _malingHalvprisDk.StartScrapping();
+             _fluggerHelsingorDkScrapper.StartScrapping();
             // fluggerNaerum.StartScrapping();
             // _fluggerHorsensDkScrapper.StartScrapping();
-            ScrappingHelper.removeDeletedProductsFromDB(_dbContext);
+           // ScrappingHelper.removeDeletedProductsFromDB(_dbContext);
         }
     }
 }
