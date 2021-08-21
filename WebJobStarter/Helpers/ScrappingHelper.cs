@@ -182,7 +182,8 @@ namespace WebJobStarter.Helpers
             ChromeOptions options = new ChromeOptions();
             options.AddArgument("--headless");
             options.AddArgument("--no-sandbox");
-            options.AddAdditionalCapability("browserless.token", "4df70c47-9938-437f-aef0-6ea89533a03c", true);
+           options.AddArgument("--disable-dev-shm-usage");
+            options.AddAdditionalCapability("browserless.token", "81ac367e-baea-4ec4-b80f-c3b1043c83b1", true);
             return options;
 
         }

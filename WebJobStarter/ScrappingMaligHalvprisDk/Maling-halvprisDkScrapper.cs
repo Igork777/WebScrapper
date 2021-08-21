@@ -19,29 +19,32 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
     {
           private DBContext _dbContext;
         private IWebDriver _driver;
-        private ChromeOptions options;
+     //   private ChromeOptions options;
 
         
         public Maling_halvprisDkScrapper(DBContext dbContext)
         {
             _dbContext = dbContext;
-            options = ScrappingHelper.getOptions();
+         //   options = ScrappingHelper.getOptions();
         }
 
         public void StartScrapping()
         {
             Console.WriteLine("Starting new scrap: Maling.dk");
-            _driver = new RemoteWebDriver(new Uri("https://chrome.browserless.io/webdriver"), options.ToCapabilities());
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments("headless");
+            _driver = new ChromeDriver(chromeOptions);
+           // _driver = new RemoteWebDriver(new Uri("https://chrome.browserless.io/webdriver"), options.ToCapabilities());
             _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_inde/", TypesOfProduct.Indoors);
-            Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_ude/", TypesOfProduct.Outdoors);
-            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-ude/", TypesOfProduct.Outdoors);
-            Start("https://www.maling-halvpris.dk/butik-kob-malin/beckers/facademaling/", TypesOfProduct.Others);
-            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-inde/", TypesOfProduct.Others);
-            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/panel-og-traemaling/",
-                TypesOfProduct.Others);
-            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/gulvmaling-fra-beckers/",
-                TypesOfProduct.Others);
+           Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_inde/", TypesOfProduct.Indoors);
+           Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_ude/", TypesOfProduct.Outdoors);
+           Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-ude/", TypesOfProduct.Outdoors);
+           Start("https://www.maling-halvpris.dk/butik-kob-malin/beckers/facademaling/", TypesOfProduct.Others);
+           Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-inde/", TypesOfProduct.Others);
+           Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/panel-og-traemaling/",
+               TypesOfProduct.Others);
+           Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/gulvmaling-fra-beckers/",
+               TypesOfProduct.Others);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/glasfilt/", TypesOfProduct.Others);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/afvask-og-algebehandling/",
                 TypesOfProduct.Others);
@@ -50,27 +53,34 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
             Start("https://www.maling-halvpris.dk/butik-kob-maling/dyrup-inde/", TypesOfProduct.Others);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/iso-paint/", TypesOfProduct.Others);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/junckers/", TypesOfProduct.Others);
-
-            Start("https://www.maling-halvpris.dk/butik-kob-maling/terrasseolie/", TypesOfProduct.Outdoors);
+           
+             Start("https://www.maling-halvpris.dk/butik-kob-maling/terrasseolie/", TypesOfProduct.Outdoors);
 
             Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-ude/", TypesOfProduct.Outdoors);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/flugger/flugger-inde/", TypesOfProduct.Indoors);
-            _driver.Quit();
+            _driver?.Quit();
         }
 
         private void Start(String urlToScrap, Enum type)
         {
+            Console.WriteLine("Starting " + urlToScrap);
             saveProductsAgain:
-           // _driver?.Quit();
-           _driver.Navigate().GoToUrl(urlToScrap);
+           
 
             try
             {
+                _driver.Navigate().GoToUrl(urlToScrap);
                 GetProductsList(type);
             }
             catch (WebDriverException e)
             {
-                Console.WriteLine(e);
+                _driver?.Quit();
+                Console.WriteLine(urlToScrap + "has an error"  + e);
+              //  _driver = new RemoteWebDriver(new Uri("https://chrome.browserless.io/webdriver"), options.ToCapabilities());
+              var chromeOptions = new ChromeOptions();
+              chromeOptions.AddArguments("headless");
+              _driver = new ChromeDriver(chromeOptions);
+                _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
                goto saveProductsAgain;
             }
         }
@@ -82,10 +92,18 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
             List<IWebElement> productList = allProducts.FindElements(By.ClassName("product")).ToList();
             for (int i = 0; i < productList.Count; i++)
             {
-
-                String pathToTheImage = productList[i].FindElement(By.TagName("img")).GetAttribute("src");
-                String nameOfTheProduct = productList[i].FindElement(By.ClassName("woocommerce-loop-product__title")).Text;
-                Dictionary<double, int> sizesAndPrices = GetAllSizesAndPrices(productList[i]);
+                String pathToTheImage = "", nameOfTheProduct = "";
+                Dictionary<double, int> sizesAndPrices = null;
+                try
+                {
+                     pathToTheImage = productList[i].FindElement(By.TagName("img")).GetAttribute("src");
+                     nameOfTheProduct = productList[i].FindElement(By.ClassName("woocommerce-loop-product__title")).Text;
+                     sizesAndPrices = GetAllSizesAndPrices(productList[i]);
+                }
+                catch (NullReferenceException e)
+                {
+                    continue;
+                }
                 SaveProducts(pathToTheImage, nameOfTheProduct, sizesAndPrices, type);
             }
         }

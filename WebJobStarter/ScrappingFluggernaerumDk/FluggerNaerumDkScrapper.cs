@@ -16,14 +16,17 @@ namespace WebJobStarter.ScrappingFluggernaerumDk
     {
          private DBContext _dbContext;
         private IWebDriver _driver, _driverItem;
+        private ChromeOptions options;
 
         public FluggerNaerumDkScrapper(DBContext dbContext)
         {
             _dbContext = dbContext;
+            options = ScrappingHelper.getOptions();
         }
 
         public void StartScrapping()
         {
+            
           Start("https://flugger-naerum.dk/k/indendoers-maling/", TypesOfProduct.Indoors);
            Start("https://flugger-naerum.dk/k/udendoers-maling/", TypesOfProduct.Outdoors);
            Start("https://flugger-naerum.dk/k/tilbehoer/", TypesOfProduct.Others);
