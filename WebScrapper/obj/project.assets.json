@@ -8199,19 +8199,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Igor\\.nuget\\packages\\": {}
+    "C:\\Users\\45503\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\PaintingProject\\WebScrapper\\WebScrapper\\WebScrapper.csproj",
+      "projectUniqueName": "C:\\WebScrapper\\WebScrapper\\WebScrapper.csproj",
       "projectName": "WebScrapper",
-      "projectPath": "D:\\PaintingProject\\WebScrapper\\WebScrapper\\WebScrapper.csproj",
-      "packagesPath": "C:\\Users\\Igor\\.nuget\\packages\\",
-      "outputPath": "D:\\PaintingProject\\WebScrapper\\WebScrapper\\obj\\",
+      "projectPath": "C:\\WebScrapper\\WebScrapper\\WebScrapper.csproj",
+      "packagesPath": "C:\\Users\\45503\\.nuget\\packages\\",
+      "outputPath": "C:\\WebScrapper\\WebScrapper\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Igor\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\45503\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

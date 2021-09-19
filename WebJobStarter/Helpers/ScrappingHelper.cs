@@ -7,9 +7,13 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 using WebJobStarter.DbContext;
 using WebJobStarter.DTO;
+using WebJobStarter.Enums;
+using WebJobStarter.Exceptions;
 
 namespace WebJobStarter.Helpers
 {
@@ -180,12 +184,104 @@ namespace WebJobStarter.Helpers
         public static ChromeOptions getOptions()
         {
             ChromeOptions options = new ChromeOptions();
+            options.AddArgument("--disable-background-timer-throttling");
+            options.AddArgument("--disable-backgrounding-occluded-windows");
+            options.AddArgument("--disable-breakpad");
+            options.AddArgument("--disable-component-extensions-with-background-pages");
+            options.AddArgument("--disable-dev-shm-usage");
+            options.AddArgument("--disable-extensions");
+            options.AddArgument("--disable-features=TranslateUI,BlinkGenPropertyTrees");
+            options.AddArgument("--disable-ipc-flooding-protection");
+            options.AddArgument("--disable-renderer-backgrounding");
+            options.AddArgument("--enable-features=NetworkService,NetworkServiceInProcess");
+            options.AddArgument("--force-color-profile=srgb");
+            options.AddArgument("--hide-scrollbars");
+            options.AddArgument("--metrics-recording-only");
+            options.AddArgument("--mute-audio");
             options.AddArgument("--headless");
             options.AddArgument("--no-sandbox");
-           options.AddArgument("--disable-dev-shm-usage");
-            options.AddAdditionalCapability("browserless.token", "81ac367e-baea-4ec4-b80f-c3b1043c83b1", true);
+         //  options.AddArgument("--disable-dev-shm-usage");
+            options.AddAdditionalCapability("browserless.token", "b7fd89cf-242c-49c8-999b-8cb41e528c68", true);
             return options;
 
         }
+
+        //this method returns an element from the drive
+        public static IWebElement GetElementWhenVisible(WebDriverWait wait, TypeOfAttribute typeOfAttribute, String valueOfAttribute)
+        {
+            IWebElement element = null;
+            if (typeOfAttribute.Equals(TypeOfAttribute.ClassAttr))
+            {
+                element = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.ClassName(valueOfAttribute)));
+            }
+            else if (typeOfAttribute.Equals(TypeOfAttribute.IdAttr))
+            {
+                element = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id(valueOfAttribute)));
+            }
+            else if (typeOfAttribute.Equals(TypeOfAttribute.TagAttr))
+            { 
+                element = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.TagName(valueOfAttribute)));
+            }
+
+            if (element == null)
+            {
+                throw new ElementDoesntExistException();
+            }
+            return element;
+        }
+
+        //this method returns an element from specific IWebElement
+        public static IWebElement GetElementWhenVisible(WebDriverWait wait, TypeOfAttribute typeOfAttribute, String valueOfAttribute, IWebElement elementToGetAnElement)
+        {
+            IWebElement element = null;
+            try
+            {
+                GetElementWhenVisible(wait, typeOfAttribute, valueOfAttribute);
+                if (typeOfAttribute.Equals(TypeOfAttribute.ClassAttr))
+                {
+                    element = elementToGetAnElement.FindElement(By.ClassName(valueOfAttribute));
+                }
+                else if (typeOfAttribute.Equals(TypeOfAttribute.IdAttr))
+                {
+                    element = elementToGetAnElement.FindElement(By.Id(valueOfAttribute));
+                }
+                else if (typeOfAttribute.Equals(TypeOfAttribute.TagAttr))
+                {
+                  element = elementToGetAnElement.FindElement(By.TagName(valueOfAttribute));
+                }
+            }
+            catch (ElementDoesntExistException)
+            {
+                throw;
+            }
+            return element;
+        }
+
+
+        //this element return a list of elements from specific IWebElement
+        public static List<IWebElement> GetElementsWhenVisible(WebDriverWait wait, TypeOfAttribute typeOfAttribute, String valueOfAttribute, IWebElement elementToGetListOfElements) 
+        {
+            try
+            {
+                GetElementWhenVisible(wait, typeOfAttribute, valueOfAttribute);
+                if (typeOfAttribute.Equals(TypeOfAttribute.ClassAttr))
+                {
+                    return elementToGetListOfElements.FindElements(By.ClassName(valueOfAttribute)).ToList();
+                }
+                else if (typeOfAttribute.Equals(TypeOfAttribute.TagAttr))
+                {
+                    return elementToGetListOfElements.FindElements(By.TagName(valueOfAttribute)).ToList();
+                }
+
+                throw new RuntimeWrappedException("Incorrect Attribute");
+                
+            }
+            catch (ElementDoesntExistException)
+            {
+                throw;
+            }
+            
+        }
+
     }
 }

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Support.UI;
 using WebJobStarter.DbContext;
 using WebJobStarter.DTO;
 using WebJobStarter.Enums;
@@ -19,13 +17,15 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
     {
           private DBContext _dbContext;
         private IWebDriver _driver;
-     //   private ChromeOptions options;
+       private ChromeOptions options;
+       private WebDriverWait wait;
 
-        
+
         public Maling_halvprisDkScrapper(DBContext dbContext)
         {
             _dbContext = dbContext;
-         //   options = ScrappingHelper.getOptions();
+           options = ScrappingHelper.getOptions();
+          
         }
 
         public void StartScrapping()
@@ -33,24 +33,24 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
             Console.WriteLine("Starting new scrap: Maling.dk");
             var chromeOptions = new ChromeOptions();
             chromeOptions.AddArguments("headless");
-            _driver = new ChromeDriver(chromeOptions);
-           // _driver = new RemoteWebDriver(new Uri("https://chrome.browserless.io/webdriver"), options.ToCapabilities());
-            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-           Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_inde/", TypesOfProduct.Indoors);
-           Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_ude/", TypesOfProduct.Outdoors);
-           Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-ude/", TypesOfProduct.Outdoors);
-           Start("https://www.maling-halvpris.dk/butik-kob-malin/beckers/facademaling/", TypesOfProduct.Others);
-           Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-inde/", TypesOfProduct.Others);
-           Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/panel-og-traemaling/",
-               TypesOfProduct.Others);
-           Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/gulvmaling-fra-beckers/",
-               TypesOfProduct.Others);
-            Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/glasfilt/", TypesOfProduct.Others);
-            Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/afvask-og-algebehandling/",
-                TypesOfProduct.Others);
-            Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/gori-professionel/", TypesOfProduct.Others);
-            Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/gori-daekkende/", TypesOfProduct.Others);
-            Start("https://www.maling-halvpris.dk/butik-kob-maling/dyrup-inde/", TypesOfProduct.Others);
+            //_driver = new ChromeDriver(chromeOptions);
+            _driver = new RemoteWebDriver(new Uri("https://chrome.browserless.io/webdriver"), options.ToCapabilities());
+            wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(7));
+             Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_inde/", TypesOfProduct.Indoors);
+             Start("https://www.maling-halvpris.dk/butik-kob-maling/ral-tex/ral-tex_ude/", TypesOfProduct.Outdoors);
+             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-ude/", TypesOfProduct.Outdoors);
+             Start("https://www.maling-halvpris.dk/butik-kob-malin/beckers/facademaling/", TypesOfProduct.Others);
+             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/beckers-inde/", TypesOfProduct.Others);
+             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/panel-og-traemaling/",
+                 TypesOfProduct.Others);
+             Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/gulvmaling-fra-beckers/",
+                 TypesOfProduct.Others);
+              Start("https://www.maling-halvpris.dk/butik-kob-maling/beckers/glasfilt/", TypesOfProduct.Others);
+              Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/afvask-og-algebehandling/",
+                  TypesOfProduct.Others);
+              Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/gori-professionel/", TypesOfProduct.Others);
+              Start("https://www.maling-halvpris.dk/butik-kob-maling/gori/gori-daekkende/", TypesOfProduct.Others);
+              Start("https://www.maling-halvpris.dk/butik-kob-maling/dyrup-inde/", TypesOfProduct.Others);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/iso-paint/", TypesOfProduct.Others);
             Start("https://www.maling-halvpris.dk/butik-kob-maling/junckers/", TypesOfProduct.Others);
            
@@ -80,7 +80,6 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
               var chromeOptions = new ChromeOptions();
               chromeOptions.AddArguments("headless");
               _driver = new ChromeDriver(chromeOptions);
-                _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
                goto saveProductsAgain;
             }
         }
@@ -88,19 +87,25 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
 
         private void GetProductsList(Enum type)
         {
-            IWebElement allProducts = _driver.FindElement(By.ClassName("products"));
-            List<IWebElement> productList = allProducts.FindElements(By.ClassName("product")).ToList();
+            
+            IWebElement allProducts = ScrappingHelper.GetElementWhenVisible(wait, TypeOfAttribute.ClassAttr, "products");
+            //_driver.FindElement(By.ClassName("products"));
+           
+            List<IWebElement> productList = ScrappingHelper.GetElementsWhenVisible(wait, TypeOfAttribute.ClassAttr, "product", allProducts);
+            //allProducts.FindElements(By.ClassName("product")).ToList();
             for (int i = 0; i < productList.Count; i++)
             {
                 String pathToTheImage = "", nameOfTheProduct = "";
                 Dictionary<double, int> sizesAndPrices = null;
                 try
                 {
-                     pathToTheImage = productList[i].FindElement(By.TagName("img")).GetAttribute("src");
-                     nameOfTheProduct = productList[i].FindElement(By.ClassName("woocommerce-loop-product__title")).Text;
+                     pathToTheImage =  ScrappingHelper.GetElementWhenVisible(wait, TypeOfAttribute.TagAttr, "img", productList[i]).GetAttribute("src");
+                     nameOfTheProduct =  ScrappingHelper.GetElementWhenVisible(wait, TypeOfAttribute.ClassAttr, "woocommerce-loop-product__title", productList[i]).Text;
+                  //   pathToTheImage = productList[i].FindElement(By.TagName("img")).GetAttribute("src");
+                  //   nameOfTheProduct = productList[i].FindElement(By.ClassName("woocommerce-loop-product__title")).Text;
                      sizesAndPrices = GetAllSizesAndPrices(productList[i]);
                 }
-                catch (NullReferenceException e)
+                catch (NullReferenceException)
                 {
                     continue;
                 }
@@ -140,12 +145,16 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
         {
             try
             {
-                IWebElement form = product.FindElement(By.ClassName("variations_form"));
-                IWebElement variations = form.FindElement(By.ClassName("variations"));
-                List<IWebElement> tableRow = variations.FindElements(By.TagName("tr")).ToList();
+               IWebElement form = ScrappingHelper.GetElementWhenVisible(wait, TypeOfAttribute.ClassAttr, "variations_form", product);
+                //  IWebElement form = product.FindElement(By.ClassName("variations_form"));
+                IWebElement variations = ScrappingHelper.GetElementWhenVisible(wait, TypeOfAttribute.ClassAttr, "variations", form);
+                // IWebElement variations = form.FindElement(By.ClassName("variations"));
+                List<IWebElement> tableRow = ScrappingHelper.GetElementsWhenVisible(wait, TypeOfAttribute.TagAttr, "tr", variations);
+               // List<IWebElement> tableRow = variations.FindElements(By.TagName("tr")).ToList();
                 if (tableRow.Count == 1)
                 {
-                    if (tableRow[0].FindElement(By.ClassName("label")).Text.Contains("Stør"))
+                    bool DoesContainStor = ScrappingHelper.GetElementWhenVisible(wait, TypeOfAttribute.ClassAttr, "label", tableRow[0]).Text.Contains("Stør");
+                    if (DoesContainStor)
                     {
                         return RetirvieCorespondedSizesAndPrices(tableRow[0], form, product);
                     }
@@ -155,11 +164,15 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
                     IWebElement sizeTableRow = null;
                     for (int i = 0; i < tableRow.Count; i++)
                     {
-                        List<IWebElement> tableData = tableRow[i].FindElements(By.ClassName("label")).ToList();
+                        List<IWebElement> tableData =  ScrappingHelper.GetElementsWhenVisible(wait, TypeOfAttribute.ClassAttr, "label", tableRow[i]);
+                        //List<IWebElement> tableData = tableRow[i].FindElements(By.ClassName("label")).ToList();
                         if (tableData.Count > 0 && tableData[0].Text.Contains("Farve")|| tableData[0].Text.Contains("Glans") || tableData[0].Text.Contains("Korn"))
                         {
-                            IWebElement farversDataValue = tableRow[i].FindElement(By.ClassName("value"));
-                            List<IWebElement> options = farversDataValue.FindElements(By.ClassName("attached")).ToList();
+                            IWebElement farversDataValue = ScrappingHelper.GetElementWhenVisible(wait, TypeOfAttribute.ClassAttr, "value", tableRow[i]);
+                            // IWebElement farversDataValue = tableRow[i].FindElement(By.ClassName("value"));
+                            List<IWebElement> options = ScrappingHelper.GetElementsWhenVisible(wait, TypeOfAttribute.ClassAttr, "attached", farversDataValue);
+   
+                          //  List<IWebElement> options = farversDataValue.FindElements(By.ClassName("attached")).ToList();
                             if (options.Count > 0)
                             {
                                 options[0].Click();
@@ -190,10 +203,13 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
             {
                 return new Dictionary<double, int>();
             }
-            IWebElement tableDataValue = tableRow.FindElement(By.ClassName("value"));
-            List<IWebElement> options = tableDataValue.FindElements(By.ClassName("attached")).ToList();
+            IWebElement tableDataValue =  ScrappingHelper.GetElementWhenVisible(wait, TypeOfAttribute.ClassAttr, "value", tableRow);
+            // IWebElement tableDataValue = tableRow.FindElement(By.ClassName("value"));
+            List<IWebElement> options = ScrappingHelper.GetElementsWhenVisible(wait, TypeOfAttribute.ClassAttr, "attached", tableDataValue);
+           // List<IWebElement> options = tableDataValue.FindElements(By.ClassName("attached")).ToList();
             for (int i = 0; i < options.Count; i++)
             {
+
                 List<IWebElement> defineOptionsOnceAgainToAvoidStaleException = DefineOptionsAgain(tableRow);
                 strSize = defineOptionsOnceAgainToAvoidStaleException[i].Text;
                 defineOptionsOnceAgainToAvoidStaleException[i].Click();
@@ -212,37 +228,44 @@ namespace WebJobStarter.ScrappingMaligHalvprisDk
 
         private List<IWebElement> DefineOptionsAgain(IWebElement tableDataValue)
         {
-            return tableDataValue.FindElements(By.ClassName("attached")).ToList();
+           return ScrappingHelper.GetElementsWhenVisible(wait, TypeOfAttribute.ClassAttr, "attached", tableDataValue);
         }
 
         private int GetPrice(IWebElement form, IWebElement supplementaryForm)
         {
-            IWebElement priceWrapper = form.FindElement(By.ClassName("single_variation_wrap"));
+            IWebElement priceWrapper = ScrappingHelper.GetElementWhenVisible(wait, TypeOfAttribute.ClassAttr, "single_variation_wrap", form);
+           // IWebElement priceWrapper = form.FindElement(By.ClassName("single_variation_wrap"));
             try
             {
-                IWebElement currentPrice = priceWrapper.FindElement(By.TagName("ins"));
+                IWebElement currentPrice =  ScrappingHelper.GetElementWhenVisible(wait, TypeOfAttribute.TagAttr, "ins", priceWrapper);
+                //IWebElement currentPrice = priceWrapper.FindElement(By.TagName("ins"));
                // IWebElement exactPrice = currentPrice.FindElement(By.ClassName("woocommerce-CurrentPrice-amount"));
                 return CleanPrice(currentPrice.Text);
             }
-            catch (NoSuchElementException exception)
+            catch (NoSuchElementException)
             {
                 try
                 {
-                    IWebElement currentPrice = supplementaryForm.FindElement(By.ClassName("price"));
-                    IWebElement exactPrice = currentPrice.FindElement(By.TagName("ins"));
+                    IWebElement currentPrice =  ScrappingHelper.GetElementWhenVisible(wait, TypeOfAttribute.ClassAttr, "price", supplementaryForm);
+                    // IWebElement currentPrice = supplementaryForm.FindElement(By.ClassName("price"));
+                    IWebElement exactPrice =  ScrappingHelper.GetElementWhenVisible(wait, TypeOfAttribute.TagAttr, "ins", currentPrice);
+                  //  IWebElement exactPrice = currentPrice.FindElement(By.TagName("ins"));
                     return CleanPrice(exactPrice.Text);
                 }
                 catch (NoSuchElementException ex)
                 {
                     try
                     {
-                        IWebElement exactPrice = priceWrapper.FindElement(By.ClassName("price"));
+                        IWebElement exactPrice = ScrappingHelper.GetElementWhenVisible(wait, TypeOfAttribute.ClassAttr, "price", priceWrapper);
+                     // exactPrice = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.ClassName("price")));
+                     //   wait.Until(ExpectedConditions.in exactPrice => priceWrapper.FindElement(By.ClassName("price"));
                         Console.WriteLine(exactPrice.Text);
                         return CleanPrice(exactPrice.Text);
                     }
                     catch (NoSuchElementException e)
                     {
-                        IWebElement exactPrice = supplementaryForm.FindElement(By.ClassName("price"));
+                        IWebElement exactPrice = ScrappingHelper.GetElementWhenVisible(wait, TypeOfAttribute.ClassAttr, "price", supplementaryForm);
+                      // IWebElement exactPrice = supplementaryForm.FindElement(By.ClassName("price"));
                         Console.WriteLine(exactPrice.Text);
                         return CleanPrice(exactPrice.Text);
                     }

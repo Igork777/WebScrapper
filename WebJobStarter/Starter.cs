@@ -75,8 +75,9 @@ namespace WebJobStarter
 
 
             // ScrappingHelper.LoadAllProducts(_dbContext);
-            _malingHalvprisDk.StartScrapping();
-             //_fluggerDk.StartScrapping();
+            Console.WriteLine("Igor is here");
+           _malingHalvprisDk.StartScrapping();
+            // _fluggerDk.StartScrapping();
             // _fluggerHelsingorDkScrapper.StartScrapping();
             // fluggerNaerum.StartScrapping();
             // _fluggerHorsensDkScrapper.StartScrapping();
